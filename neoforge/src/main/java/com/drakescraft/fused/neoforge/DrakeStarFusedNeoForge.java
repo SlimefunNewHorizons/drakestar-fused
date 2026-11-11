@@ -31,5 +31,7 @@ public class DrakeStarFusedNeoForge {
 
     private void onServerStopping(ServerStoppingEvent event) {
         LOGGER.info("🛑 [NeoForge] Deteniendo plugins de Bukkit y liberando memoria Rust off-heap...");
+        FusedCraftServer.shutdown();
     }
 }
+

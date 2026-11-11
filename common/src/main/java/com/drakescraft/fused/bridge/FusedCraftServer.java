@@ -1,5 +1,6 @@
 package com.drakescraft.fused.bridge;
 
+import com.drakescraft.fused.api.FusedLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,7 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Host de ejecución que expone la API de Bukkit/Purpur dentro del ciclo de vida
@@ -15,11 +19,13 @@ import java.util.List;
  */
 public class FusedCraftServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(FusedCraftServer.class);
+    private static final List<FusedLifecycleListener> LISTENERS = new CopyOnWriteArrayList<>();
     private static FusedCraftServer activeInstance;
 
     private final Path gameDir;
     private final Path pluginsDir;
     private final Path suitesConfigDir;
+    private final List<Path> loadedPlugins = new ArrayList<>();
     private boolean initialized = false;
 
     public FusedCraftServer(Path gameDir) {
@@ -35,6 +41,43 @@ public class FusedCraftServer {
         }
     }
 
+    public static synchronized void shutdown() {
+        if (activeInstance != null && activeInstance.initialized) {
+            LOGGER.info("🛑 Deteniendo FusedCraftServer y plugins de Bukkit...");
+            for (FusedLifecycleListener listener : LISTENERS) {
+                try {
+                    listener.onServerStopping();
+                } catch (Throwable t) {
+                    LOGGER.warn("Error en listener durante onServerStopping: {}", t.getMessage());
+                }
+            }
+
+            activeInstance.loadedPlugins.clear();
+            activeInstance.initialized = false;
+
+            for (FusedLifecycleListener listener : LISTENERS) {
+                try {
+                    listener.onServerStopped();
+                } catch (Throwable t) {
+                    LOGGER.warn("Error en listener durante onServerStopped: {}", t.getMessage());
+                }
+            }
+
+            activeInstance = null;
+            LOGGER.info("✅ FusedCraftServer detenido limpiamente. Memoria off-heap liberada.");
+        }
+    }
+
+    public static void addListener(FusedLifecycleListener listener) {
+        if (listener != null && !LISTENERS.contains(listener)) {
+            LISTENERS.add(listener);
+        }
+    }
+
+    public static void removeListener(FusedLifecycleListener listener) {
+        LISTENERS.remove(listener);
+    }
+
     private void init() {
         if (initialized) return;
         try {
@@ -48,11 +91,20 @@ public class FusedCraftServer {
                 LOGGER.info("⚙️ Directorio de configuración de StarSuites creado en: {}", suitesConfigDir.toAbsolutePath());
             }
 
+            for (FusedLifecycleListener listener : LISTENERS) {
+                try {
+                    listener.onServerStarting(gameDir, pluginsDir);
+                } catch (Throwable t) {
+                    LOGGER.warn("Error en listener durante onServerStarting: {}", t.getMessage());
+                }
+            }
+
             LOGGER.info("🏛 Inicializando FusedCraftServer sobre IntegratedServer...");
             LOGGER.info("⚡ Vinculando acelerador Slimefun-Rust (SIMD Off-Heap FFM ABI 1)...");
             
             // Escaneo e inventariado de plugins instalados
             List<Path> plugins = FusedPluginLoader.discoverPlugins(pluginsDir);
+            this.loadedPlugins.addAll(plugins);
             LOGGER.info("📦 Total de plugins/suites detectados en {}: {}", pluginsDir.getFileName(), plugins.size());
 
             // Validación de dependencias base de StarSuites
@@ -64,9 +116,19 @@ public class FusedCraftServer {
             }
 
             initialized = true;
+
+            for (FusedLifecycleListener listener : LISTENERS) {
+                try {
+                    listener.onServerStarted(gameDir, pluginsDir);
+                } catch (Throwable t) {
+                    LOGGER.warn("Error en listener durante onServerStarted: {}", t.getMessage());
+                }
+            }
+
             LOGGER.info("✅ FusedCraftServer listo. Plugins en ejecución en la misma memoria del cliente (Single JVM).");
         } catch (Exception e) {
             LOGGER.error("❌ Error al inicializar FusedCraftServer: ", e);
+            FusedCrashHandler.handleCrash("FusedCraftServer.init", e, gameDir.resolve("logs/latest.log"));
         }
     }
 
@@ -86,7 +148,12 @@ public class FusedCraftServer {
         return suitesConfigDir;
     }
 
+    public List<Path> getLoadedPlugins() {
+        return Collections.unmodifiableList(loadedPlugins);
+    }
+
     public boolean isInitialized() {
         return initialized;
     }
 }
+

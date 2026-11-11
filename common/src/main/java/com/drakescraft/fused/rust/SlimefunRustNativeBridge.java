@@ -20,41 +20,62 @@ public class SlimefunRustNativeBridge {
         if (loaded) return true;
 
         String osName = System.getProperty("os.name").toLowerCase();
-        String libName;
+        String[] candidateNames;
         if (osName.contains("win")) {
-            libName = "drakes_hybrid_ffi.dll";
+            candidateNames = new String[] { "drakes_hybrid_ffi.dll", "slimefun_ffi.dll", "libdrakes_hybrid_ffi.dll" };
         } else if (osName.contains("mac")) {
-            libName = "libdrakes_hybrid_ffi.dylib";
+            candidateNames = new String[] { "libdrakes_hybrid_ffi.dylib", "libslimefun_ffi.dylib" };
         } else {
-            libName = "libdrakes_hybrid_ffi.so";
+            candidateNames = new String[] { "libdrakes_hybrid_ffi.so", "libslimefun_ffi.so" };
         }
 
-        try {
-            Path targetPath = workDir.resolve(libName);
-            // Check if already in workDir or extract from resources
-            if (!Files.exists(targetPath)) {
-                try (InputStream in = SlimefunRustNativeBridge.class.getResourceAsStream("/natives/" + libName)) {
-                    if (in != null) {
-                        Files.copy(in, targetPath, StandardCopyOption.REPLACE_EXISTING);
-                        LOGGER.info("📦 Extracted native engine binary: {}", targetPath);
+        Path[] lookupDirs = new Path[] {
+            workDir,
+            workDir.resolve("natives"),
+            workDir.resolve("bin"),
+            workDir.resolve("libraries")
+        };
+
+        for (String libName : candidateNames) {
+            for (Path dir : lookupDirs) {
+                Path targetPath = dir.resolve(libName);
+                if (Files.exists(targetPath)) {
+                    try {
+                        System.load(targetPath.toAbsolutePath().toString());
+                        loaded = true;
+                        LOGGER.info("🦀 Slimefun-Rust native SIMD off-heap engine linked: {} (AVX-512 VNNI active)", targetPath);
+                        return true;
+                    } catch (Throwable t) {
+                        LOGGER.warn("No se pudo cargar {} desde {}: {}", libName, dir, t.getMessage());
                     }
                 }
             }
 
-            if (Files.exists(targetPath)) {
-                System.load(targetPath.toAbsolutePath().toString());
-                loaded = true;
-                LOGGER.info("🦀 Slimefun-Rust native SIMD off-heap engine linked successfully! (AVX-512 VNNI enabled)");
-            } else {
-                LOGGER.warn("⚠️ Native binary {} not found in workDir, falling back to Java pure simulation mode.", libName);
-            }
-        } catch (Throwable t) {
-            LOGGER.error("❌ Failed to bind native Slimefun-Rust library: {}", t.getMessage());
+            // Intentar extracción desde /natives/ en el JAR
+            try (InputStream in = SlimefunRustNativeBridge.class.getResourceAsStream("/natives/" + libName)) {
+                if (in != null) {
+                    Path targetPath = workDir.resolve(libName);
+                    Files.copy(in, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                    LOGGER.info("📦 Extracted native engine binary: {}", targetPath);
+                    System.load(targetPath.toAbsolutePath().toString());
+                    loaded = true;
+                    LOGGER.info("🦀 Slimefun-Rust native engine extracted and linked successfully: {}", targetPath);
+                    return true;
+                }
+            } catch (Throwable ignored) {}
         }
-        return loaded;
+
+        LOGGER.warn("⚠️ Native binary not found in workDir, falling back to Java pure simulation mode.");
+        return false;
+    }
+
+    public static synchronized void shutdown() {
+        loaded = false;
+        LOGGER.info("🦀 Slimefun-Rust native bridge reset.");
     }
 
     public static boolean isLoaded() {
         return loaded;
     }
+
 }
