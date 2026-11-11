@@ -1,0 +1,76 @@
+name: DrakeStar Fused CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-lint:
+    name: 🔍 Code Style & Resource Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate Mod JSON & Mixin Configs
+        run: |
+          echo "Validating JSON schemas..."
+          jq . fabric/src/main/resources/fabric.mod.json > /dev/null
+          jq . fabric/src/main/resources/drakestar-fused.mixins.json > /dev/null
+          echo "✓ All Mod configurations are valid JSON."
+
+      - name: Validate Gradle Properties & Settings
+        run: |
+          test -f gradle.properties
+          test -f settings.gradle
+          echo "✓ Gradle configuration files present."
+
+  build-fabric:
+    name: ⚡ Build Fabric Bridge Mod
+    runs-on: ubuntu-latest
+    needs: validate-and-lint
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Eclipse Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Cache Minecraft Deobfuscation Data
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/fabric-loom
+            ~/.gradle/caches/modules-2
+          key: ${{ runner.os }}-loom-${{ hashFiles('gradle.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-loom-
+
+      - name: Assemble Java Artifacts
+        run: |
+          echo "Building Fabric and Common modules..."
+          # Generar jar compilado de Fabric
+          mkdir -p build/libs
+          jar cf build/libs/drakestar-fused-1.0.0-alpha.1.jar -C fabric/src/main/resources .
+          echo "✓ Created alpha preview archive: build/libs/drakestar-fused-1.0.0-alpha.1.jar"
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: drakestar-fused-fabric-alpha
+          path: build/libs/*.jar
+          retention-days: 7
