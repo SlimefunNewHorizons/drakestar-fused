@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "drakestar-fused",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "name": "DrakeStar Fused",
   "description": "Fuses Bukkit API, Purpur runtime and Slimefun-Rust into Minecraft's IntegratedServer.",
   "authors": [

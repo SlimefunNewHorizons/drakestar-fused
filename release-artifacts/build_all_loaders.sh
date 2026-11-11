@@ -4,7 +4,7 @@ set -e
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-VERSION="1.0.0-alpha.1"
+VERSION="1.0.0-alpha.2"
 MC_VER="1.21.1"
 
 echo "=================================================================="
