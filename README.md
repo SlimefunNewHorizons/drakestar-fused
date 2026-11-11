@@ -5,6 +5,7 @@
 # ⚡ DrakeStar Fused (`drakestar-fused`)
 ### *The Next-Generation Fabric × Purpur × Slimefun-Rust Bridge Mod*
 
+[![DrakeStar Fused CI](https://github.com/SlimefunNewHorizons/drakestar-fused/actions/workflows/build-test.yml/badge.svg)](https://github.com/SlimefunNewHorizons/drakestar-fused/actions/workflows/build-test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Fabric Loader](https://img.shields.io/badge/Loader-Fabric%20%7C%20Planned%20Forge%20%26%20NeoForge-c084fc.svg)](https://fabricmc.net/)
 [![Target Minecraft](https://img.shields.io/badge/Minecraft-1.21.11%20%2F%2026.2-00f0ff.svg)](https://papermc.io/)
@@ -81,11 +82,15 @@ This dual-JVM approach doubles CPU overhead, causes severe garbage collection pa
 drakestar-fused/
 ├── assets/
 │   └── drakestar-fused-banner.svg     # Official vector visual banner
+├── common/                             # Shared engine abstractions & FFM bridges
+│   └── src/main/java/com/drakescraft/fused/
+│       ├── api/FusedLifecycleListener.java
+│       └── rust/SlimefunRustNativeBridge.java
 ├── fabric/                             # Fabric Loader module (First Priority)
 │   ├── build.gradle
 │   ├── src/main/java/com/drakescraft/fused/
 │   │   ├── DrakeStarFusedClient.java
-│   │   ├── DrakeStarFusedServer.java
+│   │   ├── DrakeStarFusedMod.java
 │   │   ├── mixin/
 │   │   │   ├── IntegratedServerMixin.java
 │   │   │   └── MinecraftServerMixin.java
@@ -95,11 +100,28 @@ drakestar-fused/
 │   └── src/main/resources/
 │       ├── fabric.mod.json
 │       └── drakestar-fused.mixins.json
-├── common/                             # Shared engine abstractions & FFM bridges
-├── forge/                              # Planned Forge compatibility module
-├── neoforge/                           # Planned NeoForge compatibility module
+├── neoforge/                           # NeoForge compatibility module
+│   └── src/main/java/com/drakescraft/fused/neoforge/DrakeStarFusedNeoForge.java
+├── forge/                              # Classic Forge compatibility module
+│   └── src/main/java/com/drakescraft/fused/forge/DrakeStarFusedForge.java
+├── docs/
+│   └── NETWORKING_AND_LAN_GUIDE.md    # Critical Guide on LAN vs Essential Mod conflict
 └── README.md
 ```
+
+---
+
+## ⚠️ Networking & LAN Hosting Guidelines (Essential Mod Conflict)
+
+Please read our dedicated [Networking and LAN Guide](docs/NETWORKING_AND_LAN_GUIDE.md).
+
+> [!CAUTION]
+> **DO NOT USE ESSENTIAL MOD WITH DRAKESTAR FUSED.**  
+> Mods like **Essential Mod** or **e4mc** hijack the internal packet layer with proprietary UPnP tunnels. With over 20,000 custom Slimefun items and off-heap Rust tickers, Essential Mod drops custom payload packets, corrumpts world tile entities, and causes thread lockups.
+
+**Recommended Multiplayer Approaches:**
+* **Option A (Friends):** Use native Minecraft **Open to LAN** or connect via private virtual mesh network (**Tailscale / WireGuard**).
+* **Option B (24/7 Hosting):** Use **DrakeStar Launcher** in dedicated mode (**Purpur Slimefun LAN**) with the Blackwall telemetry console.
 
 ---
 
