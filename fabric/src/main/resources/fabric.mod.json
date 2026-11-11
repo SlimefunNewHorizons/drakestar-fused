@@ -31,6 +31,11 @@
     "minecraft": ">=1.21",
     "java": ">=21"
   },
+  "breaks": {
+    "essential": "*",
+    "essential-container": "*",
+    "essential-loader": "*"
+  },
   "suggests": {
     "iris": "*",
     "sodium": "*"
