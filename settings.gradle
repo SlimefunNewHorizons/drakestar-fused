@@ -10,4 +10,7 @@ pluginManagement {
 }
 
 rootProject.name = 'drakestar-fused'
+include 'common'
 include 'fabric'
+include 'neoforge'
+include 'forge'
