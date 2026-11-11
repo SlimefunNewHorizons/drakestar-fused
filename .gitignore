@@ -12,4 +12,5 @@ out/
 run/
 logs/
 *.log
-.DS_Store
+.deps/
+dist/
