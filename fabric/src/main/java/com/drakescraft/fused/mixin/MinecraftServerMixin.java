@@ -1,16 +1,15 @@
 package com.drakescraft.fused.mixin;
 
-import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Mixin hooked into MinecraftServer tick loop and shutdown sequence.
- * Ensures graceful shutdown of Bukkit plugins and SIMD off-heap memory buffers.
+ * Mixin hooked into MinecraftServer tick loop and shutdown sequence via targets string
+ * ensuring universal compatibility from 1.20 to 26.2 without hardcoded NMS class imports.
  */
-@Mixin(MinecraftServer.class)
+@Mixin(targets = "net.minecraft.server.MinecraftServer")
 public abstract class MinecraftServerMixin {
 
     @Inject(method = "stopServer", at = @At("HEAD"))
