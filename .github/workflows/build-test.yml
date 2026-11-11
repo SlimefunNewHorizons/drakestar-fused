@@ -60,17 +60,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-loom-
 
-      - name: Assemble Java Artifacts
+      - name: Build All Multi-Loader JARs (Fabric, NeoForge, Forge)
         run: |
-          echo "Building Fabric and Common modules..."
-          # Generar jar compilado de Fabric
-          mkdir -p build/libs
-          jar cf build/libs/drakestar-fused-1.0.0-alpha.1.jar -C fabric/src/main/resources .
-          echo "✓ Created alpha preview archive: build/libs/drakestar-fused-1.0.0-alpha.1.jar"
+          chmod +x release-artifacts/build_all_loaders.sh
+          ./release-artifacts/build_all_loaders.sh
 
-      - name: Upload Build Artifact
+      - name: Upload Multi-Loader Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: drakestar-fused-fabric-alpha
-          path: build/libs/*.jar
+          name: drakestar-fused-multi-loader-alpha
+          path: dist/*.jar
           retention-days: 7
