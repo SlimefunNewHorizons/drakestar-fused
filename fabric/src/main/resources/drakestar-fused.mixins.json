@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.drakescraft.fused.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "IntegratedServerMixin",
+    "MinecraftServerMixin"
+  ],
+  "client": [
+    "IntegratedServerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
