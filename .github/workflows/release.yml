@@ -42,5 +42,5 @@ jobs:
           sha256sum drakestar-fused-fabric-universal-*.jar > SHA256SUMS
           gh release create "${GITHUB_REF_NAME}" drakestar-fused-fabric-universal-*.jar SHA256SUMS \
             --repo "${GITHUB_REPOSITORY}" --title "DrakeStar Fused ${GITHUB_REF_NAME}" \
-            --prerelease \
-            --notes "Fabric, Minecraft 1.20 a 26.2 (un solo jar, sin mixins). Alpha: prepara el entorno del servidor integrado; el host Bukkit todavia no ejecuta plugins."
+            --latest \
+            --notes "Fabric, Minecraft 1.20 a 26.2 (un solo jar, sin mixins). Alpha: prepara el entorno del servidor integrado; el host Bukkit todavia no ejecuta plugins. Las versiones alpha.1 y alpha.2 no cargan en el juego real: usa esta."
