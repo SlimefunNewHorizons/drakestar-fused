@@ -84,7 +84,7 @@ public class FusedPluginLoader {
             return;
         }
 
-        LOGGER.info("✨ [FusedPluginLoader] Carpeta plugins/ vacía. Iniciando aprovisionamiento de StarSuites...");
+        LOGGER.info("[FusedPluginLoader] Carpeta plugins/ vacía: se buscan suites incluidas en el jar (descarga remota desactivada).");
 
         for (String suiteName : DEFAULT_SUITES) {
             Path targetFile = pluginsDir.resolve(suiteName);
@@ -104,8 +104,11 @@ public class FusedPluginLoader {
                 LOGGER.warn("No se pudo extraer JiJ para {}: {}", suiteName, e.getMessage());
             }
 
-            // B. Si no viene en el bundle interno, descargar desde infraestructura de Star
-            downloadSuiteFallback(suiteName, targetFile);
+            // B. Descarga remota solo si se pide con -Ddrakestar.fused.provision=true: las suites no tienen checksum y,
+            // mientras el host Bukkit no las ejecute, descargarlas retrasaria el arranque del mundo sin beneficio.
+            if (Boolean.getBoolean("drakestar.fused.provision")) {
+                downloadSuiteFallback(suiteName, targetFile);
+            }
         }
     }
 

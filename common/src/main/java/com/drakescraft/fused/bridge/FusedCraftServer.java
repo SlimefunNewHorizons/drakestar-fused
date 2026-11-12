@@ -99,7 +99,7 @@ public class FusedCraftServer {
                 }
             }
 
-            LOGGER.info("🏛 Inicializando FusedCraftServer sobre IntegratedServer...");
+            LOGGER.info("Inicializando FusedCraftServer sobre el servidor integrado...");
             LOGGER.info("⚡ Vinculando acelerador Slimefun-Rust (SIMD Off-Heap FFM ABI 1)...");
             
             // Escaneo e inventariado de plugins instalados
@@ -125,7 +125,7 @@ public class FusedCraftServer {
                 }
             }
 
-            LOGGER.info("✅ FusedCraftServer listo. Plugins en ejecución en la misma memoria del cliente (Single JVM).");
+            LOGGER.info("FusedCraftServer listo (alpha): {} plugin(s) detectados; el host Bukkit todavía no los ejecuta.", plugins.size());
         } catch (Exception e) {
             LOGGER.error("❌ Error al inicializar FusedCraftServer: ", e);
             FusedCrashHandler.handleCrash("FusedCraftServer.init", e, gameDir.resolve("logs/latest.log"));

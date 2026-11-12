@@ -1,15 +1,17 @@
 package com.drakescraft.fused;
 
+import net.fabricmc.api.ClientModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Entrypoint de cliente para integración de telemetría y HUD.
+ * Entrypoint de cliente (solo registra que Fused esta activo en el cliente).
  */
-public class DrakeStarFusedClient {
+public class DrakeStarFusedClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("drakestar-fused-client");
 
+    @Override
     public void onInitializeClient() {
-        LOGGER.info("🎮 DrakeStar Fused Client activo. Compatible con Shaders (Iris/Sodium) y canal LAN.");
+        LOGGER.info("DrakeStar Fused activo en el cliente.");
     }
 }

@@ -43,7 +43,7 @@ public class SlimefunRustNativeBridge {
                     try {
                         System.load(targetPath.toAbsolutePath().toString());
                         loaded = true;
-                        LOGGER.info("🦀 Slimefun-Rust native SIMD off-heap engine linked: {} (AVX-512 VNNI active)", targetPath);
+                        LOGGER.info("🦀 Slimefun-Rust native SIMD off-heap engine linked: {}", targetPath);
                         return true;
                     } catch (Throwable t) {
                         LOGGER.warn("No se pudo cargar {} desde {}: {}", libName, dir, t.getMessage());

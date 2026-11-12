@@ -1,57 +1,67 @@
+// Un solo .jar para Minecraft 1.20 a 26.2. No usa Loom ni mixins: el mod solo toca Fabric Loader y los eventos de
+// Fabric API (fabric-lifecycle-events-v1), que no dependen de los nombres internos de Minecraft. Por eso no hay que
+// remapear nada y el mismo archivo sirve en versiones ofuscadas (intermediary) y en las no ofuscadas (26.x).
 plugins {
-    id 'fabric-loom' version '1.8-SNAPSHOT'
-    id 'maven-publish'
+    id 'java'
 }
 
 version = project.mod_version
 group = project.maven_group
-
-base {
-    archivesName = project.archives_base_name
-}
+base.archivesName = 'drakestar-fused-fabric-universal'
 
 repositories {
     mavenCentral()
     maven {
-        name = "Fabric"
-        url = "https://maven.fabricmc.net/"
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net/'
+    }
+}
+
+sourceSets {
+    // MinecraftServer vacio: solo para compilar (no se empaqueta; en ejecucion lo pone Minecraft).
+    stubs {
+        java.srcDir 'stubs'
+    }
+    main {
+        java.srcDir '../common/src/main/java'   // el nucleo comun se empaqueta dentro del mismo .jar
     }
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    // Se compila contra lo MAS VIEJO soportado (Fabric API 0.83.0+1.20) para no usar nada que falte en 1.20.
+    compileOnly sourceSets.stubs.output
+    compileOnly('net.fabricmc:fabric-loader:0.14.21') { transitive = false }
+    compileOnly('net.fabricmc.fabric-api:fabric-api-base:0.4.29+b04edc7a27') { transitive = false }
+    compileOnly('net.fabricmc.fabric-api:fabric-lifecycle-events-v1:2.2.20+b3afc78b27') { transitive = false }
+    compileOnly 'org.slf4j:slf4j-api:2.0.9'   // lo trae Minecraft en tiempo de ejecucion
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17            // corre en Java 17 (1.20.x), 21 (1.21.x) y 25 (26.x)
+    options.compilerArgs += ['-Xlint:all', '-Xlint:-processing']
 }
 
 processResources {
-    inputs.property "version", project.version
-    filteringCharset "UTF-8"
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
+    inputs.property 'version', project.version
+    filteringCharset = 'UTF-8'
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
     }
-}
-
-def targetJavaVersion = 21
-tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release.set(targetJavaVersion)
+    from('../assets') {
+        include 'drakestar-fused-icon.png'
+        into 'assets'
     }
-}
-
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-    withSourcesJar()
 }
 
 jar {
-    from("LICENSE") {
+    from('../LICENSE') {
         rename { "${it}_${project.base.archivesName.get()}" }
+    }
+    manifest {
+        attributes(
+            'Implementation-Title': 'DrakeStar Fused',
+            'Implementation-Version': project.version
+        )
     }
 }

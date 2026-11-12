@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "id": "drakestar-fused",
-  "version": "1.0.0-alpha.2",
+  "version": "${version}",
   "name": "DrakeStar Fused",
-  "description": "Fuses Bukkit API, Purpur runtime and Slimefun-Rust into Minecraft's IntegratedServer.",
+  "description": "Puente Bukkit/Slimefun para el servidor integrado de Minecraft (alpha). Funciona de 1.20 a 26.2.",
   "authors": [
-    "JackStar6677-1"
+    "JackStar6677"
   ],
   "contact": {
     "homepage": "https://web.drakescraft.cl",
@@ -23,12 +23,10 @@
       "com.drakescraft.fused.DrakeStarFusedClient"
     ]
   },
-  "mixins": [
-    "drakestar-fused.mixins.json"
-  ],
   "depends": {
-    "fabricloader": ">=0.15.0",
-    "minecraft": ">=1.20 <=26.2",
+    "fabricloader": ">=0.14.21",
+    "fabric-lifecycle-events-v1": "*",
+    "minecraft": ">=1.20 <26.3",
     "java": ">=17"
   },
   "breaks": {

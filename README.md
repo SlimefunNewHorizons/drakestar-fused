@@ -18,6 +18,16 @@
 
 ---
 
+## Estado real / Actual status (alpha.3)
+
+- **Funciona hoy**: un solo `.jar` de Fabric (`drakestar-fused-fabric-universal-<version>.jar`) para **Minecraft 1.20 a 26.2**, sin mixins (usa los eventos `SERVER_STARTING/STOPPING` de Fabric API). Probado con el launcher DrakeStar en 1.20.1, 1.21.1, 1.21.11, 26.1 y 26.2; en 1.21.1 se enganchó al crear un mundo en solitario.
+- **Aun no**: el host Bukkit/Purpur dentro del servidor integrado **todavia no ejecuta plugins**. Hoy prepara `plugins/`, detecta jars y enlaza el puente Rust si existe. Lo demas de este README es el objetivo de diseño.
+- Las releases `v1.0.0-alpha.1` y `alpha.2` usaban mixins sin remapear y **fallan al arrancar** en el juego real: no usarlas.
+- Para publicar: subir `mod_version` en `gradle.properties` y empujar la etiqueta `vX.Y.Z`; el flujo compila, valida el jar (`release-artifacts/check_jar.py`) y crea la release.
+- Sin descargas remotas ni navegador automatico: `-Ddrakestar.fused.provision=true` activa la descarga de suites; `-Ddrakestar.fused.openIssue=true` abre el enlace de reporte de fallos.
+
+---
+
 ## 🏛️ Executive Summary
 
 **DrakeStar Fused** is an open-source bridge mod engineered for Minecraft Java Edition. It solves the historical dilemma of running enterprise Bukkit plugins (specifically **Slimefun v11** and the **StarSuites** 20,000+ technical item matrix) alongside modern client-side performance and aesthetic modpacks (such as **Iris Shaders**, **Sodium**, **Distant Horizons**, and **Sodium-Extra**).
@@ -161,6 +171,6 @@ En laptops y computadores personales, tener dos instancias completas de Java dev
 
 ## 📜 Licencia & Créditos Soberanos
 
-- **Autor & Arquitecto:** JackStar6677-1 (`pablo.elias.miranda.292003@gmail.com`) — Arquitecto Jefe de DrakesCraft & Star.
+- **Autor & Arquitecto:** JackStar6677 — Arquitecto Jefe de DrakesCraft & Star.
 - **Organización Upstream:** [SlimefunNewHorizons](https://github.com/SlimefunNewHorizons)
 - **Licencia:** MIT License. Código abierto para la comunidad.
