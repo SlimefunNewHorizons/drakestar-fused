@@ -3,14 +3,13 @@
 <img src="./assets/drakestar-fused-banner.svg" alt="DrakeStar Fused Banner" width="100%" />
 
 # ⚡ DrakeStar Fused (`drakestar-fused`)
-### *The Next-Generation Fabric × Purpur × Slimefun-Rust Bridge Mod*
+### *Fabric bridge mod (alpha) — plugin host in the integrated server is a design goal, not implemented*
 
 [![DrakeStar Fused CI](https://github.com/SlimefunNewHorizons/drakestar-fused/actions/workflows/build-test.yml/badge.svg)](https://github.com/SlimefunNewHorizons/drakestar-fused/actions/workflows/build-test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Fabric Loader](https://img.shields.io/badge/Loader-Fabric%20%7C%20Planned%20Forge%20%26%20NeoForge-c084fc.svg)](https://fabricmc.net/)
-[![Target Minecraft](https://img.shields.io/badge/Minecraft-1.21.11%20%2F%2026.2-00f0ff.svg)](https://papermc.io/)
-[![Slimefun](https://img.shields.io/badge/StarSuites-20%2C000%2B%20Items-f5b942.svg)](https://github.com/SlimefunNewHorizons)
-[![Architecture](https://img.shields.io/badge/Engine-Single--Instance%20IntegratedServer-10b981.svg)](https://github.com/SlimefunNewHorizons)
+[![Fabric Loader](https://img.shields.io/badge/Loader-Fabric%20(Forge%20%2F%20NeoForge%3A%20planned)-c084fc.svg)](https://fabricmc.net/)
+[![Target Minecraft](https://img.shields.io/badge/Minecraft-1.20%20to%2026.2%20(Fabric%20only)-00f0ff.svg)](https://papermc.io/)
+[![Architecture](https://img.shields.io/badge/Status-alpha%20%C2%B7%20no%20plugin%20host%20yet-f59e0b.svg)](https://github.com/SlimefunNewHorizons)
 
 **English** · [Español](#-visión-arquitectónica-en-español)
 
@@ -29,7 +28,12 @@
 
 ---
 
-## 🏛️ Executive Summary
+> [!IMPORTANT]
+> **Todo lo que sigue desde aquí hasta «Networking» es la VISIÓN / DISEÑO OBJETIVO, no el estado real.** Hoy (alpha.3) el mod **no ejecuta plugins Bukkit**, no hay `CraftServer`, no se verificó compatibilidad con shaders/mods de cliente ni rendimiento. Para jugar Slimefun el camino soportado es el **servidor local gestionado del [DrakeStar Launcher](https://github.com/SlimefunNewHorizons/DrakeStar-Launcher)** (arranca el DrakesPurpur real en segundo plano y entra solo). Ver «Estado real» arriba.
+>
+> *Everything below up to «Networking» is the design vision, not the current state: alpha.3 does not run Bukkit plugins and nothing here (single-JVM host, CraftServer, shader/mod compatibility, Rust off-heap tickers inside the client) has been verified.*
+
+## 🏛️ Executive Summary — design vision (not implemented)
 
 **DrakeStar Fused** is an open-source bridge mod engineered for Minecraft Java Edition. It solves the historical dilemma of running enterprise Bukkit plugins (specifically **Slimefun v11** and the **StarSuites** 20,000+ technical item matrix) alongside modern client-side performance and aesthetic modpacks (such as **Iris Shaders**, **Sodium**, **Distant Horizons**, and **Sodium-Extra**).
 
@@ -43,7 +47,7 @@ This dual-JVM approach doubles CPU overhead, causes severe garbage collection pa
 
 ---
 
-## 🔮 Key Architectural Pillars
+## 🔮 Key Architectural Pillars — target design (not implemented)
 
 ```
 +---------------------------------------------------------------------------------+
@@ -82,8 +86,8 @@ This dual-JVM approach doubles CPU overhead, causes severe garbage collection pa
 3. **Rust SIMD Off-Heap Energy & Machine Tickers**:
    - Direct JNI / Java 25 Foreign Function & Memory (FFM) binding to `libdrakes_hybrid_ffi.so`.
    - Massive energy networks (Networks V6, Infinity Expansion, Quantum Storage) calculate off-heap with AVX-512 VNNI instructions without triggering Java GC pauses.
-4. **Shader & Client Mod Harmony**:
-   - 100% compatible with Fabric client mods: Sodium, Iris Shaders, Fabric Language Kotlin, Roughly Enough Items (REI), and minimaps.
+4. **Shader & Client Mod Harmony** *(goal; not verified)*:
+   - Intended to coexist with Fabric client mods (Sodium, Iris, REI, minimaps). Only the launcher's performance set has been launched alongside Fused alpha.3.
 
 ---
 
@@ -132,7 +136,7 @@ Please read our dedicated [Networking and LAN Guide](docs/NETWORKING_AND_LAN_GUI
 
 **Recommended Multiplayer Approaches:**
 * **Option A (Friends):** Use native Minecraft **Open to LAN** or connect via private virtual mesh network (**Tailscale / WireGuard**).
-* **Option B (24/7 Hosting):** Use **DrakeStar Launcher** in dedicated mode (**Purpur Slimefun LAN**) with the Blackwall telemetry console.
+* **Option B (Slimefun today):** use the **DrakeStar Launcher** «Slimefun solo / LAN» instance: it runs the DrakesPurpur server locally and joins it (see the launcher's `docs/LAUNCHER.md`).
 
 ---
 
@@ -151,19 +155,19 @@ export GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx3584m -Dorg.gradle.parallel=true -D
 
 ---
 
-## 🇪🇸 Visión Arquitectónica en Español
+## 🇪🇸 Visión Arquitectónica en Español — diseño objetivo, no estado real
 
 ### ¿Por qué existe DrakeStar Fused?
 El ecosistema de **Slimefun** enriquecido con **StarSuites** contiene más de 20,000 ítems, máquinas cuánticas, reactores nucleares, bio-ingeniería genética y redes de energía. Hasta la fecha, jugarlo requería montar un servidor Paper/Purpur dedicado y luego abrir un cliente de Minecraft por separado para conectarse a `localhost`.
 
 En laptops y computadores personales, tener dos instancias completas de Java devora entre 8 y 14 GB de memoria RAM y satura la CPU con la recolección de basura (GC).
 
-**DrakeStar Fused une los tres mundos:**
+**Objetivo de diseño (no implementado en alpha.3): DrakeStar Fused uniría los tres mundos:**
 1. **Fabric Loader**: Te permite cargar tus mods favoritos de optimización (Sodium, Iris, Lithium, Indium) y shaders cinematográficos.
 2. **Purpur / Bukkit**: Inyecta en el servidor interno (`IntegratedServer`) la capacidad de cargar plugins Spigot/Paper/Purpur sin requerir una segunda ventana o servidor externo.
 3. **Rust Off-Heap SIMD (`Slimefun-Rust`)**: Conecta el cálculo de redes eléctricas y almacenamiento masivo a librerías nativas en Rust compiladas con AVX-512, liberando a Java de cualquier micro-lag o caída de TPS.
 
-### Roadmap de Soporte Multi-Loader:
+### Roadmap de Soporte Multi-Loader (planificado; hoy solo existe el jar de Fabric):
 1. 🚀 **Módulo 1 (Fabric Loader):** Implementación principal y más liviana.
 2. 🛠️ **Módulo 2 (NeoForge Loader):** Para usuarios de modpacks modernos basados en NeoForge.
 3. ⚙️ **Módulo 3 (Forge Clásico):** Soporte de retrocompatibilidad para packs tradicionales.
