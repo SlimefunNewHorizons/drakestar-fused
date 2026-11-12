@@ -21,6 +21,7 @@
 ## Estado real / Actual status (alpha.3)
 
 - **Funciona hoy**: un solo `.jar` de Fabric (`drakestar-fused-fabric-universal-<version>.jar`) para **Minecraft 1.20 a 26.2**, sin mixins (usa los eventos `SERVER_STARTING/STOPPING` de Fabric API). Probado con el launcher DrakeStar en 1.20.1, 1.21.1, 1.21.11, 26.1 y 26.2; en 1.21.1 se enganchó al crear un mundo en solitario.
+- **Decisión (2026-11-12)**: Fused **no** es el camino para jugar Slimefun. Un host Bukkit dentro del servidor integrado no cubre Fabric+Forge+NeoForge de 1.20 a 26.2 ni las optimizaciones del núcleo de DrakesPurpur (Cardboard: solo Fabric 1.21.x y Slimefun falla en las cabezas de jugador; Arclight: hasta 1.21.1). El launcher DrakeStar arranca el DrakesPurpur real en segundo plano («Slimefun en solitario / LAN»). Fused queda como mod opcional en alfa.
 - **Aun no**: el host Bukkit/Purpur dentro del servidor integrado **todavia no ejecuta plugins**. Hoy prepara `plugins/`, detecta jars y enlaza el puente Rust si existe. Lo demas de este README es el objetivo de diseño.
 - Las releases `v1.0.0-alpha.1` y `alpha.2` usaban mixins sin remapear y **fallan al arrancar** en el juego real: no usarlas.
 - Para publicar: subir `mod_version` en `gradle.properties` y empujar la etiqueta `vX.Y.Z`; el flujo compila, valida el jar (`release-artifacts/check_jar.py`) y crea la release.
