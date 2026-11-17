@@ -1,0 +1,433 @@
+{
+  "artifact": "purpur-paperclip-26.2.build.140-stable.jar",
+  "artifact_sha256": "750811c856cb0e36a9b117598d7d57834b53779f5d17d84ca04f47e747f00145",
+  "paperclip_versions": "fb075e60df8eb6e5512a78646e643dc76817bdb8fc753c4a85020e055e80a1d6\t26.2\t26.2/purpur-26.2.jar",
+  "java": "openjdk version \"25.0.5.0.3\" 2026-10-24\nOpenJDK Runtime Environment (build 25.0.5.0.3+1-3-24.04.1-Ubuntu)\nOpenJDK 64-Bit Server VM (build 25.0.5.0.3+1-3-24.04.1-Ubuntu, mixed mode, sharing)",
+  "same_jvm": "Paperclip invoked reflectively by Embed, no server subprocess",
+  "mode": "baseline",
+  "host_pid": 2990518,
+  "loopback_port": 50151,
+  "ready": true,
+  "stop_sent": true,
+  "stopping_logged": true,
+  "host_survived_stop": false,
+  "host_shutdown_logged": false,
+  "host_shutdown_marker": true,
+  "exit_code": 0,
+  "timed_out": false,
+  "forced_termination": false,
+  "startup_failed": false,
+  "seconds": 72.8,
+  "peak_rss_kib": 895968,
+  "host_files_created": [
+    ".paper/console_history",
+    ".paper/version_history.json",
+    "banned-ips.json",
+    "banned-players.json",
+    "drakes-data/bundled-state.yml",
+    "drakes-data/kernel.db",
+    "drakes-data/perf.yml",
+    "drakes-data/saori.yml",
+    "drakes-data/suites.yml",
+    "drakes_modalities.db",
+    "eula.txt",
+    "logs/latest.log",
+    "ops.json",
+    "plugins/DrakesBio-v2.0.0-26.X-SNAPSHOT.jar",
+    "plugins/DrakesCombat-v2.0.0-26.X-SNAPSHOT.jar",
+    "plugins/DrakesCore-v2.0.0-26.X-SNAPSHOT.jar",
+    "plugins/DrakesGenerators-v2.0.0-26.X-SNAPSHOT.jar",
+    "plugins/DrakesMagic-v2.0.0-26.X-SNAPSHOT.jar",
+    "plugins/DrakesServer-v2.0.0-26.X-SNAPSHOT.jar",
+    "plugins/DrakesTech-v2.0.0-26.X-SNAPSHOT.jar",
+    "plugins/DrakesUtility-v2.0.0-26.X-SNAPSHOT.jar",
+    "plugins/drakes-multiverse.jar",
+    "whitelist.json"
+  ],
+  "host_files_modified": [],
+  "host_files_deleted": [],
+  "host_write_events": [
+    {
+      "mask": "0x40000100",
+      "name": "logs"
+    },
+    {
+      "mask": "0x100",
+      "name": "eula.txt"
+    },
+    {
+      "mask": "0x2",
+      "name": "eula.txt"
+    },
+    {
+      "mask": "0x8",
+      "name": "eula.txt"
+    },
+    {
+      "mask": "0x40000100",
+      "name": ".paper"
+    },
+    {
+      "mask": "0x40000100",
+      "name": "plugins"
+    },
+    {
+      "mask": "0x40000100",
+      "name": "drakes-data"
+    },
+    {
+      "mask": "0x100",
+      "name": "drakes_modalities.db"
+    },
+    {
+      "mask": "0x8",
+      "name": "drakes_modalities.db"
+    },
+    {
+      "mask": "0x200",
+      "name": "drakes_modalities.db"
+    },
+    {
+      "mask": "0x100",
+      "name": "drakes_modalities.db"
+    },
+    {
+      "mask": "0x100",
+      "name": "drakes_modalities.db-journal"
+    },
+    {
+      "mask": "0x2",
+      "name": "drakes_modalities.db-journal"
+    },
+    {
+      "mask": "0x2",
+      "name": "drakes_modalities.db-journal"
+    },
+    {
+      "mask": "0x2",
+      "name": "drakes_modalities.db"
+    },
+    {
+      "mask": "0x8",
+      "name": "drakes_modalities.db-journal"
+    },
+    {
+      "mask": "0x200",
+      "name": "drakes_modalities.db-journal"
+    },
+    {
+      "mask": "0x100",
+      "name": "drakes_modalities.db-wal"
+    },
+    {
+      "mask": "0x100",
+      "name": "drakes_modalities.db-shm"
+    },
+    {
+      "mask": "0x2",
+      "name": "drakes_modalities.db-shm"
+    },
+    {
+      "mask": "0x2",
+      "name": "drakes_modalities.db-wal"
+    },
+    {
+      "mask": "0x2",
+      "name": "drakes_modalities.db"
+    },
+    {
+      "mask": "0x200",
+      "name": "drakes_modalities.db-shm"
+    },
+    {
+      "mask": "0x8",
+      "name": "drakes_modalities.db-shm"
+    },
+    {
+      "mask": "0x8",
+      "name": "drakes_modalities.db-wal"
+    },
+    {
+      "mask": "0x200",
+      "name": "drakes_modalities.db-wal"
+    },
+    {
+      "mask": "0x8",
+      "name": "drakes_modalities.db"
+    },
+    {
+      "mask": "0x40000100",
+      "name": "backups"
+    },
+    {
+      "mask": "0x100",
+      "name": "banned-players.json"
+    },
+    {
+      "mask": "0x2",
+      "name": "banned-players.json"
+    },
+    {
+      "mask": "0x8",
+      "name": "banned-players.json"
+    },
+    {
+      "mask": "0x100",
+      "name": "banned-ips.json"
+    },
+    {
+      "mask": "0x2",
+      "name": "banned-ips.json"
+    },
+    {
+      "mask": "0x8",
+      "name": "banned-ips.json"
+    },
+    {
+      "mask": "0x100",
+      "name": "ops.json"
+    },
+    {
+      "mask": "0x2",
+      "name": "ops.json"
+    },
+    {
+      "mask": "0x8",
+      "name": "ops.json"
+    },
+    {
+      "mask": "0x100",
+      "name": "whitelist.json"
+    },
+    {
+      "mask": "0x2",
+      "name": "whitelist.json"
+    },
+    {
+      "mask": "0x8",
+      "name": "whitelist.json"
+    }
+  ],
+  "host_before": {
+    "sentinel.txt": "b03201d566150c266360a1f1ef3958672252547292adac6b8945cb8005819e80"
+  },
+  "host_after": {
+    ".paper/console_history": "3bb1b8e087992606b5c2382e7c4ebe9ba9fb834319e0b79032bf92092790fc8a",
+    ".paper/version_history.json": "93d6e04c17aab39aa2355cf0f206b33ebecbf955e7890c6d6fd4cbc9313476ae",
+    "banned-ips.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "banned-players.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "drakes-data/bundled-state.yml": "c127981f2fb59805ee922b7fa115cda1310c3eb4a818400471c1307264318d98",
+    "drakes-data/kernel.db": "0e80d5b99d61f9999a1aaf677b6b026fafdfff291f1e5a88d0ce4f3e97e36d41",
+    "drakes-data/perf.yml": "7d591e1be7e3e289d8dd30eed7aa763826064468c75d12b2761690d5a38ca038",
+    "drakes-data/saori.yml": "d8696f12f2af4cf8c782a6f4c57b5d76ad8183e8a1d4ac136e50ececfb8874ef",
+    "drakes-data/suites.yml": "2bc884a2ddb37b3939e79a604d5d2ed384cda74efe0d333293140927acc1ed38",
+    "drakes_modalities.db": "3bd2009f21838a759ffa63d6fb248eea9d003e4fae5d1d36e49e22ab0798d765",
+    "eula.txt": "57a40bce258ab091666a63accdcffedbe8ffac607b27505056e0502d8e02c92e",
+    "logs/latest.log": "d8754d7afd43aa2b2c2deef1b1a4cb143a1f1358042c6bb215403c1608ae0b2e",
+    "ops.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "plugins/DrakesBio-v2.0.0-26.X-SNAPSHOT.jar": "50af4ae961426ab02e5f3c74bd79d26cb89bf415c97ed4fa0a18bf70ab2abead",
+    "plugins/DrakesCombat-v2.0.0-26.X-SNAPSHOT.jar": "f181c1912b8ba445b2a8ae194ba5e7938d82e2c402178400407ca527fec1e68f",
+    "plugins/DrakesCore-v2.0.0-26.X-SNAPSHOT.jar": "ef7dbc20f1d0a4a81e18d7fb8c020bf35cfba6d15887abe4555f39116cd19e38",
+    "plugins/DrakesGenerators-v2.0.0-26.X-SNAPSHOT.jar": "28e9b9e4f07f203b9b3a380011c1db89f0fc6d68dfcacde41a858154cabde03a",
+    "plugins/DrakesMagic-v2.0.0-26.X-SNAPSHOT.jar": "cd067a0b3863e9ce906c245dc4ce84a733ee8f01d4fd4ed24e7e207957aedd19",
+    "plugins/DrakesServer-v2.0.0-26.X-SNAPSHOT.jar": "2d35b03606996561b57a35e026c4142408e5fae794f0acc690a510c0901debe0",
+    "plugins/DrakesTech-v2.0.0-26.X-SNAPSHOT.jar": "05cc298351f8e345061cad6ade130bd6efb551c6d8d7a51854c0e39a0e78b210",
+    "plugins/DrakesUtility-v2.0.0-26.X-SNAPSHOT.jar": "84aa65ccedcabba2cb7219bc43132b553dc4a172be3706031c64d8af65eb5c45",
+    "plugins/drakes-multiverse.jar": "f3a7fd3eda9e1f4d5c504c83088e3e6faa3cd8dedeaad08e2f970386005479f9",
+    "sentinel.txt": "b03201d566150c266360a1f1ef3958672252547292adac6b8945cb8005819e80",
+    "whitelist.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "nio_cwd_unchanged": true,
+  "host_minecraft_absent": true,
+  "probe_sources_sha256": {
+    "Embed.java": "90296ac96eb0bdfae1c18142bcca866b8b875c03c6f027ceb213e5ed645e676d",
+    "SpikeHooks.java": "669c1df233c9775b790c95fe5d9414f897df1f9796db5c92f77fe94daa43e1d4",
+    "SpikeLoader.java": "48ab18b48f411f028f5ab23eb74aacc8ff588c6cbb9bc3e6a45546547b871e7b",
+    "probe.py": "79199084b49f4ad1b533c0785c539f98a9ea758cfa2e83fa88cddb707196db05"
+  },
+  "server_files": [
+    "bukkit.yml",
+    "cache/mojang_26.2.jar",
+    "commands.yml",
+    "config/paper-global.yml",
+    "config/paper-world-defaults.yml",
+    "eula.txt",
+    "host-shutdown.txt",
+    "libraries/at/yawk/lz4/lz4-java/1.11.2/lz4-java-1.11.2.jar",
+    "libraries/ca/spottedleaf/leafpile/1.2.0/leafpile-1.2.0.jar",
+    "libraries/com/azure/azure-json/1.4.0/azure-json-1.4.0.jar",
+    "libraries/com/github/luben/zstd-jni/1.5.7-15/zstd-jni-1.5.7-15.jar",
+    "libraries/com/github/oshi/oshi-core/6.9.0/oshi-core-6.9.0.jar",
+    "libraries/com/google/auto/service/auto-service-annotations/1.1.1/auto-service-annotations-1.1.1.jar",
+    "libraries/com/google/code/gson/gson/2.14.0/gson-2.14.0.jar",
+    "libraries/com/google/errorprone/error_prone_annotations/2.48.0/error_prone_annotations-2.48.0.jar",
+    "libraries/com/google/guava/failureaccess/1.0.3/failureaccess-1.0.3.jar",
+    "libraries/com/google/guava/guava/33.6.0-jre/guava-33.6.0-jre.jar",
+    "libraries/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+    "libraries/com/google/j2objc/j2objc-annotations/3.1/j2objc-annotations-3.1.jar",
+    "libraries/com/google/protobuf/protobuf-java/4.29.0/protobuf-java-4.29.0.jar",
+    "libraries/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar",
+    "libraries/com/lmax/disruptor/3.4.4/disruptor-3.4.4.jar",
+    "libraries/com/microsoft/azure/msal4j/1.24.1/msal4j-1.24.1.jar",
+    "libraries/com/mojang/authlib/9.0.75/authlib-9.0.75.jar",
+    "libraries/com/mojang/brigadier/1.3.10/brigadier-1.3.10.jar",
+    "libraries/com/mojang/datafixerupper/10.0.21/datafixerupper-10.0.21.jar",
+    "libraries/com/mojang/jtracy/1.0.37/jtracy-1.0.37.jar",
+    "libraries/com/mojang/logging/1.7.12/logging-1.7.12.jar",
+    "libraries/com/mysql/mysql-connector-j/9.2.0/mysql-connector-j-9.2.0.jar",
+    "libraries/com/velocitypowered/velocity-native/4.1.0/velocity-native-4.1.0.jar",
+    "libraries/commons-codec/commons-codec/1.16.0/commons-codec-1.16.0.jar",
+    "libraries/commons-io/commons-io/2.20.0/commons-io-2.20.0.jar",
+    "libraries/commons-lang/commons-lang/2.6/commons-lang-2.6.jar",
+    "libraries/dev/omega24/upnp4j/1.0/upnp4j-1.0.jar",
+    "libraries/io/leangen/geantyref/geantyref/1.3.16/geantyref-1.3.16.jar",
+    "libraries/io/netty/netty-buffer/4.2.15.Final/netty-buffer-4.2.15.Final.jar",
+    "libraries/io/netty/netty-codec-base/4.2.15.Final/netty-codec-base-4.2.15.Final.jar",
+    "libraries/io/netty/netty-codec-compression/4.2.15.Final/netty-codec-compression-4.2.15.Final.jar",
+    "libraries/io/netty/netty-codec-haproxy/4.2.15.Final/netty-codec-haproxy-4.2.15.Final.jar",
+    "libraries/io/netty/netty-codec-http/4.2.15.Final/netty-codec-http-4.2.15.Final.jar",
+    "libraries/io/netty/netty-common/4.2.15.Final/netty-common-4.2.15.Final.jar",
+    "libraries/io/netty/netty-handler/4.2.15.Final/netty-handler-4.2.15.Final.jar",
+    "libraries/io/netty/netty-resolver/4.2.15.Final/netty-resolver-4.2.15.Final.jar",
+    "libraries/io/netty/netty-transport-classes-epoll/4.2.15.Final/netty-transport-classes-epoll-4.2.15.Final.jar",
+    "libraries/io/netty/netty-transport-classes-kqueue/4.2.15.Final/netty-transport-classes-kqueue-4.2.15.Final.jar",
+    "libraries/io/netty/netty-transport-native-epoll/4.2.15.Final/netty-transport-native-epoll-4.2.15.Final-linux-aarch_64.jar",
+    "libraries/io/netty/netty-transport-native-epoll/4.2.15.Final/netty-transport-native-epoll-4.2.15.Final-linux-x86_64.jar",
+    "libraries/io/netty/netty-transport-native-kqueue/4.2.15.Final/netty-transport-native-kqueue-4.2.15.Final-osx-aarch_64.jar",
+    "libraries/io/netty/netty-transport-native-kqueue/4.2.15.Final/netty-transport-native-kqueue-4.2.15.Final-osx-x86_64.jar",
+    "libraries/io/netty/netty-transport-native-unix-common/4.2.15.Final/netty-transport-native-unix-common-4.2.15.Final.jar",
+    "libraries/io/netty/netty-transport/4.2.15.Final/netty-transport-4.2.15.Final.jar",
+    "libraries/it/unimi/dsi/fastutil/8.5.19/fastutil-8.5.19.jar",
+    "libraries/javax/inject/javax.inject/1/javax.inject-1.jar",
+    "libraries/me/lucko/spark-api/0.1-20240720.200737-2/spark-api-0.1-20240720.200737-2.jar",
+    "libraries/me/lucko/spark-paper/1.10.180/spark-paper-1.10.180.jar",
+    "libraries/net/java/dev/jna/jna-platform/5.17.0/jna-platform-5.17.0.jar",
+    "libraries/net/java/dev/jna/jna/5.19.1/jna-5.19.1.jar",
+    "libraries/net/kyori/adventure-api/5.2.0/adventure-api-5.2.0.jar",
+    "libraries/net/kyori/adventure-key/5.2.0/adventure-key-5.2.0.jar",
+    "libraries/net/kyori/adventure-text-logger-slf4j/5.2.0/adventure-text-logger-slf4j-5.2.0.jar",
+    "libraries/net/kyori/adventure-text-minimessage/5.2.0/adventure-text-minimessage-5.2.0.jar",
+    "libraries/net/kyori/adventure-text-serializer-ansi/5.2.0/adventure-text-serializer-ansi-5.2.0.jar",
+    "libraries/net/kyori/adventure-text-serializer-commons/5.2.0/adventure-text-serializer-commons-5.2.0.jar",
+    "libraries/net/kyori/adventure-text-serializer-gson/5.2.0/adventure-text-serializer-gson-5.2.0.jar",
+    "libraries/net/kyori/adventure-text-serializer-json/5.2.0/adventure-text-serializer-json-5.2.0.jar",
+    "libraries/net/kyori/adventure-text-serializer-legacy/5.2.0/adventure-text-serializer-legacy-5.2.0.jar",
+    "libraries/net/kyori/adventure-text-serializer-plain/5.2.0/adventure-text-serializer-plain-5.2.0.jar",
+    "libraries/net/kyori/ansi/1.1.1/ansi-1.1.1.jar",
+    "libraries/net/kyori/option/1.1.0/option-1.1.0.jar",
+    "libraries/net/md-5/bungeecord-chat/1.21-R0.2-deprecated+build.21/bungeecord-chat-1.21-R0.2-deprecated+build.21.jar",
+    "libraries/net/minecrell/terminalconsoleappender/1.3.0/terminalconsoleappender-1.3.0.jar",
+    "libraries/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar",
+    "libraries/org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar",
+    "libraries/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar",
+    "libraries/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar",
+    "libraries/org/apache/logging/log4j/log4j-api/2.26.0/log4j-api-2.26.0.jar",
+    "libraries/org/apache/logging/log4j/log4j-core/2.26.0/log4j-core-2.26.0.jar",
+    "libraries/org/apache/logging/log4j/log4j-iostreams/2.26.0/log4j-iostreams-2.26.0.jar",
+    "libraries/org/apache/logging/log4j/log4j-slf4j2-impl/2.26.0/log4j-slf4j2-impl-2.26.0.jar",
+    "libraries/org/apache/maven/maven-artifact/3.9.6/maven-artifact-3.9.6.jar",
+    "libraries/org/apache/maven/maven-builder-support/3.9.6/maven-builder-support-3.9.6.jar",
+    "libraries/org/apache/maven/maven-model-builder/3.9.6/maven-model-builder-3.9.6.jar",
+    "libraries/org/apache/maven/maven-model/3.9.6/maven-model-3.9.6.jar",
+    "libraries/org/apache/maven/maven-repository-metadata/3.9.6/maven-repository-metadata-3.9.6.jar",
+    "libraries/org/apache/maven/maven-resolver-provider/3.9.6/maven-resolver-provider-3.9.6.jar",
+    "libraries/org/apache/maven/resolver/maven-resolver-api/1.9.18/maven-resolver-api-1.9.18.jar",
+    "libraries/org/apache/maven/resolver/maven-resolver-connector-basic/1.9.18/maven-resolver-connector-basic-1.9.18.jar",
+    "libraries/org/apache/maven/resolver/maven-resolver-impl/1.9.18/maven-resolver-impl-1.9.18.jar",
+    "libraries/org/apache/maven/resolver/maven-resolver-named-locks/1.9.18/maven-resolver-named-locks-1.9.18.jar",
+    "libraries/org/apache/maven/resolver/maven-resolver-spi/1.9.18/maven-resolver-spi-1.9.18.jar",
+    "libraries/org/apache/maven/resolver/maven-resolver-transport-http/1.9.18/maven-resolver-transport-http-1.9.18.jar",
+    "libraries/org/apache/maven/resolver/maven-resolver-util/1.9.18/maven-resolver-util-1.9.18.jar",
+    "libraries/org/codehaus/plexus/plexus-interpolation/1.26/plexus-interpolation-1.26.jar",
+    "libraries/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar",
+    "libraries/org/eclipse/sisu/org.eclipse.sisu.inject/0.9.0.M2/org.eclipse.sisu.inject-0.9.0.M2.jar",
+    "libraries/org/jetbrains/annotations/26.1.0/annotations-26.1.0.jar",
+    "libraries/org/jline/jline-native/3.27.1/jline-native-3.27.1.jar",
+    "libraries/org/jline/jline-reader/3.20.0/jline-reader-3.20.0.jar",
+    "libraries/org/jline/jline-terminal-ffm/3.27.1/jline-terminal-ffm-3.27.1.jar",
+    "libraries/org/jline/jline-terminal-jni/3.27.1/jline-terminal-jni-3.27.1.jar",
+    "libraries/org/jline/jline-terminal/3.27.1/jline-terminal-3.27.1.jar",
+    "libraries/org/joml/joml/1.10.8/joml-1.10.8.jar",
+    "libraries/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar",
+    "libraries/org/mozilla/rhino-engine/1.7.14/rhino-engine-1.7.14.jar",
+    "libraries/org/mozilla/rhino-runtime/1.7.14/rhino-runtime-1.7.14.jar",
+    "libraries/org/mozilla/rhino/1.7.14/rhino-1.7.14.jar",
+    "libraries/org/ow2/asm/asm-commons/9.9.1/asm-commons-9.9.1.jar",
+    "libraries/org/ow2/asm/asm-tree/9.9.1/asm-tree-9.9.1.jar",
+    "libraries/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar",
+    "libraries/org/purpurmc/purpur/purpur-api/26.2.build.140-stable/purpur-api-26.2.build.140-stable.jar",
+    "libraries/org/slf4j/jcl-over-slf4j/1.7.36/jcl-over-slf4j-1.7.36.jar",
+    "libraries/org/slf4j/slf4j-api/2.0.18/slf4j-api-2.0.18.jar",
+    "libraries/org/spongepowered/configurate-core/4.2.0/configurate-core-4.2.0.jar",
+    "libraries/org/spongepowered/configurate-yaml/4.2.0/configurate-yaml-4.2.0.jar",
+    "libraries/org/xerial/sqlite-jdbc/3.49.1.0/sqlite-jdbc-3.49.1.0.jar",
+    "libraries/org/yaml/snakeyaml/2.6/snakeyaml-2.6.jar",
+    "log4j2.xml",
+    "plugins/bStats/config.yml",
+    "plugins/spark/config.json",
+    "plugins/spark/tmp/about.txt",
+    "purpur.yml",
+    "server.properties",
+    "spigot.yml",
+    "versions/26.2/purpur-26.2.jar",
+    "worlds/spike/data/minecraft/custom_boss_events.dat",
+    "worlds/spike/data/minecraft/random_sequences.dat",
+    "worlds/spike/data/minecraft/scoreboard.dat",
+    "worlds/spike/data/minecraft/stopwatches.dat",
+    "worlds/spike/data/minecraft/world_clocks.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/minecraft/chunk_tickets.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/minecraft/game_rules.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/minecraft/raids.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/minecraft/scheduled_events.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/minecraft/weather.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/minecraft/world_border.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/minecraft/world_clocks.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/minecraft/world_gen_settings.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/paper/level_overrides.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/paper/metadata.dat",
+    "worlds/spike/dimensions/minecraft/overworld/data/paper/persistent_data_container.dat",
+    "worlds/spike/dimensions/minecraft/overworld/paper-world.yml",
+    "worlds/spike/dimensions/minecraft/overworld/region/r.-1.-1.mca",
+    "worlds/spike/dimensions/minecraft/overworld/region/r.-1.0.mca",
+    "worlds/spike/dimensions/minecraft/overworld/region/r.0.-1.mca",
+    "worlds/spike/dimensions/minecraft/overworld/region/r.0.0.mca",
+    "worlds/spike/dimensions/minecraft/the_end/data/minecraft/chunk_tickets.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/minecraft/ender_dragon_fight.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/minecraft/game_rules.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/minecraft/raids.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/minecraft/scheduled_events.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/minecraft/weather.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/minecraft/world_border.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/minecraft/world_clocks.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/minecraft/world_gen_settings.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/paper/level_overrides.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/paper/metadata.dat",
+    "worlds/spike/dimensions/minecraft/the_end/data/paper/persistent_data_container.dat",
+    "worlds/spike/dimensions/minecraft/the_end/paper-world.yml",
+    "worlds/spike/dimensions/minecraft/the_end/region/r.-1.-1.mca",
+    "worlds/spike/dimensions/minecraft/the_end/region/r.-1.0.mca",
+    "worlds/spike/dimensions/minecraft/the_end/region/r.0.-1.mca",
+    "worlds/spike/dimensions/minecraft/the_end/region/r.0.0.mca",
+    "worlds/spike/dimensions/minecraft/the_nether/data/minecraft/chunk_tickets.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/minecraft/game_rules.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/minecraft/raids.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/minecraft/scheduled_events.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/minecraft/weather.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/minecraft/world_border.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/minecraft/world_clocks.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/minecraft/world_gen_settings.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/paper/level_overrides.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/paper/metadata.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/data/paper/persistent_data_container.dat",
+    "worlds/spike/dimensions/minecraft/the_nether/paper-world.yml",
+    "worlds/spike/dimensions/minecraft/the_nether/region/r.-1.-1.mca",
+    "worlds/spike/dimensions/minecraft/the_nether/region/r.-1.0.mca",
+    "worlds/spike/dimensions/minecraft/the_nether/region/r.0.-1.mca",
+    "worlds/spike/dimensions/minecraft/the_nether/region/r.0.0.mca",
+    "worlds/spike/level.dat",
+    "worlds/spike/level.dat_old",
+    "worlds/spike/session.lock",
+    "worlds/usercache.json"
+  ],
+  "step1_pass": false
+}

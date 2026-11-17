@@ -32,3 +32,22 @@ Es decir: **el monolito completo (Slimefun, 9 suites, núcleo Drakes) sí arranc
 5. Solo entonces cambiar la plantilla «Slimefun solitario» del launcher a este modo; mientras tanto el **servidor local gestionado** (proceso aparte invisible) es el camino soportado.
 
 Hasta que los pasos 1–4 pasen, el README no debe afirmar que Fused ejecuta Slimefun «dentro del juego».
+
+## Laboratorio reproducible del paso 1 (2026-11-17)
+
+El laboratorio [tools/embedded-spike](../tools/embedded-spike/README.md) ejecuta
+Paperclip en la JVM de un anfitrión Java desechable, con mundo nuevo y puerto
+loopback. Incluye control con `user.dir` modificado y un cargador experimental
+que redirige rutas e intercepta salida y hooks de apagado. No se integra en el
+mod ni en el launcher.
+
+El criterio automático exige `Done`, envío de `stop`, supervivencia del
+anfitrión, cero escrituras en su directorio (inotify y SHA del centinela),
+conservación de `user.dir` en el modo aislado y finalización sin matar el
+proceso. Un servidor que sale con código 0 puede fallar esta prueba: puede
+haber matado al anfitrión. Una JVM que sobrevive también puede fallarla si deja
+hilos del servidor que impiden finalizar el laboratorio.
+
+El estado y las capturas de cada intento están en
+[evidence/embedded-step1-20261117](evidence/embedded-step1-20261117/README.md).
+El objetivo global sigue pendiente; los pasos 2–5 conservan sus requisitos.
