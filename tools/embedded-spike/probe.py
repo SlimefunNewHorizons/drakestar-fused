@@ -86,7 +86,8 @@ def run(args):
     version = subprocess.run([java, "-version"], capture_output=True, text=True, check=True)
     command = [java, "-Xms256m", "-Xmx2g", "-XX:ActiveProcessorCount=2",
                "--enable-native-access=ALL-UNNAMED", "-cp", str(classes),
-               "Embed", str(jar), str(server), args.mode]
+               "Embed", str(jar), str(server), args.mode,
+               *(["natives"] if args.preload_natives else [])]
     started = time.monotonic()
     proc = subprocess.Popen(command, cwd=host, stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -169,6 +170,12 @@ def run(args):
         "host_minecraft_absent": b"SPIKE host.minecraft.absent=true" in data,
         "probe_sources_sha256": source_hashes,
         "server_files": sorted(str(p.relative_to(server)) for p in server.rglob("*") if p.is_file()),
+        "preload_natives": args.preload_natives,
+        "host_natives": [l for l in data.decode(errors="replace").splitlines() if ("SPIKE host.native" in l or "SPIKE server.native" in l)],
+        "unsatisfied_link": data.count(b"UnsatisfiedLinkError"),
+        "natives_after_stop": ((server / "natives-after-stop.txt").read_text().splitlines()
+                               if (server / "natives-after-stop.txt").exists() else []),
+        "server_sqlite_files": {str(p.relative_to(server)): p.stat().st_size for p in server.rglob("*.db")},
         "step1_pass": bool(ready and stop_sent and alive and before == after
                            and not host_events and not forced and not timed_out and proc.returncode == 0),
     }
@@ -184,4 +191,6 @@ if __name__ == "__main__":
     parser.add_argument("--mojang-cache", type=Path)
     parser.add_argument("--timeout", type=int, default=240)
     parser.add_argument("--mode", choices=("baseline", "isolated"), default="baseline")
+    parser.add_argument("--preload-natives", action="store_true",
+                        help="Step 3: host loads netty-epoll/JNA/sqlite natives first (isolated only)")
     raise SystemExit(run(parser.parse_args()))

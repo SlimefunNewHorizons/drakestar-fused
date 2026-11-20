@@ -6,10 +6,44 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /** Laboratory host: the server runs in this JVM, never through java -jar. */
 public final class Embed {
+    /** Stands in for the game's loader; kept open so its natives stay bound. */
+    static URLClassLoader clientNatives;
+
+    /** Step 3: the host (like a client) loads netty-epoll, JNA and sqlite natives before the server does. */
+    static URLClassLoader preloadNatives(java.net.URL[] urls) throws Exception {
+        var picked = java.util.Arrays.stream(urls)
+            .filter(u -> u.getPath().matches(".*/(netty-[^/]*|jna-[^/]*|sqlite-jdbc-[^/]*)\\.jar"))
+            .filter(u -> !u.getPath().contains("osx") && !u.getPath().contains("aarch_64"))
+            .toArray(java.net.URL[]::new);
+        var client = new URLClassLoader("spike-client", picked, ClassLoader.getPlatformClassLoader());
+        var epoll = Class.forName("io.netty.channel.epoll.Epoll", true, client);
+        System.out.println("SPIKE host.native.epoll=" + epoll.getMethod("isAvailable").invoke(null)
+            + " cause=" + epoll.getMethod("unavailabilityCause").invoke(null));
+        var jna = Class.forName("com.sun.jna.Native", true, client);
+        System.out.println("SPIKE host.native.jna.sizeof.long=" + jna.getMethod("getNativeSize", Class.class).invoke(null, long.class));
+        var sqlite = Class.forName("org.sqlite.SQLiteJDBCLoader", true, client);
+        System.out.println("SPIKE host.native.sqlite=" + sqlite.getMethod("initialize").invoke(null));
+        try (var c = java.sql.DriverManager.getConnection("jdbc:sqlite::memory:");
+             var r = c.createStatement().executeQuery("select sqlite_version()")) {
+            r.next();
+            System.out.println("SPIKE host.native.sqlite.version=" + r.getString(1));
+        } catch (java.sql.SQLException error) {
+            // DriverManager only sees drivers of the caller loader; load it explicitly.
+            var driver = (java.sql.Driver) Class.forName("org.sqlite.JDBC", true, client).getDeclaredConstructor().newInstance();
+            try (var c = driver.connect("jdbc:sqlite::memory:", new java.util.Properties());
+                 var r = c.createStatement().executeQuery("select sqlite_version()")) {
+                r.next();
+                System.out.println("SPIKE host.native.sqlite.version=" + r.getString(1));
+            }
+        }
+        return client;
+    }
+
     public static void main(String[] args) throws Exception {
         Path jar = Path.of(args[0]).toAbsolutePath();
         Path server = Path.of(args[1]).toAbsolutePath();
         boolean isolated = args.length > 2 && args[2].equals("isolated");
+        boolean natives = args.length > 3 && args[3].equals("natives");
         SpikeHooks.root = server;
         String cwd = Path.of("").toAbsolutePath().toString();
         String original = System.getProperty("user.dir");
@@ -45,6 +79,7 @@ public final class Embed {
             findMain.setAccessible(true);
             mainClass = (String) findMain.invoke(null);
             serverLoader = new SpikeLoader(urls, server.resolve("log4j2.xml"));
+            if (natives) clientNatives = preloadNatives(urls);
         } else {
             serverLoader = loader;
             mainClass = "io.papermc.paperclip.Main";
@@ -115,6 +150,17 @@ public final class Embed {
                 }
                 System.out.println("SPIKE host.alive.after.stop=true");
                 Files.writeString(server.resolve("host-alive-after-stop.txt"), "host alive after stop\n");
+                if (clientNatives != null) {
+                    var epoll = Class.forName("io.netty.channel.epoll.Epoll", true, clientNatives);
+                    var lines = new java.util.ArrayList<String>();
+                    lines.add("SPIKE host.native.epoll.after.stop=" + epoll.getMethod("isAvailable").invoke(null));
+                    // Same native from the server's own loader (already loaded there if it used epoll).
+                    var serverEpoll = Class.forName("io.netty.channel.epoll.Epoll", true, serverLoader);
+                    lines.add("SPIKE server.native.epoll=" + serverEpoll.getMethod("isAvailable").invoke(null)
+                        + " cause=" + serverEpoll.getMethod("unavailabilityCause").invoke(null));
+                    // System.out may be closed by the server after stop.
+                    Files.write(server.resolve("natives-after-stop.txt"), lines);
+                }
                 serverLoader.close();
                 loader.close();
                 return;

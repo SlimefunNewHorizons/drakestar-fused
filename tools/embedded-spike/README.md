@@ -50,6 +50,9 @@ El modo aislado comprueba además que termina `Server thread` y conserva
 Las marcas de supervivencia se escriben en disco porque el servidor puede
 reemplazar/cerrar `System.out` durante la parada.
 
+`--preload-natives` (sólo `isolated`) hace que el anfitrión cargue antes netty-epoll, JNA y sqlite en
+su propio cargador, como haría el cliente; ver `docs/evidence/embedded-step3-jni-20261120`.
+
 Los siguientes pasos de `docs/EMBEDDED_SERVER_SPIKE.md` requieren evidencia
 propia. Este laboratorio no acredita cliente real, JNI doble, compatibilidad
 log4j del cliente, Rust activo ni soporte de ningún loader.
