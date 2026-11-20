@@ -1,0 +1,11 @@
+{
+  "captured_after_host_alive_marker": true,
+  "non_daemon_threads": [
+    "\"pool-8-thread-1\" #54 [2986426] prio=5 os_prio=0 cpu=0.73ms elapsed=82.01s tid=0x00007031d826e5e0 nid=2986426 waiting on condition  [0x0000703235dfe000]",
+    "\"Dimension-Data-IO-Worker-1\" #65 [2986663] prio=7 os_prio=0 cpu=41.55ms elapsed=68.91s tid=0x00007031d9d21ab0 nid=2986663 waiting on condition  [0x000070318fffe000]",
+    "\"Dimension-Data-IO-Worker-2\" #66 [2986664] prio=7 os_prio=0 cpu=47.93ms elapsed=68.91s tid=0x00007031d9d208d0 nid=2986664 waiting on condition  [0x000070318fefe000]",
+    "\"Dimension-Data-IO-Worker-3\" #67 [2986665] prio=7 os_prio=0 cpu=30.32ms elapsed=68.91s tid=0x00007031d9d26940 nid=2986665 waiting on condition  [0x000070318fdfe000]",
+    "\"Dimension-Data-IO-Worker-4\" #68 [2986666] prio=7 os_prio=0 cpu=44.76ms elapsed=68.91s tid=0x00007031d9d27cd0 nid=2986666 waiting on condition  [0x000070318fcfe000]",
+    "\"Craft Async Scheduler Management Thread\" #69 [2986667] prio=5 os_prio=0 cpu=4.41ms elapsed=68.42s tid=0x00007031d9d41250 nid=2986667 waiting on condition  [0x000070318fbfe000]"
+  ]
+}

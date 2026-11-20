@@ -27,8 +27,27 @@ Es decir: **el monolito completo (Slimefun, 9 suites, núcleo Drakes) sí arranc
 
 1. Probar en `Embed` con `user.dir` aislado: lanzar el servidor con rutas propias y confirmar que no toca el directorio del anfitrión (riesgo 1) y qué ocurre al `stop` (riesgo 2).
 2. Probar el arranque dentro de un cliente Fabric 26.2 real (hilo desde el entrypoint, bloqueo hasta puerto abierto) con quickplay; registrar logs y RAM.
-3. Resolver 3 y 4 con pruebas reales (JNI doble, log4j).
+3. Resolver 3 y 4 con pruebas reales (JNI doble, log4j). **JNI de netty-epoll/JNA/sqlite pasa en laboratorio (20-nov, `docs/evidence/embedded-step3-jni-20261120`)**; faltan log4j y Rust FFM activo.
 4. Portar el arranque a NeoForge/Forge (módulo fino sobre el mismo núcleo).
 5. Solo entonces cambiar la plantilla «Slimefun solitario» del launcher a este modo; mientras tanto el **servidor local gestionado** (proceso aparte invisible) es el camino soportado.
 
 Hasta que los pasos 1–4 pasen, el README no debe afirmar que Fused ejecuta Slimefun «dentro del juego».
+
+## Laboratorio reproducible del paso 1 (2026-11-17)
+
+El laboratorio [tools/embedded-spike](../tools/embedded-spike/README.md) ejecuta
+Paperclip en la JVM de un anfitrión Java desechable, con mundo nuevo y puerto
+loopback. Incluye control con `user.dir` modificado y un cargador experimental
+que redirige rutas e intercepta salida y hooks de apagado. No se integra en el
+mod ni en el launcher.
+
+El criterio automático exige `Done`, envío de `stop`, supervivencia del
+anfitrión, cero escrituras en su directorio (inotify y SHA del centinela),
+conservación de `user.dir` en el modo aislado y finalización sin matar el
+proceso. Un servidor que sale con código 0 puede fallar esta prueba: puede
+haber matado al anfitrión. Una JVM que sobrevive también puede fallarla si deja
+hilos del servidor que impiden finalizar el laboratorio.
+
+El estado y las capturas de cada intento están en
+[evidence/embedded-step1-20261117](evidence/embedded-step1-20261117/README.md).
+El objetivo global sigue pendiente; los pasos 2–5 conservan sus requisitos.
