@@ -29,7 +29,8 @@ escapando y el comportamiento real de `stop`. **Código 1 significa que el paso
 salida usando la API Class-File de JDK 25. Conserva el `user.dir` del anfitrión,
 reemplaza el cargador generado por Paperclip y proporciona un log4j2.xml propio.
 Intercepta llamadas directas a `System.exit`, `Runtime.exit/halt` y hooks de
-apagado en las clases cargadas por ese cargador. **Es experimental**: no cubre
+apagado en las clases cargadas por ese cargador, y registra los ejecutores
+creados con `Executors.new*` para apagarlos tras `stop`. **Es experimental**: no cubre
 automáticamente cargadores de plugins, llamadas reflectivas, código nativo ni
 APIs de archivo que reciben cadenas sin pasar por `File`/`Path`. No es una
 frontera de seguridad ni una implementación integrada en Fused.

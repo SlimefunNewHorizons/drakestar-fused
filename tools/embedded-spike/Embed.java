@@ -97,6 +97,19 @@ public final class Embed {
                     if (running) throw new AssertionError("Server thread remains alive");
                     if (!original.equals(System.getProperty("user.dir")))
                         throw new AssertionError("Host user.dir changed");
+                    int stuck = SpikeHooks.shutdownExecutors(10);
+                    System.out.println("SPIKE executors.tracked=" + SpikeHooks.executors.size() + " stuck=" + stuck);
+                    // In-process report: jcmd attach would write .attach_pid into the watched host dir.
+                    var leftover = Thread.getAllStackTraces().keySet().stream()
+                        .filter(t -> t.isAlive() && !t.isDaemon() && t != Thread.currentThread()
+                            && !t.getName().equals("DestroyJavaVM"))
+                        .map(t -> t.getName() + " group=" + (t.getThreadGroup() == null ? "-" : t.getThreadGroup().getName()))
+                        .sorted().toList();
+                    var report = new java.util.ArrayList<String>();
+                    report.add("# executors.tracked=" + SpikeHooks.executors.size() + " stuck=" + stuck);
+                    report.addAll(leftover);
+                    Files.write(server.resolve("non-daemon-threads-after-stop.txt"), report);
+                    System.out.println("SPIKE nondaemon.after.stop=" + leftover.size());
                     System.out.println("SPIKE server.thread.stopped=true");
                     System.out.println("SPIKE server.exit.status=" + SpikeHooks.exitStatus);
                 }

@@ -81,6 +81,14 @@ public final class SpikeLoader extends URLClassLoader {
                             code.invokestatic(HOOK, method.equals("exit") ? "exit" : "property", type);
                             return;
                         }
+                        String ret = type.returnType().descriptorString();
+                        if (owner.equals("java/util/concurrent/Executors") && method.startsWith("new")
+                                && (ret.equals("Ljava/util/concurrent/ExecutorService;")
+                                    || ret.equals("Ljava/util/concurrent/ScheduledExecutorService;"))) {
+                            code.with(element);
+                            code.invokestatic(HOOK, "track", java.lang.constant.MethodTypeDesc.of(type.returnType(), type.returnType()));
+                            return;
+                        }
                         if (owner.equals("java/lang/Runtime") && java.util.Set.of(
                                 "exit", "halt", "addShutdownHook", "removeShutdownHook").contains(method)) {
                             code.invokestatic(HOOK, method, type.insertParameterTypes(0, call.owner().asSymbol()));

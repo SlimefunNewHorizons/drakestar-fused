@@ -1,6 +1,6 @@
 # Paso 1: mediciones del 17 de noviembre de 2026
 
-Estado: **incompleto**. Se conserva el experimento y sus fallos para continuar
+Estado: **paso 1 pasa en laboratorio (20-nov)**. Se conserva el experimento y sus fallos para continuar
 desde hechos reproducibles. No se valida Slimefun dentro de un cliente.
 
 Artefacto publicado: [Purpur 26.2 build 140](https://github.com/SlimefunNewHorizons/DrakesPurpur/releases/tag/v26.2.140-stable),
@@ -77,13 +77,43 @@ Se detuvo la corrección tras los dos intentos, conforme a la regla de Jack.
 No hubo un tercer intento aislado. El control sin transformaciones mide el
 comportamiento original del mismo build y no constituye otra corrección.
 
+## Tercer intento aislado (20 de noviembre de 2026)
+
+[Consola](isolated-3/console.txt), [resultado](isolated-3/result.json),
+[hilos tras la parada](isolated-3/non-daemon-threads-after-stop.txt).
+
+Causa de los hilos del segundo intento, leída en el bytecode del build 140:
+`Util.DIMENSION_DATA_IO_POOL` (`Dimension-Data-IO-Worker-*`) y el ejecutor
+`management` de `CraftAsyncScheduler` se crean con `Executors.new*` y el
+servidor nunca los apaga porque asume que la JVM muere tras `stop`.
+`SpikeLoader` ahora envuelve toda llamada `Executors.new*` que devuelve
+`ExecutorService`/`ScheduledExecutorService` con `SpikeHooks.track`, y el
+anfitrión aplica `shutdownNow` + espera de 10 s tras interceptar la salida.
+El listado de hilos se toma **dentro del proceso** (sin `jcmd`, sin
+`.attach_pid` en el directorio vigilado).
+
+Mismo JAR (SHA-256 `750811c8…0145`), JDK 25.0.5.1. Dos ejecuciones
+consecutivas pasan (`step1_pass: true`); se conserva la segunda: `Done`,
+`stop`, `System.exit(0)` interceptado, anfitrión vivo después de la parada,
+**0 eventos de escritura** en el anfitrión, `user.dir` intacto, 14 ejecutores
+retirados (0 atascados), salida natural 0 sin terminación forzada en 109,46 s,
+RSS máximo 1.169.272 KiB.
+
+Quedan tres `Craft Scheduler Thread` no daemon al momento de la parada: son
+del `ThreadPoolExecutor` construido directamente por `CraftAsyncScheduler`
+(no pasa por `Executors`), con `allowCoreThreadTimeOut`, y terminan solos
+por inactividad; por eso la JVM salió sin ayuda. En un cliente real eso deja
+el cargador del servidor retenido ~60 s tras salir del mundo. Mismo ERROR
+de mundo plano que antes (`No key layers in MapLike[{}]`), ajeno a la parada.
+
 ## Alcance y continuación
 
 - [x] Laboratorio ejecutable con `Done`/`stop`, hashes, RSS, centinela e inotify.
 - [x] Dos intentos reales sobre el build 140 y evidencia del defecto de parada.
 - [x] Control real con el mismo build y las mismas fuentes finales.
-- [ ] Paso 1 completo: retirar los ejecutores propios del servidor y repetir
-  la prueba sin contaminación del observador, conservando el anfitrión.
+- [x] Paso 1 en laboratorio: ejecutores retirados y prueba repetida sin
+  contaminación del observador, anfitrión vivo (tercer intento). Pendiente
+  menor: retirar también el `ThreadPoolExecutor` directo de CraftAsyncScheduler.
 - [ ] Paso 2: cliente Fabric 26.2 real, quickplay, RAM y captura del juego.
 - [ ] Paso 3: JNI doble, log4j y Rust activos.
 - [ ] Paso 4: NeoForge/Forge con el mismo núcleo y pruebas propias.

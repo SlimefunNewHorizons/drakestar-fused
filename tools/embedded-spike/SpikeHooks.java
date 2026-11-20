@@ -4,6 +4,9 @@ import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /** Experimental hooks scoped to this laboratory JVM, not part of the mod. */
 public final class SpikeHooks {
@@ -11,6 +14,22 @@ public final class SpikeHooks {
     static volatile boolean exitRequested;
     static volatile int exitStatus;
     static final List<Thread> hooks = new CopyOnWriteArrayList<>();
+    static final List<ExecutorService> executors = new CopyOnWriteArrayList<>();
+
+    // The server assumes the JVM dies after stop, so executors made through
+    // Executors.new* (Util.DIMENSION_DATA_IO_POOL, CraftAsyncScheduler management)
+    // are never shut down. Track them so the host can retire them.
+    public static ExecutorService track(ExecutorService executor) { executors.add(executor); return executor; }
+    public static ScheduledExecutorService track(ScheduledExecutorService executor) { executors.add(executor); return executor; }
+
+    /** Returns how many tracked executors did not terminate within the timeout. */
+    public static int shutdownExecutors(long seconds) throws InterruptedException {
+        for (ExecutorService executor : executors) executor.shutdownNow();
+        int stuck = 0;
+        for (ExecutorService executor : executors)
+            if (!executor.awaitTermination(seconds, TimeUnit.SECONDS)) stuck++;
+        return stuck;
+    }
 
     public static Path redirect(Path path) {
         return path.isAbsolute() ? path : root.resolve(path).normalize();

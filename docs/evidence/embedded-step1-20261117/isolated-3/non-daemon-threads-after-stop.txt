@@ -1,0 +1,4 @@
+# executors.tracked=14 stuck=0
+Craft Scheduler Thread - 1 group=main
+Craft Scheduler Thread - 2 group=main
+Craft Scheduler Thread - 3 group=main
