@@ -106,6 +106,22 @@ por inactividad; por eso la JVM salió sin ayuda. En un cliente real eso deja
 el cargador del servidor retenido ~60 s tras salir del mundo. Mismo ERROR
 de mundo plano que antes (`No key layers in MapLike[{}]`), ajeno a la parada.
 
+## Verificación independiente (20-nov)
+
+[Consola](verify-20261120/console.txt), [resultado](verify-20261120/result.json).
+Revisor distinto al autor; mismo JAR (SHA-256 `750811c8…0145`) y **mismos hashes
+de fuentes que el tercer intento aislado**, `--mode isolated`, carpeta nueva,
+por `build_seguro.sh 25` con carga ~4,5. Resultado: `step1_pass=true`, `Done`,
+`stop` enviado, anfitrión vivo tras la parada, salida 0 sin timeout ni
+terminación forzada, cero archivos creados/modificados/borrados en el anfitrión,
+`Path.of("")` intacto, 120,06 s, RSS máximo 1.212.948 KiB. Reproduce el paso 1.
+
+Contraste: el prototipo anterior sin versionar (`common/.../embedded/`, 14-nov,
+reescritura manual de bytecode) también deja el anfitrión vivo y sin fugas de
+archivos, pero tras `stop` quedan **25–28 hilos** (9 no-daemon: Craft Scheduler,
+Dimension-Data-IO, pool-8) y la JVM no termina; interrumpirlos no basta. Confirma
+que hace falta retirar los ejecutores como hace `SpikeHooks`.
+
 ## Alcance y continuación
 
 - [x] Laboratorio ejecutable con `Done`/`stop`, hashes, RSS, centinela e inotify.
