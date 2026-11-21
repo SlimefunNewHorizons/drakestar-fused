@@ -1,0 +1,151 @@
+SPIKE pid=3465313
+SPIKE user.dir.original=/tmp/fused-step3-rust-run1/host
+SPIKE user.dir.server=/tmp/fused-step3-rust-run1/host
+SPIKE nio.cwd=/tmp/fused-step3-rust-run1/host
+SPIKE io.cwd=/tmp/fused-step3-rust-run1/host
+SPIKE cwd.unchanged=true
+Applying patches
+SPIKE host.native.epoll=true cause=null
+SPIKE host.native.jna.sizeof.long=8
+SPIKE host.native.sqlite=true
+SPIKE host.native.sqlite.version=3.49.1
+SPIKE host.log4j.jars=2
+SPIKE host.rust.ffm=hybrid.abi=1 hybrid.packWords=1 odysseia.abi=1 slimefun.abi=2 slimefun.sum=60 jniSamePath=false
+SPIKE host.minecraft.absent=true
+[14:37:56 INFO] Running Java 25 (OpenJDK 64-Bit Server VM 25.0.5.1+2-1-24.04.1-Ubuntu; Ubuntu null) on Linux 6.8.0-149-generic (amd64)
+[14:37:56 INFO] Loading Purpur 26.2-140-experimental/horizon-rust-hybrid-engine@ab5d46e (2026-11-07T05:07:01Z) for Minecraft 26.2
+[14:37:57 WARN] Did not find udev library in operating system. Some features may not work.
+[14:37:57 INFO] Initializing plugins...
+[14:37:57 INFO] Initialized 0 plugins
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.joml.MemUtil$MemUtilUnsafe (file:/tmp/fused-step3-rust-run1/server/libraries/org/joml/joml/1.10.8/joml-1.10.8.jar)
+WARNING: Please consider reporting this to the maintainers of class org.joml.MemUtil$MemUtilUnsafe
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[14:38:15 INFO] Initialising converters for DataConverter...
+[14:38:16 WARN] You have used the Paper command line EULA agreement flag.
+[14:38:16 WARN] By using this setting you are indicating your agreement to Mojang's EULA (https://aka.ms/MinecraftEULA).
+[14:38:16 WARN] If you do not agree to the above EULA please stop your server and remove this flag immediately.
+[14:38:16 INFO] Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[14:38:19 INFO] Finished initialising converters for DataConverter in 4,248.6ms
+[14:38:20 INFO] Found new data pack paper, loading it automatically
+[14:38:23 INFO] No existing world data, creating new world
+[14:38:23 ERROR] No key layers in MapLike[{}]
+[14:38:27 INFO] Loaded 1585 recipes
+[14:38:27 INFO] Loaded 1688 advancements
+[14:38:28 INFO] Starting minecraft server version 26.2
+[14:38:28 INFO] Loading properties
+[14:38:28 INFO] This server is running Purpur version 26.2-140-experimental/horizon-rust-hybrid-engine@ab5d46e (2026-11-07T05:07:01Z) (Implementing API version 26.2.build.140-stable)
+[14:38:28 INFO] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[14:38:29 INFO] Server Ping Player Sample Count: 12
+[14:38:29 INFO] Using 4 threads for Netty based IO
+[14:38:30 INFO] [DrakesBundled] 0 en keep; 9 plugins activos (0 desactivados en drakes-data/suites.yml), 9 extraídos/actualizados en plugins/
+[14:38:31 INFO] [38;5;99m================================================================[0m
+[14:38:31 INFO] [1;38;5;141m####  ####   ###  #  #  #####  #### [0m
+[14:38:31 INFO] [1;38;5;141m#   # #   # #   # # #   #     #     [0m
+[14:38:31 INFO] [1;38;5;141m#   # ####  ##### ##    ####   ###  [0m
+[14:38:31 INFO] [1;38;5;141m#   # #  #  #   # # #   #         # [0m
+[14:38:31 INFO] [1;38;5;141m####  #   # #   # #  #  ##### ####  [0m
+[14:38:31 INFO] [1;38;5;51m####  #   # ####  ####  #   # ####  [0m[1;38;5;141m ###   ###      ###  [0m
+[14:38:31 INFO] [1;38;5;51m#   # #   # #   # #   # #   # #   # [0m[1;38;5;141m#   # #        #   # [0m
+[14:38:31 INFO] [1;38;5;51m####  #   # ####  ####  #   # ####  [0m[1;38;5;141m  ##  ####       ##  [0m
+[14:38:31 INFO] [1;38;5;51m#     #   # #  #  #     #   # #  #  [0m[1;38;5;141m #    #   #     #    [0m
+[14:38:31 INFO] [1;38;5;51m#      ###  #   # #      ###  #   # [0m[1;38;5;141m#####  ###  #  ##### [0m
+[14:38:31 INFO] [38;5;99m================================================================[0m
+[14:38:31 INFO] [38;5;245mVersion   [0m[1;37mDrakesPurpur 26.2 build 140[0m
+[14:38:31 INFO] [38;5;245mMinecraft [0m[1;37m26.2[0m
+[14:38:31 INFO] [38;5;245mJava      [0m[1;37m25.0.5.1+2-1-24.04.1-Ubuntu (OpenJDK 64-Bit Server VM)[0m
+[14:38:31 INFO] [38;5;245mModo      [0m[1;37mMONOLITO (9 suites embebidas)[0m
+[14:38:31 INFO] [38;5;245mEdited by [1;37mJackStar6677-1 (JackStar Systems)[38;5;245m - DrakesCraft Season Two[0m
+[14:38:31 INFO] [38;5;245mGitHub    [0m[4;38;5;81mhttps://github.com/SlimefunNewHorizons/DrakesPurpur[0m
+[14:38:31 INFO] [38;5;245mPerfil    [0m[4;38;5;81mhttps://github.com/JackStar6677-1[0m
+[14:38:31 INFO] [38;5;245mMaven     [0m[4;38;5;81mhttps://maven.drakescraft.cl[0m
+[14:38:31 INFO] [38;5;245mWeb       [0m[4;38;5;81mhttps://web.drakescraft.cl[0m
+[14:38:31 INFO] [38;5;245mDiscord   [0m[4;38;5;81mhttps://discord.gg/rv3vtXZTk7[0m
+[14:38:31 INFO] [2;37mBased on Purpur (PurpurMC) and Paper (PaperMC); licensed per upstream; modifications by JackStar6677-1[0m
+[14:38:31 INFO] [38;5;99m================================================================[0m
+[14:38:31 INFO] [DrakesDb] Base compartida activa (WAL): drakes-data/kernel.db
+[14:38:31 INFO] [CrashGuard] Fallos del kernel en DrakesDb (tabla kernel_faults)
+[14:38:31 INFO] [Native] enabled=true odysseia=/tmp/fused-step3-rust-run1/server/natives/libodysseia_ffi.so [pulses=true aura=true] slimefun=/tmp/fused-step3-rust-run1/server/natives/libslimefun_ffi.so [fill=true sum=true price=true]
+[14:38:31 INFO] [Hybrid] bits=true noise=true region=true minBatch=2048 lib=/tmp/fused-step3-rust-run1/server/natives/libdrakes_hybrid_ffi.so
+[14:38:31 INFO] [Perf] status=true load-governor=false backup-throttle=true
+[14:38:31 INFO] [DrakesPurpur] Motor Rust FFM cargado exitosamente off-heap: /tmp/fused-step3-rust-run1/server/natives/libslimefun_ffi.so
+[14:38:32 INFO] [SaoriLink] SAORI desactivada (falta el archivo de token).
+[14:38:32 INFO] [ChaguiCompat] Initializing Pumpkin & PatchBukkit compatibility layer (Author: Chagui68).
+[14:38:32 INFO] [StaffEngine] Initialized kernel-embedded staff management, vanish/freeze matrix & sovereign godmode.
+[14:38:32 INFO] [ModalityEngine] Kernel Modality Separation active. Database: drakes_modalities.db
+[14:38:32 INFO] [StorageAudit] Kernel Storage Forensics active (tabla storage_actions en DrakesDb)
+[14:38:32 INFO] [BackupManager] Daily 7z backup scheduler active (first run in 60 min, retention: 7 days).
+[14:38:33 INFO] Paper is using 1 worker threads, 1 I/O threads
+[14:38:34 INFO] Default game type: SURVIVAL
+[14:38:34 INFO] Generating keypair
+[14:38:34 INFO] Starting Minecraft server on 127.0.0.1:38827
+[14:38:34 INFO] Paper: Using libdeflate (Linux x86_64) compression from Velocity.
+[14:38:34 INFO] Paper: Using OpenSSL 3.x.x (Linux x86_64) cipher from Velocity.
+[14:38:35 WARN] **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[14:38:35 WARN] The server will make no attempt to authenticate usernames. Beware.
+[14:38:35 WARN] While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[14:38:35 WARN] To change this, set "online-mode" to "true" in the server.properties file.
+[14:38:35 INFO] Preparing level "spike"
+[14:38:37 INFO] Selecting spawn point for level 'minecraft:overworld'...
+[14:38:39 INFO] Selecting spawn point for level 'minecraft:the_nether'...
+[14:38:43 INFO] Selecting spawn point for level 'minecraft:the_end'...
+[14:38:44 INFO] Loading 0 persistent chunks for level 'minecraft:overworld'...
+[14:38:44 INFO] Preparing spawn area: 100%
+[14:38:44 INFO] Prepared spawn area in 7703 ms
+[14:38:44 INFO] Loading 0 persistent chunks for level 'minecraft:the_nether'...
+[14:38:44 INFO] Preparing spawn area: 100%
+[14:38:44 INFO] Prepared spawn area in 5116 ms
+[14:38:44 INFO] Loading 0 persistent chunks for level 'minecraft:the_end'...
+[14:38:44 INFO] Preparing spawn area: 100%
+[14:38:44 INFO] Prepared spawn area in 977 ms
+[14:38:44 INFO] Done preparing level "spike" (9.608s)
+[14:38:45 INFO] Starting background profiler...
+[14:38:46 INFO] Saving chunks for level 'ServerLevel[spike]'/minecraft:overworld
+[14:38:46 INFO] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_nether
+[14:38:46 INFO] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_end
+[14:38:46 INFO] ThreadedAnvilChunkStorage (world): All chunks are saved
+[14:38:46 INFO] ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[14:38:46 INFO] ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[14:38:46 INFO] ThreadedAnvilChunkStorage: All dimensions are saved
+[14:38:46 INFO] Running delayed init tasks
+[14:38:46 INFO] Done (54.231s)! For help, type "help"
+[14:38:46 INFO] *************************************************************************************
+[14:38:46 INFO] This is the first time you're starting this server.
+[14:38:46 INFO] It's recommended you read our 'Getting Started' documentation for guidance.
+[14:38:46 INFO] View this and more helpful information here: https://docs.papermc.io/paper/next-steps
+[14:38:46 INFO] *************************************************************************************
+[14:38:47 INFO] Stopping the server
+[14:38:47 INFO] Stopping server
+[14:38:47 INFO] Saving players
+[14:38:47 INFO] Saving worlds
+[14:38:47 INFO] Saving chunks for level 'ServerLevel[spike]'/minecraft:overworld
+[14:38:47 INFO] Waiting 60s for chunk system to halt for world 'minecraft:overworld'
+[14:38:47 INFO] Halted chunk system for world 'minecraft:overworld'
+[14:38:47 INFO] Saving all chunkholders for world 'minecraft:overworld'
+[14:38:49 INFO] Saved 478 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:overworld' in 1.87s
+[14:38:49 INFO] Waiting 60s for chunk I/O to halt for world 'minecraft:overworld'
+[14:38:49 INFO] Halted I/O scheduler for world 'minecraft:overworld'
+[14:38:49 INFO] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_nether
+[14:38:49 INFO] Waiting 60s for chunk system to halt for world 'minecraft:the_nether'
+[14:38:49 INFO] Halted chunk system for world 'minecraft:the_nether'
+[14:38:49 INFO] Saving all chunkholders for world 'minecraft:the_nether'
+[14:38:50 INFO] Saved 478 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:the_nether' in 0.98s
+[14:38:50 INFO] Waiting 60s for chunk I/O to halt for world 'minecraft:the_nether'
+[14:38:50 INFO] Halted I/O scheduler for world 'minecraft:the_nether'
+[14:38:50 INFO] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_end
+[14:38:50 INFO] Waiting 60s for chunk system to halt for world 'minecraft:the_end'
+[14:38:50 INFO] Halted chunk system for world 'minecraft:the_end'
+[14:38:50 INFO] Saving all chunkholders for world 'minecraft:the_end'
+[14:38:51 INFO] Saved 478 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:the_end' in 0.72s
+[14:38:51 INFO] Waiting 60s for chunk I/O to halt for world 'minecraft:the_end'
+[14:38:51 INFO] Halted I/O scheduler for world 'minecraft:the_end'
+[14:38:51 INFO] ThreadedAnvilChunkStorage (world): All chunks are saved
+[14:38:51 INFO] ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[14:38:51 INFO] ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[14:38:51 INFO] ThreadedAnvilChunkStorage: All dimensions are saved
+[14:38:51 INFO] Waiting for all RegionFile I/O tasks to complete...
+[14:38:51 INFO] All RegionFile I/O tasks to complete
+[14:38:51 INFO] Awaiting termination of worker pool for up to 60s...
+[14:38:51 INFO] Awaiting termination of I/O pool for up to 60s...
+[14:38:51 INFO] [STDOUT] [SpikeHooks] SPIKE server.exit.intercepted=0
+2026-11-21T17:39:02.090276469Z main WARN Unable to register Log4j shutdown hook because JVM is shutting down. Using SimpleLogger

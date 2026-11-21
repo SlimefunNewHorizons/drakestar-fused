@@ -62,6 +62,30 @@ def run(args):
             f'<Appenders><File name="Client" fileName="{server}/client-logs/latest.log">'
             '<PatternLayout pattern="[CLIENT %c] %msg%n"/></File></Appenders>'
             '<Loggers><Root level="info"><AppenderRef ref="Client"/></Root></Loggers></Configuration>')
+    rust_native_hashes = {}
+    if args.rust_ffm:
+        if not args.natives_dir:
+            raise ValueError("--rust-ffm requires --natives-dir")
+        natives_src = args.natives_dir.resolve(strict=True)
+        natives_dst = server / "natives"
+        natives_dst.mkdir()
+        for name in ("libdrakes_hybrid_ffi.so", "libodysseia_ffi.so", "libslimefun_ffi.so"):
+            src_file = (natives_src / name).resolve(strict=True)
+            dst_file = natives_dst / name
+            shutil.copy2(src_file, dst_file)
+            rust_native_hashes[name] = hashlib.sha256(dst_file.read_bytes()).hexdigest()
+        drakes_data = server / "drakes-data"
+        drakes_data.mkdir()
+        (drakes_data / "perf.yml").write_text(
+            "enabled: true\n"
+            "status:\n  enabled: true\n  file: drakes-data/perf-status.json\n  interval-seconds: 10\n"
+            "load-governor:\n  enabled: false\n"
+            "hybrid:\n  engine:\n    enabled: true\n"
+            "native:\n  enabled: true\n  dir: natives\n  ring-capacity: 64\n  max-entries: 8192\n"
+            "  odysseia:\n    pulses: true\n    aura: true\n"
+            "  slimefun:\n    fill: true\n    sum: true\n    price: true\n    tick-engine: true\n"
+            "  hybrid:\n    enabled: true\n    min-batch: 2048\n    bits: true\n    noise: true\n"
+            "    region: true\n    stats: true\n    prefetch:\n      enabled: false\n")
     before = snapshot(host)
     # The host initially contains only sentinel.txt. Watching its directory also
     # catches transient new subtrees, which before/after hashes alone miss.
@@ -94,7 +118,9 @@ def run(args):
                "--enable-native-access=ALL-UNNAMED", "-cp", str(classes),
                "Embed", str(jar), str(server), args.mode,
                *(["natives"] if args.preload_natives else []),
-               *(["log4j"] if args.host_log4j else [])]
+               *(["log4j"] if args.host_log4j else []),
+               *(["rust"] if args.rust_ffm else []),
+               *(["rust-jni-conflict"] if args.rust_jni_conflict else [])]
     started = time.monotonic()
     proc = subprocess.Popen(command, cwd=host, stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -185,6 +211,8 @@ def run(args):
         "server_sqlite_files": {str(p.relative_to(server)): p.stat().st_size for p in server.rglob("*.db")},
         "host_log4j": args.host_log4j,
         **(log4j_report(server) if args.host_log4j else {}),
+        "rust_ffm": args.rust_ffm,
+        **(rust_report(server, data, rust_native_hashes, args.rust_jni_conflict) if args.rust_ffm else {}),
         "step1_pass": bool(ready and stop_sent and alive and before == after
                            and not host_events and not forced and not timed_out and proc.returncode == 0),
     }
@@ -209,6 +237,29 @@ def log4j_report(server):
     }
 
 
+def rust_report(server, data, rust_native_hashes, jni_conflict):
+    """Step 3 (Rust FFM + JNI): host and embedded server loading libdrakes_hybrid_ffi/libodysseia_ffi/libslimefun_ffi."""
+    text = data.decode(errors="replace")
+    own = server / "logs/latest.log"
+    server_text = own.read_text(errors="replace") if own.exists() else text
+    after = server / "rust-ffm-after-stop.txt"
+    after_lines = after.read_text(errors="replace").splitlines() if after.exists() else []
+    markers = ("[Native]", "[Hybrid]", "[DrakesPurpur]", "[RustEngine]", "already loaded in another classloader")
+    return {
+        "rust_jni_conflict": jni_conflict,
+        "rust_natives_sha256": rust_native_hashes,
+        "host_rust_ffm": [l for l in text.splitlines() if "SPIKE host.rust.ffm=" in l],
+        "server_rust_logs": [l for l in server_text.splitlines() if any(m in l for m in markers)],
+        "rust_after_stop": after_lines,
+        "rust_all_active": bool(
+            after_lines
+            and any("enabled=true tickEngineAllowed=true" in l and "pulseCounter=org.purpurmc.purpur.nativelib.DrakesNative$Odysseia$Native" in l for l in after_lines)
+            and any("libraryLoaded=true bitsEnabled=true" in l and "parityOk=true" in l for l in after_lines)
+            and any("kernelBridge.isRustLoaded=true SlimefunRustEngine.isNativeLinked=true" in l for l in after_lines)
+        ),
+    }
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--jar", type=Path, required=True)
@@ -220,4 +271,10 @@ if __name__ == "__main__":
                         help="Step 3: host loads netty-epoll/JNA/sqlite natives first (isolated only)")
     parser.add_argument("--host-log4j", action="store_true",
                         help="Step 3: host configures its own log4j via -Dlog4j.configurationFile first (isolated only)")
+    parser.add_argument("--rust-ffm", action="store_true",
+                        help="Step 3: enable perf.yml native.*=true and preload Rust FFM/JNI in host loader (isolated only)")
+    parser.add_argument("--natives-dir", type=Path,
+                        help="Directory containing libdrakes_hybrid_ffi.so, libodysseia_ffi.so and libslimefun_ffi.so")
+    parser.add_argument("--rust-jni-conflict", action="store_true",
+                        help="Step 3 control: host calls System.load on server/natives/libslimefun_ffi.so directly")
     raise SystemExit(run(parser.parse_args()))

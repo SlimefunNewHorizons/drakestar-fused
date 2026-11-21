@@ -58,5 +58,13 @@ global `-Dlog4j.configurationFile` (como hace el launcher de Minecraft) antes de
 comprueba que el servidor escriba en su propio `logs/latest.log` sin contaminar `client-logs/latest.log`
 y que el contexto del cliente siga activo tras `stop`; ver `docs/evidence/embedded-step3-log4j-20261121`.
 
+`--rust-ffm --natives-dir <dir>` (sólo `isolated`) copia `libdrakes_hybrid_ffi.so`, `libodysseia_ffi.so` y
+`libslimefun_ffi.so` a `server/natives/`, habilita todas las banderas `native.*` y `hybrid.engine.enabled` en
+`drakes-data/perf.yml`, precarga los tres `.so` por FFM (`SymbolLookup.libraryLookup`) más `libslimefun_ffi.so`
+por JNI (`System.load`) en un cargador propio del anfitrión (`spike-client-rust`), y verifica tras `stop` que
+`DrakesNative`, `HybridNative`, `DrakesKernelBridge` y `SlimefunRustEngine` queden activos junto con el
+anfitrión. `--rust-jni-conflict` reproduce el fallo de control cuando ambos cargadores llaman a `System.load`
+sobre la misma ruta `server/natives/libslimefun_ffi.so`; ver `docs/evidence/embedded-step3-rust-ffm-20261121`.
+
 Los siguientes pasos de `docs/EMBEDDED_SERVER_SPIKE.md` requieren evidencia
-propia. Este laboratorio no acredita cliente real, Rust activo ni soporte de ningún loader.
+propia. Este laboratorio no acredita cliente real ni soporte de ningún loader.

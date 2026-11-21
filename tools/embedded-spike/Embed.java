@@ -1,4 +1,10 @@
 import java.io.File;
+import java.lang.foreign.Arena;
+import java.lang.foreign.FunctionDescriptor;
+import java.lang.foreign.Linker;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.SymbolLookup;
+import java.lang.foreign.ValueLayout;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,6 +14,104 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class Embed {
     /** Stands in for the game's loader; kept open so its natives stay bound. */
     static URLClassLoader clientNatives;
+    static URLClassLoader clientRustLoader;
+    static Class<?> clientRustProbe;
+
+    /** Helper class defined inside a dedicated host URLClassLoader to test FFM/JNI across distinct loaders. */
+    public static final class HostRustProbe {
+        public static SymbolLookup hybridLookup;
+        public static SymbolLookup odysseiaLookup;
+        public static SymbolLookup slimefunLookup;
+
+        public static String preload(Path dir, boolean jniSamePath) throws Throwable {
+            var linker = Linker.nativeLinker();
+            var intDesc = FunctionDescriptor.of(ValueLayout.JAVA_INT);
+            Path hybrid = dir.resolve("libdrakes_hybrid_ffi.so").toAbsolutePath();
+            Path odysseia = dir.resolve("libodysseia_ffi.so").toAbsolutePath();
+            Path slimefun = dir.resolve("libslimefun_ffi.so").toAbsolutePath();
+
+            hybridLookup = SymbolLookup.libraryLookup(hybrid, Arena.global());
+            int hybridAbi = (int) linker.downcallHandle(
+                hybridLookup.find("drakes_hybrid_abi_version").orElseThrow(), intDesc).invokeExact();
+            var pack = linker.downcallHandle(
+                hybridLookup.find("drakes_bits_pack").orElseThrow(),
+                FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, ValueLayout.JAVA_INT,
+                    ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT),
+                Linker.Option.critical(true));
+            int[] values = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
+            long[] packed = new long[1];
+            int packWords = (int) pack.invokeExact(4, values.length,
+                MemorySegment.ofArray(values), MemorySegment.ofArray(packed), packed.length);
+
+            odysseiaLookup = SymbolLookup.libraryLookup(odysseia, Arena.global());
+            int odysseiaAbi = (int) linker.downcallHandle(
+                odysseiaLookup.find("odysseia_abi_version").orElseThrow(), intDesc).invokeExact();
+
+            slimefunLookup = SymbolLookup.libraryLookup(slimefun, Arena.global());
+            int slimefunAbi = (int) linker.downcallHandle(
+                slimefunLookup.find("slimefun_abi_version").orElseThrow(), intDesc).invokeExact();
+            var sum = linker.downcallHandle(
+                slimefunLookup.find("slimefun_sum_saturating").orElseThrow(),
+                FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG),
+                Linker.Option.critical(true));
+            int sumVal = (int) sum.invokeExact(MemorySegment.ofArray(new int[]{10, 20, 30}), 3L);
+
+            if (jniSamePath) {
+                // Deliberate conflict control: load the exact same file path via JNI System.load in this loader.
+                System.load(slimefun.toString());
+            } else {
+                // Safe JNI isolation: copy to a loader-unique path before System.load, while FFM shares the original path.
+                Path hostDir = dir.getParent().resolve("client-natives");
+                Files.createDirectories(hostDir);
+                Path hostCopy = hostDir.resolve("libslimefun_ffi.so");
+                Files.copy(slimefun, hostCopy, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                System.load(hostCopy.toAbsolutePath().toString());
+            }
+            return "hybrid.abi=" + hybridAbi + " hybrid.packWords=" + packWords
+                + " odysseia.abi=" + odysseiaAbi + " slimefun.abi=" + slimefunAbi
+                + " slimefun.sum=" + sumVal + " jniSamePath=" + jniSamePath;
+        }
+
+        public static String verifyAfterStop() throws Throwable {
+            var linker = Linker.nativeLinker();
+            var intDesc = FunctionDescriptor.of(ValueLayout.JAVA_INT);
+            int hybridAbi = (int) linker.downcallHandle(
+                hybridLookup.find("drakes_hybrid_abi_version").orElseThrow(), intDesc).invokeExact();
+            int odysseiaAbi = (int) linker.downcallHandle(
+                odysseiaLookup.find("odysseia_abi_version").orElseThrow(), intDesc).invokeExact();
+            int slimefunAbi = (int) linker.downcallHandle(
+                slimefunLookup.find("slimefun_abi_version").orElseThrow(), intDesc).invokeExact();
+            var sum = linker.downcallHandle(
+                slimefunLookup.find("slimefun_sum_saturating").orElseThrow(),
+                FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG),
+                Linker.Option.critical(true));
+            int sumVal = (int) sum.invokeExact(MemorySegment.ofArray(new int[]{40, 50, 60}), 3L);
+            return "hybrid.abi=" + hybridAbi + " odysseia.abi=" + odysseiaAbi
+                + " slimefun.abi=" + slimefunAbi + " slimefun.sum=" + sumVal;
+        }
+    }
+
+    static void preloadRustFfm(Path server, boolean jniSamePath) throws Exception {
+        byte[] bytes;
+        try (var in = Embed.class.getClassLoader().getResourceAsStream("Embed$HostRustProbe.class")) {
+            bytes = in.readAllBytes();
+        }
+        clientRustLoader = new URLClassLoader("spike-client-rust", new java.net.URL[0],
+            ClassLoader.getPlatformClassLoader()) {
+            Class<?> defineProbe(byte[] b) {
+                return defineClass("Embed$HostRustProbe", b, 0, b.length);
+            }
+        };
+        var define = clientRustLoader.getClass().getDeclaredMethod("defineProbe", byte[].class);
+        define.setAccessible(true);
+        clientRustProbe = (Class<?>) define.invoke(clientRustLoader, (Object) bytes);
+        if (clientRustProbe.getClassLoader() != clientRustLoader)
+            throw new AssertionError("HostRustProbe was not defined in spike-client-rust");
+        String summary = (String) clientRustProbe
+            .getMethod("preload", Path.class, boolean.class)
+            .invoke(null, server.resolve("natives"), jniSamePath);
+        System.out.println("SPIKE host.rust.ffm=" + summary);
+    }
 
     /** Step 3: the host (like a client) loads netty-epoll, JNA and sqlite natives before the server does. */
     static URLClassLoader preloadNatives(java.net.URL[] urls) throws Exception {
@@ -68,6 +172,8 @@ public final class Embed {
         var flags = java.util.Arrays.asList(args).subList(Math.min(3, args.length), args.length);
         boolean natives = flags.contains("natives");
         boolean log4j = flags.contains("log4j");
+        boolean rust = flags.contains("rust");
+        boolean rustJniConflict = flags.contains("rust-jni-conflict");
         SpikeHooks.root = server;
         String cwd = Path.of("").toAbsolutePath().toString();
         String original = System.getProperty("user.dir");
@@ -105,6 +211,7 @@ public final class Embed {
             serverLoader = new SpikeLoader(urls, server.resolve("log4j2.xml"));
             if (natives) clientNatives = preloadNatives(urls);
             if (log4j) hostLog4j(urls, server);
+            if (rust) preloadRustFfm(server, rustJniConflict);
         } else {
             serverLoader = loader;
             mainClass = "io.papermc.paperclip.Main";
@@ -192,6 +299,76 @@ public final class Embed {
                         .getMethod("getContext", boolean.class).invoke(null, false);
                     Files.writeString(server.resolve("client-log-after-stop.txt"),
                         "context.started=" + context.getClass().getMethod("isStarted").invoke(context) + "\n");
+                }
+                if (clientRustProbe != null) {
+                    var rustLines = new java.util.ArrayList<String>();
+                    String hostAfter = (String) clientRustProbe.getMethod("verifyAfterStop").invoke(null);
+                    rustLines.add("host.after.stop: " + hostAfter);
+
+                    var drakesNative = Class.forName("org.purpurmc.purpur.nativelib.DrakesNative", true, serverLoader);
+                    boolean nativeEnabled = (boolean) drakesNative.getMethod("enabled").invoke(null);
+                    boolean tickAllowed = (boolean) drakesNative.getMethod("tickEngineAllowed").invoke(null);
+                    String nativeStatus = (String) drakesNative.getMethod("status").invoke(null);
+                    int sumResult = (int) drakesNative.getMethod("sumSaturating", int[].class, int.class)
+                        .invoke(null, new int[]{100, 200, 300}, 3);
+                    int[] charge = new int[]{10, 20};
+                    int[] out2 = new int[2];
+                    int filled = (int) drakesNative.getMethod("fillSequential", int.class, int[].class, int[].class, int.class, int[].class)
+                        .invoke(null, 50, new int[]{100, 100}, charge, 2, out2);
+                    int[] storeCharge = new int[]{10, 20};
+                    int storeLeft = (int) drakesNative.getMethod("storeRemaining", int.class, int[].class, int[].class, int.class)
+                        .invoke(null, 200, new int[]{100, 100}, storeCharge, 2);
+                    double price = (double) drakesNative.getMethod("marketPrice",
+                        double.class, long.class, double.class, double.class, double.class, double.class, double.class, double.class, double.class)
+                        .invoke(null, 100.0, 0L, 0.0, 100_000_000.0, 0.85, 1.85, 0.02, 1.45, 1.0);
+                    int auraHits = (int) drakesNative.getMethod("auraBatch",
+                        double.class, double.class, double.class, double.class, int.class, double[].class, byte[].class)
+                        .invoke(null, 0.0, 0.0, 0.0, 5.0, 2, new double[]{1.0, 0.0, 0.0, 9.0, 0.0, 0.0}, new byte[2]);
+                    Object pulses = drakesNative.getMethod("pulses").invoke(null);
+                    String pulseClass = pulses.getClass().getName();
+                    rustLines.add("server.drakes_native: enabled=" + nativeEnabled
+                        + " tickEngineAllowed=" + tickAllowed
+                        + " status={" + nativeStatus + "}"
+                        + " sum=" + sumResult
+                        + " filled=" + filled
+                        + " fillCharge=[" + charge[0] + "," + charge[1] + "]"
+                        + " storeLeft=" + storeLeft
+                        + " storeCharge=[" + storeCharge[0] + "," + storeCharge[1] + "]"
+                        + " price=" + price
+                        + " auraHits=" + auraHits
+                        + " pulseCounter=" + pulseClass);
+
+                    var hybridNative = Class.forName("org.purpurmc.purpur.nativelib.HybridNative", true, serverLoader);
+                    boolean hybridLoaded = (boolean) hybridNative.getMethod("libraryLoaded").invoke(null);
+                    boolean hybridBits = (boolean) hybridNative.getMethod("bitsEnabled").invoke(null);
+                    String hybridStatus = (String) hybridNative.getMethod("status").invoke(null);
+                    int[] vals = new int[2048];
+                    for (int i = 0; i < vals.length; i++) vals[i] = i & 15;
+                    long[] packed = new long[(int) hybridNative.getMethod("longCount", int.class, int.class).invoke(null, 4, vals.length)];
+                    int words = (int) hybridNative.getMethod("packBits", int.class, int[].class, long[].class)
+                        .invoke(null, 4, vals, packed);
+                    int[] unpacked = new int[vals.length];
+                    int unpackedCount = (int) hybridNative.getMethod("unpackBits", int.class, int.class, long[].class, int[].class)
+                        .invoke(null, 4, vals.length, packed, unpacked);
+                    boolean parityOk = java.util.Arrays.equals(vals, unpacked);
+                    rustLines.add("server.hybrid_native: libraryLoaded=" + hybridLoaded
+                        + " bitsEnabled=" + hybridBits
+                        + " status={" + hybridStatus + "}"
+                        + " packWords=" + words
+                        + " unpackedCount=" + unpackedCount
+                        + " parityOk=" + parityOk);
+
+                    var kernelBridge = Class.forName("org.purpurmc.purpur.DrakesKernelBridge", true, serverLoader);
+                    boolean kernelRustLoaded = (boolean) kernelBridge.getMethod("isRustLoaded").invoke(null);
+                    var rustEngine = Class.forName("org.purpurmc.purpur.rust.SlimefunRustEngine", true, serverLoader);
+                    rustEngine.getMethod("initPanamaBindings").invoke(null);
+                    boolean engineLinked = (boolean) rustEngine.getMethod("isNativeLinked").invoke(null);
+                    Object cycle = rustEngine.getMethod("executeTick").invoke(null);
+                    rustLines.add("server.rust_engine: kernelBridge.isRustLoaded=" + kernelRustLoaded
+                        + " SlimefunRustEngine.isNativeLinked=" + engineLinked
+                        + " cycle=" + cycle);
+
+                    Files.write(server.resolve("rust-ffm-after-stop.txt"), rustLines);
                 }
                 serverLoader.close();
                 loader.close();

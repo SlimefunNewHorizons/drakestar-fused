@@ -1,0 +1,2 @@
+SPIKE host.native.epoll.after.stop=true
+SPIKE server.native.epoll=true cause=null

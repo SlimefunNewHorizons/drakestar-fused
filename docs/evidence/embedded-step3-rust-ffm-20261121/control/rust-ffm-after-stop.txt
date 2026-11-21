@@ -1,0 +1,4 @@
+host.after.stop: hybrid.abi=1 odysseia.abi=1 slimefun.abi=2 slimefun.sum=150
+server.drakes_native: enabled=true tickEngineAllowed=true status={enabled=true odysseia=/tmp/fused-step3-rust-control/server/natives/libodysseia_ffi.so [pulses=true aura=true] slimefun=/tmp/fused-step3-rust-control/server/natives/libslimefun_ffi.so [fill=true sum=true price=true]} sum=600 filled=0 fillCharge=[60,20] storeLeft=0 storeCharge=[100,100] price=90.0 auraHits=1 pulseCounter=org.purpurmc.purpur.nativelib.DrakesNative$Odysseia$Native
+server.hybrid_native: libraryLoaded=true bitsEnabled=true status={bits=true noise=true region=true minBatch=2048} packWords=128 unpackedCount=2048 parityOk=true
+server.rust_engine: kernelBridge.isRustLoaded=false SlimefunRustEngine.isNativeLinked=false cycle=RustCycleResult[tickNumber=1, unmetDemand=0, wastedEnergy=0, durationNanos=7083, isNative=false]

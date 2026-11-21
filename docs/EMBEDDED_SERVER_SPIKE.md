@@ -27,7 +27,7 @@ Es decir: **el monolito completo (Slimefun, 9 suites, núcleo Drakes) sí arranc
 
 1. Probar en `Embed` con `user.dir` aislado: lanzar el servidor con rutas propias y confirmar que no toca el directorio del anfitrión (riesgo 1) y qué ocurre al `stop` (riesgo 2).
 2. Probar el arranque dentro de un cliente Fabric 26.2 real (hilo desde el entrypoint, bloqueo hasta puerto abierto) con quickplay; registrar logs y RAM.
-3. Resolver 3 y 4 con pruebas reales (JNI doble, log4j). **JNI de netty-epoll/JNA/sqlite pasa en laboratorio (20-nov, `docs/evidence/embedded-step3-jni-20261120`)** y **log4j del anfitrión con `-Dlog4j.configurationFile` pasa en laboratorio junto con JNI (21-nov, `docs/evidence/embedded-step3-log4j-20261121`)**; falta Rust FFM activo (`native.enabled=true`).
+3. Resolver 3 y 4 con pruebas reales (JNI doble, log4j). **Pasa completo en laboratorio**: JNI de netty-epoll/JNA/sqlite (`docs/evidence/embedded-step3-jni-20261120`), log4j del anfitrión con `-Dlog4j.configurationFile` (`docs/evidence/embedded-step3-log4j-20261121`) y **Rust FFM/JNI activo (`native.enabled=true`, `hybrid.engine.enabled=true`, `libdrakes_hybrid_ffi.so`/`libodysseia_ffi.so`/`libslimefun_ffi.so` en ambos cargadores; 21-nov, `docs/evidence/embedded-step3-rust-ffm-20261121`)**.
 4. Portar el arranque a NeoForge/Forge (módulo fino sobre el mismo núcleo).
 5. Solo entonces cambiar la plantilla «Slimefun solitario» del launcher a este modo; mientras tanto el **servidor local gestionado** (proceso aparte invisible) es el camino soportado.
 
