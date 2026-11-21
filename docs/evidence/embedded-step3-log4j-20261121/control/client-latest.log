@@ -1,0 +1,100 @@
+[CLIENT SpikeClient] SPIKE-CLIENT before server
+[CLIENT bootstrap] Running Java 25 (OpenJDK 64-Bit Server VM 25.0.5.1+2-1-24.04.1-Ubuntu; Ubuntu null) on Linux 6.8.0-149-generic (amd64)
+[CLIENT bootstrap] Loading Purpur 26.2-140-experimental/horizon-rust-hybrid-engine@ab5d46e (2026-11-07T05:07:01Z) for Minecraft 26.2
+[CLIENT oshi.software.os.linux.LinuxOperatingSystem] Did not find udev library in operating system. Some features may not work.
+[CLIENT PluginInitializerManager] Initializing plugins...
+[CLIENT PluginInitializerManager] Initialized 0 plugins
+[CLIENT ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Initialising converters for DataConverter...
+[CLIENT net.minecraft.server.Main] You have used the Paper command line EULA agreement flag.
+[CLIENT net.minecraft.server.Main] By using this setting you are indicating your agreement to Mojang's EULA (https://aka.ms/MinecraftEULA).
+[CLIENT net.minecraft.server.Main] If you do not agree to the above EULA please stop your server and remove this flag immediately.
+[CLIENT com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService] Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[CLIENT ca.spottedleaf.dataconverter.minecraft.datatypes.MCTypeRegistry] Finished initialising converters for DataConverter in 4,227.3ms
+[CLIENT net.minecraft.server.MinecraftServer] Found new data pack paper, loading it automatically
+[CLIENT net.minecraft.server.Main] No existing world data, creating new world
+[CLIENT net.minecraft.server.dedicated.DedicatedServerProperties] No key layers in MapLike[{}]
+[CLIENT net.minecraft.world.item.crafting.RecipeManager] Loaded 1585 recipes
+[CLIENT net.minecraft.server.ServerAdvancementManager] Loaded 1688 advancements
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] Starting minecraft server version 26.2
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] Loading properties
+[CLIENT Minecraft] This server is running Purpur version 26.2-140-experimental/horizon-rust-hybrid-engine@ab5d46e (2026-11-07T05:07:01Z) (Implementing API version 26.2.build.140-stable)
+[CLIENT spark] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[CLIENT Minecraft] Server Ping Player Sample Count: 12
+[CLIENT Minecraft] Using 4 threads for Netty based IO
+[CLIENT DrakesBundled] [DrakesBundled] 0 en keep; 9 plugins activos (0 desactivados en drakes-data/suites.yml), 9 extraídos/actualizados en plugins/
+[CLIENT DrakesKernel] [38;5;99m================================================================[0m
+[CLIENT DrakesKernel] [1;38;5;141m####  ####   ###  #  #  #####  #### [0m
+[CLIENT DrakesKernel] [1;38;5;141m#   # #   # #   # # #   #     #     [0m
+[CLIENT DrakesKernel] [1;38;5;141m#   # ####  ##### ##    ####   ###  [0m
+[CLIENT DrakesKernel] [1;38;5;141m#   # #  #  #   # # #   #         # [0m
+[CLIENT DrakesKernel] [1;38;5;141m####  #   # #   # #  #  ##### ####  [0m
+[CLIENT DrakesKernel] [1;38;5;51m####  #   # ####  ####  #   # ####  [0m[1;38;5;141m ###   ###      ###  [0m
+[CLIENT DrakesKernel] [1;38;5;51m#   # #   # #   # #   # #   # #   # [0m[1;38;5;141m#   # #        #   # [0m
+[CLIENT DrakesKernel] [1;38;5;51m####  #   # ####  ####  #   # ####  [0m[1;38;5;141m  ##  ####       ##  [0m
+[CLIENT DrakesKernel] [1;38;5;51m#     #   # #  #  #     #   # #  #  [0m[1;38;5;141m #    #   #     #    [0m
+[CLIENT DrakesKernel] [1;38;5;51m#      ###  #   # #      ###  #   # [0m[1;38;5;141m#####  ###  #  ##### [0m
+[CLIENT DrakesKernel] [38;5;99m================================================================[0m
+[CLIENT DrakesKernel] [38;5;245mVersion   [0m[1;37mDrakesPurpur 26.2 build 140[0m
+[CLIENT DrakesKernel] [38;5;245mMinecraft [0m[1;37m26.2[0m
+[CLIENT DrakesKernel] [38;5;245mJava      [0m[1;37m25.0.5.1+2-1-24.04.1-Ubuntu (OpenJDK 64-Bit Server VM)[0m
+[CLIENT DrakesKernel] [38;5;245mModo      [0m[1;37mMONOLITO (9 suites embebidas)[0m
+[CLIENT DrakesKernel] [38;5;245mEdited by [1;37mJackStar6677-1 (JackStar Systems)[38;5;245m - DrakesCraft Season Two[0m
+[CLIENT DrakesKernel] [38;5;245mGitHub    [0m[4;38;5;81mhttps://github.com/SlimefunNewHorizons/DrakesPurpur[0m
+[CLIENT DrakesKernel] [38;5;245mPerfil    [0m[4;38;5;81mhttps://github.com/JackStar6677-1[0m
+[CLIENT DrakesKernel] [38;5;245mMaven     [0m[4;38;5;81mhttps://maven.drakescraft.cl[0m
+[CLIENT DrakesKernel] [38;5;245mWeb       [0m[4;38;5;81mhttps://web.drakescraft.cl[0m
+[CLIENT DrakesKernel] [38;5;245mDiscord   [0m[4;38;5;81mhttps://discord.gg/rv3vtXZTk7[0m
+[CLIENT DrakesKernel] [2;37mBased on Purpur (PurpurMC) and Paper (PaperMC); licensed per upstream; modifications by JackStar6677-1[0m
+[CLIENT DrakesKernel] [38;5;99m================================================================[0m
+[CLIENT DrakesDb] [DrakesDb] Base compartida activa (WAL): drakes-data/kernel.db
+[CLIENT DrakesKernel] [CrashGuard] Fallos del kernel en DrakesDb (tabla kernel_faults)
+[CLIENT DrakesNative] [Native] apagado (native.enabled=false): todo corre en Java.
+[CLIENT HybridNative] [Hybrid] apagado (native.hybrid.enabled=false): todo corre en Java.
+[CLIENT DrakesPerf] [Perf] status=true load-governor=false backup-throttle=true
+[CLIENT DrakesKernel] [DrakesPurpur] Motor Rust apagado (perf.yml native.*); todo corre en Java.
+[CLIENT SaoriLink] [SaoriLink] SAORI desactivada (falta el archivo de token).
+[CLIENT ChaguiPumpkinCompat] [ChaguiCompat] Initializing Pumpkin & PatchBukkit compatibility layer (Author: Chagui68).
+[CLIENT DrakesStaffEngine] [StaffEngine] Initialized kernel-embedded staff management, vanish/freeze matrix & sovereign godmode.
+[CLIENT DrakesModalityEngine] [ModalityEngine] Kernel Modality Separation active. Database: drakes_modalities.db
+[CLIENT DrakesStorageAudit] [StorageAudit] Kernel Storage Forensics active (tabla storage_actions en DrakesDb)
+[CLIENT DrakesBackupManager] [BackupManager] Daily 7z backup scheduler active (first run in 60 min, retention: 7 days).
+[CLIENT MoonriseCommon] Paper is using 1 worker threads, 1 I/O threads
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] Default game type: SURVIVAL
+[CLIENT net.minecraft.server.MinecraftServer] Generating keypair
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] Starting Minecraft server on 127.0.0.1:22753
+[CLIENT net.minecraft.server.network.ServerConnectionListener] Paper: Using libdeflate (Linux x86_64) compression from Velocity.
+[CLIENT net.minecraft.server.network.ServerConnectionListener] Paper: Using OpenSSL 3.x.x (Linux x86_64) cipher from Velocity.
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] The server will make no attempt to authenticate usernames. Beware.
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] To change this, set "online-mode" to "true" in the server.properties file.
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] Preparing level "spike"
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Selecting spawn point for level 'minecraft:overworld'...
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Selecting spawn point for level 'minecraft:the_nether'...
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Selecting spawn point for level 'minecraft:the_end'...
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Loading 0 persistent chunks for level 'minecraft:overworld'...
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Preparing spawn area: 100%
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Prepared spawn area in 8821 ms
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Loading 0 persistent chunks for level 'minecraft:the_nether'...
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Preparing spawn area: 100%
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Prepared spawn area in 5522 ms
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Loading 0 persistent chunks for level 'minecraft:the_end'...
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Preparing spawn area: 100%
+[CLIENT net.minecraft.server.level.progress.LoggingLevelLoadListener] Prepared spawn area in 1264 ms
+[CLIENT net.minecraft.server.dedicated.DedicatedServer] Done preparing level "spike" (10.898s)
+[CLIENT spark] Starting background profiler...
+[CLIENT net.minecraft.server.MinecraftServer] Saving chunks for level 'ServerLevel[spike]'/minecraft:overworld
+[CLIENT net.minecraft.server.MinecraftServer] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_nether
+[CLIENT net.minecraft.server.MinecraftServer] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_end
+[CLIENT net.minecraft.server.MinecraftServer] ThreadedAnvilChunkStorage (world): All chunks are saved
+[CLIENT net.minecraft.server.MinecraftServer] ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[CLIENT net.minecraft.server.MinecraftServer] ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[CLIENT net.minecraft.server.MinecraftServer] ThreadedAnvilChunkStorage: All dimensions are saved
+[CLIENT net.minecraft.server.MinecraftServer] Running delayed init tasks
+[CLIENT net.minecraft.server.MinecraftServer] Done (75.551s)! For help, type "help"
+[CLIENT net.minecraft.server.MinecraftServer] *************************************************************************************
+[CLIENT net.minecraft.server.MinecraftServer] This is the first time you're starting this server.
+[CLIENT net.minecraft.server.MinecraftServer] It's recommended you read our 'Getting Started' documentation for guidance.
+[CLIENT net.minecraft.server.MinecraftServer] View this and more helpful information here: https://docs.papermc.io/paper/next-steps
+[CLIENT net.minecraft.server.MinecraftServer] *************************************************************************************
+[CLIENT Minecraft] [STDOUT] [Embed] SPIKE host.shutdown
