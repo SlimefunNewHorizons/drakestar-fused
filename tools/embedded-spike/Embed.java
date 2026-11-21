@@ -39,11 +39,35 @@ public final class Embed {
         return client;
     }
 
+    /** Step 3 (log4j): the host's own log4j, configured like the vanilla launcher does. */
+    static URLClassLoader clientLog;
+    static Object clientLogger;
+
+    static void clientLog(String message) throws Exception {
+        Class.forName("org.apache.logging.log4j.Logger", true, clientLog)
+            .getMethod("info", String.class).invoke(clientLogger, message);
+    }
+
+    static void hostLog4j(java.net.URL[] urls, Path server) throws Exception {
+        var picked = java.util.Arrays.stream(urls)
+            .filter(u -> u.getPath().matches(".*/log4j-(api|core)-[^/]*\\.jar"))
+            .toArray(java.net.URL[]::new);
+        // The vanilla launcher passes -Dlog4j.configurationFile=client-*.xml: a JVM-wide property.
+        System.setProperty("log4j.configurationFile", server.resolve("client-log4j2.xml").toString());
+        clientLog = new URLClassLoader("spike-client-log", picked, ClassLoader.getPlatformClassLoader());
+        var manager = Class.forName("org.apache.logging.log4j.LogManager", true, clientLog);
+        clientLogger = manager.getMethod("getLogger", String.class).invoke(null, "SpikeClient");
+        System.out.println("SPIKE host.log4j.jars=" + picked.length);
+        clientLog("SPIKE-CLIENT before server");
+    }
+
     public static void main(String[] args) throws Exception {
         Path jar = Path.of(args[0]).toAbsolutePath();
         Path server = Path.of(args[1]).toAbsolutePath();
         boolean isolated = args.length > 2 && args[2].equals("isolated");
-        boolean natives = args.length > 3 && args[3].equals("natives");
+        var flags = java.util.Arrays.asList(args).subList(Math.min(3, args.length), args.length);
+        boolean natives = flags.contains("natives");
+        boolean log4j = flags.contains("log4j");
         SpikeHooks.root = server;
         String cwd = Path.of("").toAbsolutePath().toString();
         String original = System.getProperty("user.dir");
@@ -80,6 +104,7 @@ public final class Embed {
             mainClass = (String) findMain.invoke(null);
             serverLoader = new SpikeLoader(urls, server.resolve("log4j2.xml"));
             if (natives) clientNatives = preloadNatives(urls);
+            if (log4j) hostLog4j(urls, server);
         } else {
             serverLoader = loader;
             mainClass = "io.papermc.paperclip.Main";
@@ -160,6 +185,13 @@ public final class Embed {
                         + " cause=" + serverEpoll.getMethod("unavailabilityCause").invoke(null));
                     // System.out may be closed by the server after stop.
                     Files.write(server.resolve("natives-after-stop.txt"), lines);
+                }
+                if (clientLog != null) {
+                    clientLog("SPIKE-CLIENT after stop");
+                    var context = Class.forName("org.apache.logging.log4j.LogManager", true, clientLog)
+                        .getMethod("getContext", boolean.class).invoke(null, false);
+                    Files.writeString(server.resolve("client-log-after-stop.txt"),
+                        "context.started=" + context.getClass().getMethod("isStarted").invoke(context) + "\n");
                 }
                 serverLoader.close();
                 loader.close();

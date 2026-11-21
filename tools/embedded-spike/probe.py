@@ -56,6 +56,12 @@ def run(args):
         '<PatternLayout pattern="[%d{HH:mm:ss} %level] %msg%n"/></File></Appenders>'
         '<Loggers><Root level="info"><AppenderRef ref="Console"/>'
         '<AppenderRef ref="File"/></Root></Loggers></Configuration>')
+    if args.host_log4j:
+        (server / "client-log4j2.xml").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?><Configuration status="WARN">'
+            f'<Appenders><File name="Client" fileName="{server}/client-logs/latest.log">'
+            '<PatternLayout pattern="[CLIENT %c] %msg%n"/></File></Appenders>'
+            '<Loggers><Root level="info"><AppenderRef ref="Client"/></Root></Loggers></Configuration>')
     before = snapshot(host)
     # The host initially contains only sentinel.txt. Watching its directory also
     # catches transient new subtrees, which before/after hashes alone miss.
@@ -87,7 +93,8 @@ def run(args):
     command = [java, "-Xms256m", "-Xmx2g", "-XX:ActiveProcessorCount=2",
                "--enable-native-access=ALL-UNNAMED", "-cp", str(classes),
                "Embed", str(jar), str(server), args.mode,
-               *(["natives"] if args.preload_natives else [])]
+               *(["natives"] if args.preload_natives else []),
+               *(["log4j"] if args.host_log4j else [])]
     started = time.monotonic()
     proc = subprocess.Popen(command, cwd=host, stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -176,12 +183,30 @@ def run(args):
         "natives_after_stop": ((server / "natives-after-stop.txt").read_text().splitlines()
                                if (server / "natives-after-stop.txt").exists() else []),
         "server_sqlite_files": {str(p.relative_to(server)): p.stat().st_size for p in server.rglob("*.db")},
+        "host_log4j": args.host_log4j,
+        **(log4j_report(server) if args.host_log4j else {}),
         "step1_pass": bool(ready and stop_sent and alive and before == after
                            and not host_events and not forced and not timed_out and proc.returncode == 0),
     }
     (output / "result.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps({k: v for k, v in result.items() if not k.startswith(("host_before", "host_after", "server_files"))}, indent=2))
     return 0 if result["step1_pass"] else 1
+
+
+def log4j_report(server):
+    """Where each logger's lines ended up (riesgo 4: estáticos log4j compartidos)."""
+    client = server / "client-logs/latest.log"
+    own = server / "logs/latest.log"
+    lines = client.read_text(errors="replace").splitlines() if client.exists() else []
+    after = server / "client-log-after-stop.txt"
+    return {
+        "client_log_lines": len(lines),
+        "client_log_own_lines": [l for l in lines if l.startswith("[CLIENT SpikeClient]")],
+        "client_log_foreign_lines": sum(not l.startswith("[CLIENT SpikeClient]") for l in lines),
+        "server_log_bytes": own.stat().st_size if own.exists() else None,
+        "server_log_has_done": own.exists() and "Done (" in own.read_text(errors="replace"),
+        "client_log_after_stop": after.read_text().strip() if after.exists() else None,
+    }
 
 
 if __name__ == "__main__":
@@ -193,4 +218,6 @@ if __name__ == "__main__":
     parser.add_argument("--mode", choices=("baseline", "isolated"), default="baseline")
     parser.add_argument("--preload-natives", action="store_true",
                         help="Step 3: host loads netty-epoll/JNA/sqlite natives first (isolated only)")
+    parser.add_argument("--host-log4j", action="store_true",
+                        help="Step 3: host configures its own log4j via -Dlog4j.configurationFile first (isolated only)")
     raise SystemExit(run(parser.parse_args()))

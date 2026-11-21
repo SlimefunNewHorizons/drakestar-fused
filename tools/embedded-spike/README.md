@@ -53,6 +53,10 @@ reemplazar/cerrar `System.out` durante la parada.
 `--preload-natives` (sólo `isolated`) hace que el anfitrión cargue antes netty-epoll, JNA y sqlite en
 su propio cargador, como haría el cliente; ver `docs/evidence/embedded-step3-jni-20261120`.
 
+`--host-log4j` (sólo `isolated`) configura el Log4j del anfitrión en un cargador propio con la propiedad
+global `-Dlog4j.configurationFile` (como hace el launcher de Minecraft) antes de iniciar el servidor, y
+comprueba que el servidor escriba en su propio `logs/latest.log` sin contaminar `client-logs/latest.log`
+y que el contexto del cliente siga activo tras `stop`; ver `docs/evidence/embedded-step3-log4j-20261121`.
+
 Los siguientes pasos de `docs/EMBEDDED_SERVER_SPIKE.md` requieren evidencia
-propia. Este laboratorio no acredita cliente real, JNI doble, compatibilidad
-log4j del cliente, Rust activo ni soporte de ningún loader.
+propia. Este laboratorio no acredita cliente real, Rust activo ni soporte de ningún loader.

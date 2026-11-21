@@ -48,12 +48,18 @@ public final class SpikeHooks {
         return fs.equals(java.nio.file.FileSystems.getDefault()) ? redirect(path) : path;
     }
 
+    private static boolean isolatedProperty(String key) {
+        return "log4j.configurationFile".equals(key) || "log4j2.configurationFile".equals(key);
+    }
+
     public static String property(String key) {
-        return "user.dir".equals(key) ? root.toString() : System.getProperty(key);
+        if ("user.dir".equals(key)) return root.toString();
+        return isolatedProperty(key) ? null : System.getProperty(key);
     }
 
     public static String property(String key, String fallback) {
-        return "user.dir".equals(key) ? root.toString() : System.getProperty(key, fallback);
+        if ("user.dir".equals(key)) return root.toString();
+        return isolatedProperty(key) ? fallback : System.getProperty(key, fallback);
     }
 
     public static void exit(int status) {

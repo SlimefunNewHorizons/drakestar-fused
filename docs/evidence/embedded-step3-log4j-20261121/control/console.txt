@@ -1,0 +1,13 @@
+SPIKE pid=1414436
+SPIKE user.dir.original=/tmp/fused-step3-log4j-run1/host
+SPIKE user.dir.server=/tmp/fused-step3-log4j-run1/host
+SPIKE nio.cwd=/tmp/fused-step3-log4j-run1/host
+SPIKE io.cwd=/tmp/fused-step3-log4j-run1/host
+SPIKE cwd.unchanged=true
+Applying patches
+SPIKE host.log4j.jars=2
+SPIKE host.minecraft.absent=true
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.joml.MemUtil$MemUtilUnsafe (file:/tmp/fused-step3-log4j-run1/server/libraries/org/joml/joml/1.10.8/joml-1.10.8.jar)
+WARNING: Please consider reporting this to the maintainers of class org.joml.MemUtil$MemUtilUnsafe
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
