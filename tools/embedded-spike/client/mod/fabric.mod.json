@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "id": "fused_embedded_spike",
+  "version": "0.0.0-spike",
+  "name": "Fused embedded spike (paso 2)",
+  "environment": "client",
+  "entrypoints": { "client": ["SpikeClientMod"] }
+}

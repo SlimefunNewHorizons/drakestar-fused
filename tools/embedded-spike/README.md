@@ -77,5 +77,21 @@ por JNI con `DrakesKernelBridge`/`SlimefunRustEngine`. `--loader-jni-conflict` d
 JNI por cargador (`-Ddrakestar.fused.jniDirectPath=true`) para reproducir la colisión de control; ver
 `docs/evidence/embedded-step4-neoforge-forge-20261121`.
 
+## Paso 2: cliente Fabric 26.2 real (arnés, **aún sin ejecutar**)
+
+`client/prepare_client.py --root <dir>` descarga el cliente 26.2, Fabric Loader 0.20.1 y los assets sin
+sonidos (~225 MB) y escribe `launch.json`. `client/run_client.py` compila `Embed` + `SpikeClientMod` como mod
+Fabric de cliente, arranca el cliente bajo Xvfb/llvmpipe con `--quickPlayMultiplayer 127.0.0.1:<puerto>`; el
+entrypoint lanza el monolito en modo `isolated` en un hilo y bloquea hasta `Done (` + puerto abierto. El
+supervisor captura pantallas (`boot.png`, `in-world.png`, `after-stop.png`), mide RSS, envía `stop` y exige
+jugador dentro + cliente vivo tras la parada.
+
+```sh
+python3 tools/embedded-spike/client/prepare_client.py --root ~/.cache/fused-embedded-spike/fabric-26.2
+~/ai-hub/scripts/build_seguro.sh 25 "$PWD" python3 tools/embedded-spike/client/run_client.py \
+  --client-root ~/.cache/fused-embedded-spike/fabric-26.2 \
+  --jar /ruta/purpur-paperclip-26.2.build.140-stable.jar --output /tmp/fused-step2-<fecha>
+```
+
 Los siguientes pasos de `docs/EMBEDDED_SERVER_SPIKE.md` requieren evidencia
 propia. Este laboratorio no acredita cliente gráfico real.
