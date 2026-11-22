@@ -368,11 +368,18 @@ public final class Embed {
             serverLoader = loader;
             mainClass = "io.papermc.paperclip.Main";
         }
+        // A Fabric client host ships its own vanilla net.minecraft.server.Main;
+        // isolation then means the embedded server resolves a distinct class.
+        Class<?> hostMain = null;
         try {
-            Class.forName("net.minecraft.server.Main", false, Embed.class.getClassLoader());
-            throw new AssertionError("Server classes leaked to host");
+            hostMain = Class.forName("net.minecraft.server.Main", false, Embed.class.getClassLoader());
         } catch (ClassNotFoundException expected) {
             System.out.println("SPIKE host.minecraft.absent=true");
+        }
+        if (hostMain != null) {
+            if (!isolated || Class.forName("net.minecraft.server.Main", false, serverLoader) == hostMain)
+                throw new AssertionError("Server classes leaked to host");
+            System.out.println("SPIKE host.minecraft.distinct=true");
         }
         var launch = new Thread(() -> {
             try {

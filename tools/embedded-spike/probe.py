@@ -239,6 +239,7 @@ def run(args):
         "host_before": before, "host_after": after,
         "nio_cwd_unchanged": b"SPIKE cwd.unchanged=true" in data,
         "host_minecraft_absent": b"SPIKE host.minecraft.absent=true" in data,
+        "host_minecraft_distinct": b"SPIKE host.minecraft.distinct=true" in data,
         "probe_sources_sha256": source_hashes,
         "server_files": sorted(str(p.relative_to(server)) for p in server.rglob("*") if p.is_file()),
         "preload_natives": args.preload_natives,

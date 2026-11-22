@@ -94,6 +94,9 @@ def main():
         while time.monotonic() - started < a.timeout and client.poll() is None:
             peak = max(peak, rss_kib(client.pid))
             t = text()
+            if stage == "boot" and ("SPIKE-CLIENT embed.failed=" in t or "server.ready=false" in t):
+                res["boot_failure"] = next(l for l in t.splitlines() if "SPIKE-CLIENT" in l)
+                break
             if stage == "boot" and "SPIKE-CLIENT server.ready port=" in t:
                 res["server_ready_seconds"] = round(time.monotonic() - started, 1)
                 stage = "join"
