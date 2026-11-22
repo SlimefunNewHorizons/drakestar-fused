@@ -16,6 +16,155 @@ public final class Embed {
     static URLClassLoader clientNatives;
     static URLClassLoader clientRustLoader;
     static Class<?> clientRustProbe;
+    static URLClassLoader neoforgeModLoader;
+    static URLClassLoader forgeModLoader;
+    static URLClassLoader fabricModLoader;
+    static final java.util.List<String> loaderStartLines = new java.util.ArrayList<>();
+
+    static URLClassLoader createModClassLoader(String name, Path modJar, Path stubsDir, java.net.URL[] paperclipUrls) throws Exception {
+        var urls = new java.util.ArrayList<java.net.URL>();
+        urls.add(modJar.toUri().toURL());
+        urls.add(stubsDir.toUri().toURL());
+        for (java.net.URL u : paperclipUrls) {
+            if (u.getPath().matches(".*/slf4j-api-[^/]*\\.jar")) {
+                urls.add(u);
+            }
+        }
+        return new URLClassLoader(name, urls.toArray(java.net.URL[]::new), ClassLoader.getPlatformClassLoader());
+    }
+
+    static String inspectLoaderState(String loaderId, URLClassLoader cl, String annotationInfo) throws Exception {
+        var serverClass = Class.forName("com.drakescraft.fused.bridge.FusedCraftServer", true, cl);
+        Object instance = serverClass.getMethod("getActiveInstance").invoke(null);
+        boolean initialized = instance != null && (boolean) serverClass.getMethod("isInitialized").invoke(instance);
+        Object gameDir = instance != null ? serverClass.getMethod("getGameDir").invoke(instance) : null;
+        Object pluginsDir = instance != null ? serverClass.getMethod("getPluginsDir").invoke(instance) : null;
+        var rustBridge = Class.forName("com.drakescraft.fused.rust.SlimefunRustNativeBridge", true, cl);
+        boolean rustLoaded = (boolean) rustBridge.getMethod("isLoaded").invoke(null);
+        Object loadedPath = rustBridge.getMethod("getLoadedPath").invoke(null);
+        Object lastError = rustBridge.getMethod("getLastError").invoke(null);
+        return "loader=" + loaderId
+            + " annotation=" + annotationInfo
+            + " initialized=" + initialized
+            + " gameDir=" + gameDir
+            + " pluginsDirExists=" + (pluginsDir instanceof Path p && Files.isDirectory(p))
+            + " rustLoaded=" + rustLoaded
+            + " loadedPath=" + loadedPath
+            + " lastError=" + lastError;
+    }
+
+    static void startLoaderMods(java.net.URL[] paperclipUrls, Path server, boolean jniConflict) throws Exception {
+        System.setProperty("drakestar.fused.gameDir", server.toString());
+        System.setProperty("drakestar.fused.jniDirectPath", Boolean.toString(jniConflict));
+        String jarsProp = System.getProperty("drakestar.fused.loaderJars", "");
+        String stubsProp = System.getProperty("drakestar.fused.loaderStubs", "");
+        if (jarsProp.isBlank() || stubsProp.isBlank()) {
+            throw new IllegalArgumentException("Missing drakestar.fused.loaderJars or drakestar.fused.loaderStubs");
+        }
+        String[] jarParts = jarsProp.split(File.pathSeparator);
+        if (jarParts.length != 3) {
+            throw new IllegalArgumentException("Expected 3 loader jars (fabric, neoforge, forge), got " + jarParts.length);
+        }
+        Path fabricJar = Path.of(jarParts[0]).toAbsolutePath();
+        Path neoforgeJar = Path.of(jarParts[1]).toAbsolutePath();
+        Path forgeJar = Path.of(jarParts[2]).toAbsolutePath();
+        Path stubsRoot = Path.of(stubsProp).toAbsolutePath();
+
+        // 1. NeoForge universal mod jar
+        neoforgeModLoader = createModClassLoader("spike-loader-neoforge", neoforgeJar, stubsRoot.resolve("neoforge"), paperclipUrls);
+        var neoModClass = Class.forName("com.drakescraft.fused.neoforge.DrakeStarFusedNeoForge", true, neoforgeModLoader);
+        var neoModAnnClass = Class.forName("net.neoforged.fml.common.Mod", true, neoforgeModLoader).asSubclass(java.lang.annotation.Annotation.class);
+        var neoAnn = neoModClass.getAnnotation(neoModAnnClass);
+        String neoModId = (String) neoModAnnClass.getMethod("value").invoke(neoAnn);
+        var neoBusClass = Class.forName("net.neoforged.bus.api.IEventBus", true, neoforgeModLoader);
+        var neoForgeClass = Class.forName("net.neoforged.neoforge.common.NeoForge", true, neoforgeModLoader);
+        Object neoEventBus = neoForgeClass.getField("EVENT_BUS").get(null);
+        neoModClass.getConstructor(neoBusClass).newInstance(neoEventBus);
+        var neoStartEventClass = Class.forName("net.neoforged.neoforge.event.server.ServerStartingEvent", true, neoforgeModLoader);
+        var mcServerNeo = Class.forName("net.minecraft.server.MinecraftServer", true, neoforgeModLoader);
+        Object neoStartEvent = neoStartEventClass.getConstructor(mcServerNeo).newInstance((Object) null);
+        neoBusClass.getMethod("post", Class.forName("net.neoforged.bus.api.Event", true, neoforgeModLoader)).invoke(neoEventBus, neoStartEvent);
+        String neoLine = inspectLoaderState("neoforge", neoforgeModLoader, "@Mod(" + neoModId + ")");
+        loaderStartLines.add("start." + neoLine);
+        System.out.println("SPIKE loader.start." + neoLine);
+
+        // 2. Forge universal mod jar
+        forgeModLoader = createModClassLoader("spike-loader-forge", forgeJar, stubsRoot.resolve("forge"), paperclipUrls);
+        var forgeModClass = Class.forName("com.drakescraft.fused.forge.DrakeStarFusedForge", true, forgeModLoader);
+        var forgeModAnnClass = Class.forName("net.minecraftforge.fml.common.Mod", true, forgeModLoader).asSubclass(java.lang.annotation.Annotation.class);
+        var forgeAnn = forgeModClass.getAnnotation(forgeModAnnClass);
+        String forgeModId = (String) forgeModAnnClass.getMethod("value").invoke(forgeAnn);
+        forgeModClass.getConstructor().newInstance();
+        var forgeBusClass = Class.forName("net.minecraftforge.eventbus.api.IEventBus", true, forgeModLoader);
+        var mcForgeClass = Class.forName("net.minecraftforge.common.MinecraftForge", true, forgeModLoader);
+        Object forgeEventBus = mcForgeClass.getField("EVENT_BUS").get(null);
+        var forgeStartEventClass = Class.forName("net.minecraftforge.event.server.ServerStartingEvent", true, forgeModLoader);
+        var mcServerForge = Class.forName("net.minecraft.server.MinecraftServer", true, forgeModLoader);
+        Object forgeStartEvent = forgeStartEventClass.getConstructor(mcServerForge).newInstance((Object) null);
+        forgeBusClass.getMethod("post", Class.forName("net.minecraftforge.eventbus.api.Event", true, forgeModLoader)).invoke(forgeEventBus, forgeStartEvent);
+        String forgeLine = inspectLoaderState("forge", forgeModLoader, "@Mod(" + forgeModId + ")");
+        loaderStartLines.add("start." + forgeLine);
+        System.out.println("SPIKE loader.start." + forgeLine);
+
+        // 3. Fabric universal mod jar
+        fabricModLoader = createModClassLoader("spike-loader-fabric", fabricJar, stubsRoot.resolve("fabric"), paperclipUrls);
+        var fabricClientClass = Class.forName("com.drakescraft.fused.DrakeStarFusedClient", true, fabricModLoader);
+        Object fabricClient = fabricClientClass.getConstructor().newInstance();
+        fabricClientClass.getMethod("onInitializeClient").invoke(fabricClient);
+        var fabricModClass = Class.forName("com.drakescraft.fused.DrakeStarFusedMod", true, fabricModLoader);
+        Object fabricMod = fabricModClass.getConstructor().newInstance();
+        fabricModClass.getMethod("onInitialize").invoke(fabricMod);
+        var lifecycleClass = Class.forName("net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents", true, fabricModLoader);
+        Object startingEvent = lifecycleClass.getField("SERVER_STARTING").get(null);
+        Object startingInvoker = startingEvent.getClass().getMethod("invoker").invoke(startingEvent);
+        var startingIface = Class.forName("net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents$ServerStarting", true, fabricModLoader);
+        var mcServerFabric = Class.forName("net.minecraft.server.MinecraftServer", true, fabricModLoader);
+        startingIface.getMethod("onServerStarting", mcServerFabric).invoke(startingInvoker, (Object) null);
+        String fabricLine = inspectLoaderState("fabric", fabricModLoader, "ModInitializer(drakestar-fused)");
+        loaderStartLines.add("start." + fabricLine);
+        System.out.println("SPIKE loader.start." + fabricLine);
+    }
+
+    static void stopLoaderMods(Path server) throws Exception {
+        var lines = new java.util.ArrayList<String>(loaderStartLines);
+
+        if (neoforgeModLoader != null) {
+            var neoBusClass = Class.forName("net.neoforged.bus.api.IEventBus", true, neoforgeModLoader);
+            var neoForgeClass = Class.forName("net.neoforged.neoforge.common.NeoForge", true, neoforgeModLoader);
+            Object neoEventBus = neoForgeClass.getField("EVENT_BUS").get(null);
+            var neoStopEventClass = Class.forName("net.neoforged.neoforge.event.server.ServerStoppingEvent", true, neoforgeModLoader);
+            var mcServerNeo = Class.forName("net.minecraft.server.MinecraftServer", true, neoforgeModLoader);
+            Object neoStopEvent = neoStopEventClass.getConstructor(mcServerNeo).newInstance((Object) null);
+            neoBusClass.getMethod("post", Class.forName("net.neoforged.bus.api.Event", true, neoforgeModLoader)).invoke(neoEventBus, neoStopEvent);
+            lines.add("stop." + inspectLoaderState("neoforge", neoforgeModLoader, "@Mod(drakestar_fused)"));
+        }
+
+        if (forgeModLoader != null) {
+            var forgeBusClass = Class.forName("net.minecraftforge.eventbus.api.IEventBus", true, forgeModLoader);
+            var mcForgeClass = Class.forName("net.minecraftforge.common.MinecraftForge", true, forgeModLoader);
+            Object forgeEventBus = mcForgeClass.getField("EVENT_BUS").get(null);
+            var forgeStopEventClass = Class.forName("net.minecraftforge.event.server.ServerStoppingEvent", true, forgeModLoader);
+            var mcServerForge = Class.forName("net.minecraft.server.MinecraftServer", true, forgeModLoader);
+            Object forgeStopEvent = forgeStopEventClass.getConstructor(mcServerForge).newInstance((Object) null);
+            forgeBusClass.getMethod("post", Class.forName("net.minecraftforge.eventbus.api.Event", true, forgeModLoader)).invoke(forgeEventBus, forgeStopEvent);
+            lines.add("stop." + inspectLoaderState("forge", forgeModLoader, "@Mod(drakestar_fused)"));
+        }
+
+        if (fabricModLoader != null) {
+            var lifecycleClass = Class.forName("net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents", true, fabricModLoader);
+            Object stoppingEvent = lifecycleClass.getField("SERVER_STOPPING").get(null);
+            Object stoppingInvoker = stoppingEvent.getClass().getMethod("invoker").invoke(stoppingEvent);
+            var stoppingIface = Class.forName("net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents$ServerStopping", true, fabricModLoader);
+            var mcServerFabric = Class.forName("net.minecraft.server.MinecraftServer", true, fabricModLoader);
+            stoppingIface.getMethod("onServerStopping", mcServerFabric).invoke(stoppingInvoker, (Object) null);
+            lines.add("stop." + inspectLoaderState("fabric", fabricModLoader, "ModInitializer(drakestar-fused)"));
+        }
+
+        Files.write(server.resolve("loader-mods-after-stop.txt"), lines);
+        if (neoforgeModLoader != null) neoforgeModLoader.close();
+        if (forgeModLoader != null) forgeModLoader.close();
+        if (fabricModLoader != null) fabricModLoader.close();
+    }
 
     /** Helper class defined inside a dedicated host URLClassLoader to test FFM/JNI across distinct loaders. */
     public static final class HostRustProbe {
@@ -174,6 +323,8 @@ public final class Embed {
         boolean log4j = flags.contains("log4j");
         boolean rust = flags.contains("rust");
         boolean rustJniConflict = flags.contains("rust-jni-conflict");
+        boolean loaderMods = flags.contains("loaders");
+        boolean loaderJniConflict = flags.contains("loader-jni-conflict");
         SpikeHooks.root = server;
         String cwd = Path.of("").toAbsolutePath().toString();
         String original = System.getProperty("user.dir");
@@ -212,6 +363,7 @@ public final class Embed {
             if (natives) clientNatives = preloadNatives(urls);
             if (log4j) hostLog4j(urls, server);
             if (rust) preloadRustFfm(server, rustJniConflict);
+            if (loaderMods) startLoaderMods(urls, server, loaderJniConflict);
         } else {
             serverLoader = loader;
             mainClass = "io.papermc.paperclip.Main";
@@ -369,6 +521,9 @@ public final class Embed {
                         + " cycle=" + cycle);
 
                     Files.write(server.resolve("rust-ffm-after-stop.txt"), rustLines);
+                }
+                if (loaderMods) {
+                    stopLoaderMods(server);
                 }
                 serverLoader.close();
                 loader.close();

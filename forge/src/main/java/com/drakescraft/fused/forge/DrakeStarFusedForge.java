@@ -9,11 +9,12 @@ import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.nio.file.Path;
 
-@Mod("drakestar_fused")
+@Mod(DrakeStarFusedForge.MOD_ID)
 public class DrakeStarFusedForge {
     public static final String MOD_ID = "drakestar_fused";
+    public static final String GAME_DIR_PROPERTY = "drakestar.fused.gameDir";
     public static final Logger LOGGER = LoggerFactory.getLogger(DrakeStarFusedForge.class);
 
     public DrakeStarFusedForge() {
@@ -22,16 +23,34 @@ public class DrakeStarFusedForge {
         MinecraftForge.EVENT_BUS.addListener(this::onServerStopping);
     }
 
+    public static Path resolveGameDir() {
+        String customDir = System.getProperty(GAME_DIR_PROPERTY);
+        if (customDir != null && !customDir.isBlank()) {
+            return Path.of(customDir).toAbsolutePath().normalize();
+        }
+        return Path.of("").toAbsolutePath().normalize();
+    }
+
     private void onServerStarting(ServerStartingEvent event) {
-        LOGGER.info("🏛 [Forge] Inyectando Bukkit & StarSuites en el servidor...");
-        File runDir = new File(".");
-        SlimefunRustNativeBridge.init(runDir.toPath());
-        FusedCraftServer.bootstrap(runDir.toPath());
+        try {
+            Path gameDir = resolveGameDir();
+            LOGGER.info("🏛 [Forge] Iniciando DrakeStar Fused en {}...", gameDir);
+            SlimefunRustNativeBridge.init(gameDir);
+            FusedCraftServer.bootstrap(gameDir);
+        } catch (Throwable t) {
+            LOGGER.error("DrakeStar Fused (Forge) no pudo iniciar (el juego sigue sin Fused): ", t);
+        }
     }
 
     private void onServerStopping(ServerStoppingEvent event) {
-        LOGGER.info("🛑 [Forge] Deteniendo plugins de Bukkit y liberando memoria Rust off-heap...");
-        FusedCraftServer.shutdown();
+        try {
+            LOGGER.info("🛑 [Forge] Deteniendo FusedCraftServer y liberando puente Rust...");
+            FusedCraftServer.shutdown();
+            SlimefunRustNativeBridge.shutdown();
+        } catch (Throwable t) {
+            LOGGER.warn("Error al detener DrakeStar Fused (Forge): ", t);
+        }
     }
 }
+
 

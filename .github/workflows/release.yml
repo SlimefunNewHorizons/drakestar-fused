@@ -29,18 +29,26 @@ jobs:
         with:
           gradle-version: '8.10.2'
 
-      - run: gradle --no-daemon :fabric:build
+      - run: gradle --no-daemon :fabric:build :neoforge:build :forge:build
 
-      - run: python3 release-artifacts/check_jar.py fabric/build/libs/drakestar-fused-fabric-universal-*.jar
+      - run: |
+          python3 release-artifacts/check_jar.py \
+            fabric/build/libs/drakestar-fused-fabric-universal-*.jar \
+            neoforge/build/libs/drakestar-fused-neoforge-universal-*.jar \
+            forge/build/libs/drakestar-fused-forge-universal-*.jar
 
       - name: Publicar release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd fabric/build/libs
+          mkdir -p release-bundle
+          cp fabric/build/libs/drakestar-fused-fabric-universal-*.jar release-bundle/
+          cp neoforge/build/libs/drakestar-fused-neoforge-universal-*.jar release-bundle/
+          cp forge/build/libs/drakestar-fused-forge-universal-*.jar release-bundle/
+          cd release-bundle
           rm -f *-sources.jar
-          sha256sum drakestar-fused-fabric-universal-*.jar > SHA256SUMS
-          gh release create "${GITHUB_REF_NAME}" drakestar-fused-fabric-universal-*.jar SHA256SUMS \
+          sha256sum drakestar-fused-*-universal-*.jar > SHA256SUMS
+          gh release create "${GITHUB_REF_NAME}" drakestar-fused-*-universal-*.jar SHA256SUMS \
             --repo "${GITHUB_REPOSITORY}" --title "DrakeStar Fused ${GITHUB_REF_NAME}" \
             --latest \
-            --notes "Fabric, Minecraft 1.20 a 26.2 (un solo jar, sin mixins). Alpha: prepara el entorno del servidor integrado; el host Bukkit todavia no ejecuta plugins. Las versiones alpha.1 y alpha.2 no cargan en el juego real: usa esta."
+            --notes "Fabric, NeoForge y Forge, Minecraft 1.20 a 26.2 (jars universales, sin mixins). Alpha: prepara el entorno del servidor integrado; el host Bukkit todavia no ejecuta plugins. Las versiones alpha.1 y alpha.2 no cargan en el juego real: usa esta."

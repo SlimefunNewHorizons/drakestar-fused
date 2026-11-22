@@ -51,3 +51,10 @@ hilos del servidor que impiden finalizar el laboratorio.
 El estado y las capturas de cada intento están en
 [evidence/embedded-step1-20261117](evidence/embedded-step1-20261117/README.md).
 El objetivo global sigue pendiente; los pasos 2–5 conservan sus requisitos.
+
+## Estado por paso (laboratorio, sin cliente gráfico)
+
+- Paso 1: pasa en modo `isolated` — [evidence/embedded-step1-20261117](evidence/embedded-step1-20261117/README.md).
+- Paso 3: JNI doble, Log4j2 y Rust FFM/JNI pasan — [JNI](evidence/embedded-step3-jni-20261120/README.md), [Log4j](evidence/embedded-step3-log4j-20261121/README.md), [Rust](evidence/embedded-step3-rust-ffm-20261121/README.md).
+- Paso 4: módulos universales NeoForge/Forge/Fabric sobre `common`, cargados en la misma JVM que el monolito 26.2, con ruta JNI propia por cargador — [evidence/embedded-step4-neoforge-forge-20261121](evidence/embedded-step4-neoforge-forge-20261121/README.md).
+- Paso 2 (cliente Fabric 26.2 gráfico real con quickplay) y paso 5 (plantilla del launcher): **pendientes**. Ningún paso acredita aún un cliente real; el README sigue sin afirmar ejecución «dentro del juego».

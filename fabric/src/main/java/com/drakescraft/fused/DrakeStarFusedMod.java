@@ -19,11 +19,20 @@ import java.nio.file.Path;
  */
 public class DrakeStarFusedMod implements ModInitializer {
     public static final String MOD_ID = "drakestar-fused";
+    public static final String GAME_DIR_PROPERTY = "drakestar.fused.gameDir";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    public static Path resolveGameDir() {
+        String customDir = System.getProperty(GAME_DIR_PROPERTY);
+        if (customDir != null && !customDir.isBlank()) {
+            return Path.of(customDir).toAbsolutePath().normalize();
+        }
+        return FabricLoader.getInstance().getGameDir();
+    }
 
     @Override
     public void onInitialize() {
-        Path gameDir = FabricLoader.getInstance().getGameDir();
+        Path gameDir = resolveGameDir();
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             try {

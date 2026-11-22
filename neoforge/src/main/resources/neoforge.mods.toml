@@ -5,24 +5,24 @@ issueTrackerURL="https://github.com/SlimefunNewHorizons/drakestar-fused/issues"
 
 [[mods]]
 modId="drakestar_fused"
-version="1.0.0-alpha.2"
+version="${version}"
 displayName="DrakeStar Fused (NeoForge)"
 authors="JackStar6677-1"
 description='''
-Single-Instance Bridge Mod fusing Bukkit, Purpur runtime, and Slimefun-Rust into Minecraft's IntegratedServer on NeoForge.
+Puente Bukkit/Slimefun para el servidor integrado de Minecraft en NeoForge (alpha). Funciona de 1.20 a 26.2.
 '''
 logoFile="assets/drakestar-fused-icon.png"
 
 [[dependencies.drakestar_fused]]
     modId="neoforge"
     type="required"
-    versionRange="[21.1.0,)"
+    versionRange="[21.0.0,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.drakestar_fused]]
     modId="minecraft"
     type="required"
-    versionRange="[1.20,26.2]"
+    versionRange="[1.20,26.3)"
     ordering="NONE"
     side="BOTH"

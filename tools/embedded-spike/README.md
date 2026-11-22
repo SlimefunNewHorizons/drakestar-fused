@@ -66,5 +66,16 @@ por JNI (`System.load`) en un cargador propio del anfitrión (`spike-client-rust
 anfitrión. `--rust-jni-conflict` reproduce el fallo de control cuando ambos cargadores llaman a `System.load`
 sobre la misma ruta `server/natives/libslimefun_ffi.so`; ver `docs/evidence/embedded-step3-rust-ffm-20261121`.
 
+`--loader-mods` (sólo `isolated`) carga los tres JARs universales compilados por Gradle
+(`drakestar-fused-neoforge-universal-*.jar`, `drakestar-fused-forge-universal-*.jar` y
+`drakestar-fused-fabric-universal-*.jar`) en cargadores aislados (`spike-loader-neoforge`, `spike-loader-forge`
+y `spike-loader-fabric`), dispara sus eventos de inicio (`ServerStartingEvent` en `NeoForge.EVENT_BUS` y
+`MinecraftForge.EVENT_BUS`, `ServerLifecycleEvents.SERVER_STARTING` en Fabric) antes de arrancar el monolito
+`DrakesPurpur` 26.2 embebido y sus eventos de parada (`ServerStoppingEvent` / `SERVER_STOPPING`) tras `stop`,
+verificando que `FusedCraftServer` y `SlimefunRustNativeBridge` inicien y cierren limpiamente sin colisionar
+por JNI con `DrakesKernelBridge`/`SlimefunRustEngine`. `--loader-jni-conflict` desactiva el aislamiento de ruta
+JNI por cargador (`-Ddrakestar.fused.jniDirectPath=true`) para reproducir la colisión de control; ver
+`docs/evidence/embedded-step4-neoforge-forge-20261121`.
+
 Los siguientes pasos de `docs/EMBEDDED_SERVER_SPIKE.md` requieren evidencia
-propia. Este laboratorio no acredita cliente real ni soporte de ningún loader.
+propia. Este laboratorio no acredita cliente gráfico real.

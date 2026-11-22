@@ -1,0 +1,64 @@
+// Un solo .jar de NeoForge para Minecraft 1.20 a 26.2. Sin mixins ni referencias a nombres internos de Minecraft
+// (salvo MinecraftServer, cuyo nombre no cambia). Compila contra stubs limpios de las firmas publicas de NeoForge
+// (IEventBus, @Mod, NeoForge.EVENT_BUS, ServerStartingEvent, ServerStoppingEvent) con bytecode Java 17 (--release 17).
+plugins {
+    id 'java'
+}
+
+version = project.mod_version
+group = project.maven_group
+base.archivesName = 'drakestar-fused-neoforge-universal'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    stubs {
+        java.srcDirs = ['stubs', '../fabric/stubs']
+    }
+    main {
+        java.srcDir '../common/src/main/java'
+    }
+}
+
+dependencies {
+    compileOnly sourceSets.stubs.output
+    compileOnly 'org.slf4j:slf4j-api:2.0.9'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+    options.compilerArgs += ['-Xlint:all', '-Xlint:-processing']
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filteringCharset = 'UTF-8'
+    filesMatching('neoforge.mods.toml') {
+        expand 'version': project.version
+    }
+    from('src/main/resources') {
+        include 'neoforge.mods.toml'
+        into 'META-INF'
+        expand 'version': project.version
+    }
+    from('../assets') {
+        include 'drakestar-fused-icon.png'
+        into 'assets'
+    }
+}
+
+jar {
+    from('../LICENSE') {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+    manifest {
+        attributes(
+            'Implementation-Title': 'DrakeStar Fused (NeoForge)',
+            'Implementation-Version': project.version,
+            'FMLModType': 'MOD'
+        )
+    }
+}

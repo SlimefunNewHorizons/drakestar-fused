@@ -30,14 +30,21 @@ jobs:
         with:
           gradle-version: '8.10.2'
 
-      - name: Compilar
-        run: gradle --no-daemon :fabric:build
+      - name: Compilar Fabric, NeoForge y Forge
+        run: gradle --no-daemon :fabric:build :neoforge:build :forge:build
 
-      - name: El jar es universal (sin mixins ni nombres internos de Minecraft)
-        run: python3 release-artifacts/check_jar.py fabric/build/libs/drakestar-fused-fabric-universal-*.jar
+      - name: Los jars son universales (sin mixins ni nombres internos de Minecraft)
+        run: |
+          python3 release-artifacts/check_jar.py \
+            fabric/build/libs/drakestar-fused-fabric-universal-*.jar \
+            neoforge/build/libs/drakestar-fused-neoforge-universal-*.jar \
+            forge/build/libs/drakestar-fused-forge-universal-*.jar
 
       - uses: actions/upload-artifact@v4
         with:
-          name: drakestar-fused-fabric-universal
-          path: fabric/build/libs/drakestar-fused-fabric-universal-*.jar
+          name: drakestar-fused-universal-loaders
+          path: |
+            fabric/build/libs/drakestar-fused-fabric-universal-*.jar
+            neoforge/build/libs/drakestar-fused-neoforge-universal-*.jar
+            forge/build/libs/drakestar-fused-forge-universal-*.jar
           retention-days: 14

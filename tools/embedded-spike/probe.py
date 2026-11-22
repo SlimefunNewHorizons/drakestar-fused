@@ -108,6 +108,40 @@ def run(args):
                 host_events.append({"mask": hex(mask), "name": os.fsdecode(name)})
                 pos += 16 + length
     java_home = Path(os.environ["JAVA_HOME"])
+    repo_root = Path(__file__).resolve().parents[2]
+    loader_jar_hashes = {}
+    loader_jvm_props = []
+    if args.loader_mods:
+        stubs_out = output / "loader-stubs"
+        for loader_name, stub_dirs in (
+            ("fabric", [repo_root / "fabric/stubs"]),
+            ("neoforge", [repo_root / "neoforge/stubs", repo_root / "fabric/stubs/net/minecraft"]),
+            ("forge", [repo_root / "forge/stubs", repo_root / "fabric/stubs/net/minecraft"]),
+        ):
+            dest = stubs_out / loader_name
+            dest.mkdir(parents=True, exist_ok=True)
+            java_files = []
+            for sdir in stub_dirs:
+                java_files.extend(sorted(sdir.rglob("*.java")))
+            subprocess.run([str(java_home / "bin/javac"), "--release", "17", "-d", str(dest),
+                            *map(str, java_files)], check=True)
+        jar_paths = []
+        for mod_dir, prefix in (
+            ("fabric", "drakestar-fused-fabric-universal-"),
+            ("neoforge", "drakestar-fused-neoforge-universal-"),
+            ("forge", "drakestar-fused-forge-universal-"),
+        ):
+            candidates = sorted((repo_root / mod_dir / "build/libs").glob(f"{prefix}*.jar"))
+            candidates = [c for c in candidates if not c.name.endswith("-sources.jar")]
+            if not candidates:
+                raise FileNotFoundError(f"Missing built universal jar for {mod_dir} in {repo_root / mod_dir / 'build/libs'}")
+            chosen = candidates[-1].resolve(strict=True)
+            jar_paths.append(str(chosen))
+            loader_jar_hashes[chosen.name] = hashlib.sha256(chosen.read_bytes()).hexdigest()
+        loader_jvm_props = [
+            f"-Ddrakestar.fused.loaderJars={os.pathsep.join(jar_paths)}",
+            f"-Ddrakestar.fused.loaderStubs={stubs_out}",
+        ]
     source_hashes = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
         for p in sorted(Path(__file__).parent.iterdir()) if p.suffix in (".java", ".py")}
     subprocess.run([str(java_home / "bin/javac"), "-d", str(classes),
@@ -115,12 +149,16 @@ def run(args):
     java = str(java_home / "bin/java")
     version = subprocess.run([java, "-version"], capture_output=True, text=True, check=True)
     command = [java, "-Xms256m", "-Xmx2g", "-XX:ActiveProcessorCount=2",
-               "--enable-native-access=ALL-UNNAMED", "-cp", str(classes),
+               "--enable-native-access=ALL-UNNAMED",
+               *loader_jvm_props,
+               "-cp", str(classes),
                "Embed", str(jar), str(server), args.mode,
                *(["natives"] if args.preload_natives else []),
                *(["log4j"] if args.host_log4j else []),
                *(["rust"] if args.rust_ffm else []),
-               *(["rust-jni-conflict"] if args.rust_jni_conflict else [])]
+               *(["rust-jni-conflict"] if args.rust_jni_conflict else []),
+               *(["loaders"] if args.loader_mods else []),
+               *(["loader-jni-conflict"] if args.loader_jni_conflict else [])]
     started = time.monotonic()
     proc = subprocess.Popen(command, cwd=host, stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -213,6 +251,8 @@ def run(args):
         **(log4j_report(server) if args.host_log4j else {}),
         "rust_ffm": args.rust_ffm,
         **(rust_report(server, data, rust_native_hashes, args.rust_jni_conflict) if args.rust_ffm else {}),
+        "loader_mods": args.loader_mods,
+        **(loader_mods_report(server, loader_jar_hashes, args.loader_jni_conflict) if args.loader_mods else {}),
         "step1_pass": bool(ready and stop_sent and alive and before == after
                            and not host_events and not forced and not timed_out and proc.returncode == 0),
     }
@@ -260,6 +300,26 @@ def rust_report(server, data, rust_native_hashes, jni_conflict):
     }
 
 
+def loader_mods_report(server, loader_jar_hashes, jni_conflict):
+    """Step 4 (NeoForge, Forge and Fabric universal mod jars in the same JVM as embedded DrakesPurpur)."""
+    after = server / "loader-mods-after-stop.txt"
+    lines = after.read_text(errors="replace").splitlines() if after.exists() else []
+    start_ok = all(
+        any(l.startswith(f"start.loader={name} ") and "initialized=true" in l and "pluginsDirExists=true" in l and "rustLoaded=true" in l for l in lines)
+        for name in ("neoforge", "forge", "fabric")
+    )
+    stop_ok = all(
+        any(l.startswith(f"stop.loader={name} ") and "initialized=false" in l and "rustLoaded=false" in l for l in lines)
+        for name in ("neoforge", "forge", "fabric")
+    )
+    return {
+        "loader_jni_conflict": jni_conflict,
+        "loader_jars_sha256": loader_jar_hashes,
+        "loader_lifecycle_lines": lines,
+        "loaders_all_active": bool(start_ok and stop_ok),
+    }
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--jar", type=Path, required=True)
@@ -277,4 +337,8 @@ if __name__ == "__main__":
                         help="Directory containing libdrakes_hybrid_ffi.so, libodysseia_ffi.so and libslimefun_ffi.so")
     parser.add_argument("--rust-jni-conflict", action="store_true",
                         help="Step 3 control: host calls System.load on server/natives/libslimefun_ffi.so directly")
+    parser.add_argument("--loader-mods", action="store_true",
+                        help="Step 4: load and exercise built NeoForge, Forge and Fabric universal JARs in isolated mod loaders")
+    parser.add_argument("--loader-jni-conflict", action="store_true",
+                        help="Step 4 control: disable per-loader JNI staging in SlimefunRustNativeBridge")
     raise SystemExit(run(parser.parse_args()))

@@ -28,11 +28,8 @@ sourceSets {
 }
 
 dependencies {
-    // Se compila contra lo MAS VIEJO soportado (Fabric API 0.83.0+1.20) para no usar nada que falte en 1.20.
+    // Compila contra stubs limpios de las firmas publicas de Fabric Loader 0.14.21 y Fabric API 0.83.0+1.20.
     compileOnly sourceSets.stubs.output
-    compileOnly('net.fabricmc:fabric-loader:0.14.21') { transitive = false }
-    compileOnly('net.fabricmc.fabric-api:fabric-api-base:0.4.29+b04edc7a27') { transitive = false }
-    compileOnly('net.fabricmc.fabric-api:fabric-lifecycle-events-v1:2.2.20+b3afc78b27') { transitive = false }
     compileOnly 'org.slf4j:slf4j-api:2.0.9'   // lo trae Minecraft en tiempo de ejecucion
 }
 
