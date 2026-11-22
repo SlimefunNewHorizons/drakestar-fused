@@ -70,6 +70,9 @@ def main():
         '<PatternLayout pattern="[%d{HH:mm:ss} %level] %msg%n"/></File></Appenders>'
         '<Loggers><Root level="info"><AppenderRef ref="Console"/>'
         '<AppenderRef ref="File"/></Root></Loggers></Configuration>')
+    # Primer arranque: la pantalla de accesibilidad bloquea el quickplay (join-7.png, run 45076538078).
+    (inst / "options.txt").write_text("onboardAccessibility:false\nskipMultiplayerWarning:true\n"
+                                      "joinedFirstServer:true\ntutorialStep:none\nnarrator:0\n")
     root = a.client_root.resolve()
     cmd = [str(a.java_home / "bin/java"), "-Xmx4G", *launch["jvmArgs"],
            f"-Dfused.spike.server={server}", f"-Dfused.spike.jar={a.jar.resolve()}",

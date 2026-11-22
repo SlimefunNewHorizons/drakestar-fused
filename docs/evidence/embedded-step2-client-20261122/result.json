@@ -1,0 +1,15 @@
+{
+  "port": 33227,
+  "client_pid": 3753,
+  "same_jvm": "Embed.main from Fabric client entrypoint",
+  "server_ready_seconds": 32.0,
+  "join_timeout": true,
+  "stage": "join",
+  "seconds": 453.9,
+  "peak_rss_kib": 1969760,
+  "client_exit": null,
+  "server_done": true,
+  "unsatisfied_link": 0,
+  "host_alive_after_stop_marker": false,
+  "pass": false
+}
