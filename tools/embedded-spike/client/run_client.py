@@ -32,6 +32,7 @@ def main():
     p.add_argument("--java-home", type=Path, default=Path("/usr/lib/jvm/java-25-openjdk-amd64"))
     p.add_argument("--display", default=":77")
     p.add_argument("--timeout", type=int, default=900)
+    p.add_argument("--join-timeout", type=int, default=420)
     a = p.parse_args()
     out = a.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -100,6 +101,17 @@ def main():
             if stage == "boot" and "SPIKE-CLIENT server.ready port=" in t:
                 res["server_ready_seconds"] = round(time.monotonic() - started, 1)
                 stage = "join"
+                join_at, shots = time.monotonic(), 0
+            if stage == "join" and time.monotonic() - join_at > 60 * (shots + 1):
+                shots += 1
+                shot(a.display, out / f"join-{shots}.png")
+            if stage == "join" and time.monotonic() - join_at > a.join_timeout:
+                # Sin unirse: volcar hilos del cliente para ver dónde se cuelga.
+                with open(out / "client-threads.txt", "w") as f:
+                    subprocess.run([str(a.java_home / "bin/jcmd"), str(client.pid), "Thread.print", "-l"],
+                                   stdout=f, stderr=subprocess.STDOUT, check=False, timeout=60)
+                res["join_timeout"] = True
+                break
             if stage == "join" and ("SpikeJack joined the game" in t or "SpikeJack[/" in t):
                 res["joined_seconds"] = round(time.monotonic() - started, 1)
                 time.sleep(25)
