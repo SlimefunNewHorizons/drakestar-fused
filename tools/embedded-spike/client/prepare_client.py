@@ -79,7 +79,9 @@ def main():
     # Fabric antepone sus librerías; quita duplicados de ASM etc. dejando la versión de Fabric.
     seen, final = set(), []
     for path in [c for c in cp if "/net/fabricmc/" in c or "/org/ow2/asm/" in c] + cp:
-        key = "/".join(path.split("/")[:-2])
+        # El clasificador (natives-*) es parte de la clave: lwjgl-3.4.1.jar y su -natives-linux.jar comparten carpeta.
+        parts = path.split("/")
+        key = ("/".join(parts[:-2]), parts[-1].removeprefix(f"{parts[-3]}-{parts[-2]}"))
         if key not in seen:
             seen.add(key)
             final.append(path)
