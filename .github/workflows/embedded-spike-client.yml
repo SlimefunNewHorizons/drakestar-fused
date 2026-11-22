@@ -1,0 +1,57 @@
+name: Spike paso 2 (cliente Fabric 26.2 real)
+
+# Corre el arnés del paso 2 en un runner de GitHub (Xvfb + llvmpipe) para no
+# cargar Star. Solo produce evidencia; no publica nada.
+on:
+  push:
+    branches: [ spike/embedded-isolation-20261117 ]
+    paths:
+      - 'tools/embedded-spike/**'
+      - '.github/workflows/embedded-spike-client.yml'
+  workflow_dispatch:
+
+jobs:
+  client:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      JAR_URL: https://github.com/SlimefunNewHorizons/DrakesPurpur/releases/download/v26.2.140-stable/purpur-paperclip-26.2.build.140-stable.jar
+      JAR_SHA256: 750811c856cb0e36a9b117598d7d57834b53779f5d17d84ca04f47e747f00145
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Xvfb, mesa y ffmpeg
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -yq xvfb ffmpeg libgl1 libgl1-mesa-dri libegl1 libxcursor1 libxrandr2 libxi6 libxxf86vm1
+
+      - name: Monolito DrakesPurpur b140 (mismo SHA que pasos 1-4)
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/purpur.jar" "$JAR_URL"
+          echo "$JAR_SHA256  $RUNNER_TEMP/purpur.jar" | sha256sum -c
+
+      - name: Cliente Fabric 26.2
+        run: python3 tools/embedded-spike/client/prepare_client.py --root "$RUNNER_TEMP/client"
+
+      - name: Jugar (quickplay al monolito embebido)
+        run: |
+          python3 tools/embedded-spike/client/run_client.py --client-root "$RUNNER_TEMP/client" \
+            --jar "$RUNNER_TEMP/purpur.jar" --java-home "$JAVA_HOME" --output "$RUNNER_TEMP/out" --timeout 1500
+
+      - name: Evidencia
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: embedded-step2-client
+          path: |
+            ${{ runner.temp }}/out/*.json
+            ${{ runner.temp }}/out/*.png
+            ${{ runner.temp }}/out/*.txt
+            ${{ runner.temp }}/out/server/logs/
+            ${{ runner.temp }}/out/instance/logs/
+          if-no-files-found: warn
