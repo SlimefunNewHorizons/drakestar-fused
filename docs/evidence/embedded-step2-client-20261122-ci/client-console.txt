@@ -1,0 +1,275 @@
+[22:23:58] [main/INFO]: Loading Minecraft 26.2 with Fabric Loader 0.20.1
+[22:23:58] [main/INFO]: Mappings not present!
+[22:23:58] [main/INFO]: Loading 5 mods:
+	- fabricloader 0.20.1
+	   \-- mixinextras 0.5.5
+	- fused_embedded_spike 0.0.0-spike
+	- java 25
+	- minecraft 26.2
+[22:23:58] [main/INFO]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/work/_temp/client/libraries/net/fabricmc/sponge-mixin/0.17.5+mixin.0.8.7/sponge-mixin-0.17.5+mixin.0.8.7.jar Service=Knot/Fabric Env=CLIENT
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.lwjgl.system.Library$$Lambda/0x000000005c27ef80 in an unnamed module (file:/home/runner/work/_temp/client/libraries/org/lwjgl/lwjgl/3.4.1/lwjgl-3.4.1-unsafe.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by org.lwjgl.system.MemoryUtil (file:/home/runner/work/_temp/client/libraries/org/lwjgl/lwjgl/3.4.1/lwjgl-3.4.1-unsafe.jar)
+WARNING: Please consider reporting this to the maintainers of class org.lwjgl.system.MemoryUtil
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[22:24:00] [Datafixer Bootstrap #0/INFO]: 295 Datafixer optimizations took 330 milliseconds
+[22:24:02] [main/INFO]: Completely ignored arguments: [--userType, legacy]
+[22:24:03] [Render thread/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[22:24:03] [Render thread/INFO]: Setting user: SpikeJack
+[22:24:03] [Fused-Embedded-Host/INFO]: [STDOUT]: SPIKE pid=3648
+[22:24:03] [Fused-Embedded-Host/INFO]: [STDOUT]: SPIKE user.dir.original=/home/runner/work/_temp/out/instance
+[22:24:03] [Fused-Embedded-Host/INFO]: [STDOUT]: SPIKE user.dir.server=/home/runner/work/_temp/out/instance
+[22:24:03] [Fused-Embedded-Host/INFO]: [STDOUT]: SPIKE nio.cwd=/home/runner/work/_temp/out/instance
+[22:24:03] [Fused-Embedded-Host/INFO]: [STDOUT]: SPIKE io.cwd=/home/runner/work/_temp/out/instance
+[22:24:03] [Fused-Embedded-Host/INFO]: [STDOUT]: SPIKE cwd.unchanged=true
+[22:24:03] [Fused-Embedded-Host/INFO]: [STDOUT]: Downloading mojang_26.2.jar
+[22:24:03] [Download-2/ERROR]: Failed to fetch user properties
+com.mojang.authlib.exceptions.InvalidCredentialsException: Status: 401
+	at knot//com.mojang.authlib.exceptions.MinecraftClientHttpException.toAuthenticationException(MinecraftClientHttpException.java:70)
+	at knot//com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:173)
+	at knot//net.minecraft.client.Minecraft.lambda$new$1(Minecraft.java:438)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+Caused by: MinecraftClientHttpException[type=HTTP_ERROR, status=401, response=ErrorResponse[path=/player/attributes, error=null, errorMessage=null, details=null]]
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.buildHttpException(MinecraftClient.java:170)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.readServiceResponse(MinecraftClient.java:147)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.getWithEtag(MinecraftClient.java:81)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.get(MinecraftClient.java:65)
+	at knot//com.mojang.authlib.yggdrasil.YggdrasilUserApiService.fetchProperties(YggdrasilUserApiService.java:123)
+	... 5 more
+[22:24:04] [Fused-Embedded-Host/INFO]: [STDOUT]: Applying patches
+[22:24:09] [Fused-Embedded-Host/INFO]: [STDOUT]: SPIKE host.minecraft.distinct=true
+[22:24:10 INFO] [srv] Running Java 25 (OpenJDK 64-Bit Server VM 25.0.5+8-LTS; Eclipse Adoptium Temurin-25.0.5+8) on Linux 7.0.0-1014-aws (amd64)
+[22:24:10 INFO] [srv] Loading Purpur 26.2-140-experimental/horizon-rust-hybrid-engine@ab5d46e (2026-11-07T05:07:01Z) for Minecraft 26.2
+[22:24:10 WARN] [srv] Did not find udev library in operating system. Some features may not work.
+[22:24:10 INFO] [srv] Initializing plugins...
+[22:24:10 INFO] [srv] Initialized 0 plugins
+[22:24:13 INFO] [srv] Initialising converters for DataConverter...
+[22:24:13 WARN] [srv] You have used the Paper command line EULA agreement flag.
+[22:24:13 WARN] [srv] By using this setting you are indicating your agreement to Mojang's EULA (https://aka.ms/MinecraftEULA).
+[22:24:13 WARN] [srv] If you do not agree to the above EULA please stop your server and remove this flag immediately.
+[22:24:13 INFO] [srv] Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[22:24:14 INFO] [srv] Finished initialising converters for DataConverter in 548.7ms
+[22:24:14 INFO] [srv] Found new data pack paper, loading it automatically
+[22:24:14 INFO] [srv] No existing world data, creating new world
+[22:24:14 ERROR] [srv] No key layers in MapLike[{}]
+[22:24:15 INFO] [srv] Loaded 1585 recipes
+[22:24:15 INFO] [srv] Loaded 1688 advancements
+[22:24:15 INFO] [srv] Starting minecraft server version 26.2
+[22:24:15 INFO] [srv] Loading properties
+[22:24:15 INFO] [srv] This server is running Purpur version 26.2-140-experimental/horizon-rust-hybrid-engine@ab5d46e (2026-11-07T05:07:01Z) (Implementing API version 26.2.build.140-stable)
+[22:24:15 INFO] [srv] This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling
+[22:24:15 INFO] [srv] Server Ping Player Sample Count: 12
+[22:24:15 INFO] [srv] Using 4 threads for Netty based IO
+[22:24:16 INFO] [srv] [DrakesBundled] 0 en keep; 9 plugins activos (0 desactivados en drakes-data/suites.yml), 9 extraídos/actualizados en plugins/
+[22:24:16 INFO] [srv] [38;5;99m================================================================[0m
+[22:24:16 INFO] [srv] [1;38;5;141m####  ####   ###  #  #  #####  #### [0m
+[22:24:16 INFO] [srv] [1;38;5;141m#   # #   # #   # # #   #     #     [0m
+[22:24:16 INFO] [srv] [1;38;5;141m#   # ####  ##### ##    ####   ###  [0m
+[22:24:16 INFO] [srv] [1;38;5;141m#   # #  #  #   # # #   #         # [0m
+[22:24:16 INFO] [srv] [1;38;5;141m####  #   # #   # #  #  ##### ####  [0m
+[22:24:16 INFO] [srv] [1;38;5;51m####  #   # ####  ####  #   # ####  [0m[1;38;5;141m ###   ###      ###  [0m
+[22:24:16 INFO] [srv] [1;38;5;51m#   # #   # #   # #   # #   # #   # [0m[1;38;5;141m#   # #        #   # [0m
+[22:24:16 INFO] [srv] [1;38;5;51m####  #   # ####  ####  #   # ####  [0m[1;38;5;141m  ##  ####       ##  [0m
+[22:24:16 INFO] [srv] [1;38;5;51m#     #   # #  #  #     #   # #  #  [0m[1;38;5;141m #    #   #     #    [0m
+[22:24:16 INFO] [srv] [1;38;5;51m#      ###  #   # #      ###  #   # [0m[1;38;5;141m#####  ###  #  ##### [0m
+[22:24:16 INFO] [srv] [38;5;99m================================================================[0m
+[22:24:16 INFO] [srv] [38;5;245mVersion   [0m[1;37mDrakesPurpur 26.2 build 140[0m
+[22:24:16 INFO] [srv] [38;5;245mMinecraft [0m[1;37m26.2[0m
+[22:24:16 INFO] [srv] [38;5;245mJava      [0m[1;37m25.0.5+8-LTS (OpenJDK 64-Bit Server VM)[0m
+[22:24:16 INFO] [srv] [38;5;245mModo      [0m[1;37mMONOLITO (9 suites embebidas)[0m
+[22:24:16 INFO] [srv] [38;5;245mEdited by [1;37mJackStar6677-1 (JackStar Systems)[38;5;245m - DrakesCraft Season Two[0m
+[22:24:16 INFO] [srv] [38;5;245mGitHub    [0m[4;38;5;81mhttps://github.com/SlimefunNewHorizons/DrakesPurpur[0m
+[22:24:16 INFO] [srv] [38;5;245mPerfil    [0m[4;38;5;81mhttps://github.com/JackStar6677-1[0m
+[22:24:16 INFO] [srv] [38;5;245mMaven     [0m[4;38;5;81mhttps://maven.drakescraft.cl[0m
+[22:24:16 INFO] [srv] [38;5;245mWeb       [0m[4;38;5;81mhttps://web.drakescraft.cl[0m
+[22:24:16 INFO] [srv] [38;5;245mDiscord   [0m[4;38;5;81mhttps://discord.gg/rv3vtXZTk7[0m
+[22:24:16 INFO] [srv] [2;37mBased on Purpur (PurpurMC) and Paper (PaperMC); licensed per upstream; modifications by JackStar6677-1[0m
+[22:24:16 INFO] [srv] [38;5;99m================================================================[0m
+[22:24:16 INFO] [srv] [DrakesDb] Base compartida activa (WAL): drakes-data/kernel.db
+[22:24:16 INFO] [srv] [CrashGuard] Fallos del kernel en DrakesDb (tabla kernel_faults)
+[22:24:16 INFO] [srv] [Native] apagado (native.enabled=false): todo corre en Java.
+[22:24:16 INFO] [srv] [Hybrid] apagado (native.hybrid.enabled=false): todo corre en Java.
+[22:24:16 INFO] [srv] [Perf] status=true load-governor=false backup-throttle=true
+[22:24:16 INFO] [srv] [DrakesPurpur] Motor Rust apagado (perf.yml native.*); todo corre en Java.
+[22:24:16 INFO] [srv] [SaoriLink] SAORI desactivada (falta el archivo de token).
+[22:24:16 INFO] [srv] [ChaguiCompat] Initializing Pumpkin & PatchBukkit compatibility layer (Author: Chagui68).
+[22:24:16 INFO] [srv] [StaffEngine] Initialized kernel-embedded staff management, vanish/freeze matrix & sovereign godmode.
+[22:24:16 INFO] [srv] [ModalityEngine] Kernel Modality Separation active. Database: drakes_modalities.db
+[22:24:16 INFO] [srv] [StorageAudit] Kernel Storage Forensics active (tabla storage_actions en DrakesDb)
+[22:24:16 INFO] [srv] [BackupManager] Daily 7z backup scheduler active (first run in 60 min, retention: 7 days).
+[22:24:16 INFO] [srv] Paper is using 1 worker threads, 1 I/O threads
+[22:24:16 INFO] [srv] Default game type: SURVIVAL
+[22:24:16 INFO] [srv] Generating keypair
+[22:24:16 INFO] [srv] Starting Minecraft server on 127.0.0.1:59687
+[22:24:16 INFO] [srv] Paper: Using libdeflate (Linux x86_64) compression from Velocity.
+[22:24:16 INFO] [srv] Paper: Using OpenSSL 3.x.x (Linux x86_64) cipher from Velocity.
+[22:24:16 WARN] [srv] **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[22:24:16 WARN] [srv] The server will make no attempt to authenticate usernames. Beware.
+[22:24:16 WARN] [srv] While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[22:24:16 WARN] [srv] To change this, set "online-mode" to "true" in the server.properties file.
+[22:24:16 INFO] [srv] Preparing level "spike"
+[22:24:17 INFO] [srv] Selecting spawn point for level 'minecraft:overworld'...
+[22:24:17 INFO] [srv] Selecting spawn point for level 'minecraft:the_nether'...
+[22:24:18 INFO] [srv] Selecting spawn point for level 'minecraft:the_end'...
+[22:24:18 INFO] [srv] Loading 0 persistent chunks for level 'minecraft:overworld'...
+[22:24:18 INFO] [srv] Preparing spawn area: 100%
+[22:24:18 INFO] [srv] Prepared spawn area in 1252 ms
+[22:24:18 INFO] [srv] Loading 0 persistent chunks for level 'minecraft:the_nether'...
+[22:24:18 INFO] [srv] Preparing spawn area: 100%
+[22:24:18 INFO] [srv] Prepared spawn area in 882 ms
+[22:24:18 INFO] [srv] Loading 0 persistent chunks for level 'minecraft:the_end'...
+[22:24:18 INFO] [srv] Preparing spawn area: 100%
+[22:24:18 INFO] [srv] Prepared spawn area in 214 ms
+[22:24:18 INFO] [srv] Done preparing level "spike" (1.617s)
+[22:24:18 INFO] [srv] Starting background profiler...
+[22:24:19 INFO] [srv] Saving chunks for level 'ServerLevel[spike]'/minecraft:overworld
+[22:24:19 INFO] [srv] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_nether
+[22:24:19 INFO] [srv] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_end
+[22:24:19 INFO] [srv] ThreadedAnvilChunkStorage (world): All chunks are saved
+[22:24:19 INFO] [srv] ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[22:24:19 INFO] [srv] ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[22:24:19 INFO] [srv] ThreadedAnvilChunkStorage: All dimensions are saved
+[22:24:19 INFO] [srv] Running delayed init tasks
+[22:24:19 INFO] [srv] Done (9.825s)! For help, type "help"
+[22:24:19 INFO] [srv] *************************************************************************************
+[22:24:19 INFO] [srv] This is the first time you're starting this server.
+[22:24:19 INFO] [srv] It's recommended you read our 'Getting Started' documentation for guidance.
+[22:24:19 INFO] [srv] View this and more helpful information here: https://docs.papermc.io/paper/next-steps
+[22:24:19 INFO] [srv] *************************************************************************************
+[22:24:19 INFO] [srv] [STDOUT] [SpikeClientMod] SPIKE-CLIENT server.ready port=59687 seconds=16.309730798
+[22:24:19] [Render thread/INFO]: Backend library: LWJGL version 3.4.1-snapshot
+[22:24:20] [Render thread/INFO]: Using graphics backend OpenGL, using drivers: 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.5
+[22:24:20] [Render thread/INFO]: Using graphics device: llvmpipe (LLVM 20.1.2, 256 bits) (Mesa)
+[22:24:20] [Render thread/INFO]: Using graphics device extensions: GL_ARB_multi_draw_indirect, GL_ARB_buffer_storage, GL_ARB_shader_draw_parameters, GL_ARB_base_instance, GL_KHR_debug, GL_ARB_draw_indirect, GL_ARB_clip_control, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access, GL_EXT_texture_filter_anisotropic
+[22:24:20] [Render thread/INFO]: Reloading ResourceManager: vanilla
+[22:24:20] [Download-1/INFO]: Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: 0
+[22:24:20] [Download-1/ERROR]: Failed to fetch Realms feature flags
+com.mojang.realmsclient.exception.RealmsServiceException: Realms authentication error with message 'java.lang.RuntimeException: Failed to parse into SignedJWT: 0'
+	at knot//com.mojang.realmsclient.client.RealmsClient.execute(RealmsClient.java:528)
+	at knot//com.mojang.realmsclient.client.RealmsClient.fetchFeatureFlags(RealmsClient.java:187)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[22:24:21] [Worker-Main-2/INFO]: Found unifont_all_no_pua-17.0.01.hex, loading
+[22:24:21] [Worker-Main-1/INFO]: Found unifont_pua-17.0.01.hex, loading
+[22:24:21] [Worker-Main-2/INFO]: Found unifont_jp_patch-17.0.01.hex, loading
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5731:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2721:(snd_pcm_open_noupdate) Unknown PCM default
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5208:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5731:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2721:(snd_pcm_open_noupdate) Unknown PCM default
+[22:24:22] [Render thread/ERROR]: Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at knot//com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:275)
+	at knot//com.mojang.blaze3d.audio.Library.init(Library.java:150)
+	at knot//net.minecraft.client.sounds.SoundEngine.loadLibrary(SoundEngine.java:120)
+	at knot//net.minecraft.client.sounds.SoundEngine.reload(SoundEngine.java:109)
+	at knot//net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:122)
+	at knot//net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:41)
+	at knot//net.minecraft.server.packs.resources.SimplePreparableReloadListener.lambda$reload$1(SimplePreparableReloadListener.java:15)
+	at java.base/java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:739)
+	at java.base/java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:503)
+	at knot//net.minecraft.server.packs.resources.SimpleReloadInstance.lambda$prepareTasks$3(SimpleReloadInstance.java:59)
+	at knot//net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:173)
+	at knot//net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:23)
+	at knot//net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:147)
+	at knot//net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:127)
+	at knot//net.minecraft.client.Minecraft.runTick(Minecraft.java:1235)
+	at knot//net.minecraft.client.Minecraft.run(Minecraft.java:959)
+	at knot//net.minecraft.client.main.Main.main(Main.java:292)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:517)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+[22:24:22] [Render thread/INFO]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[22:24:22] [Render thread/INFO]: Created: 128x128x0 minecraft:textures/atlas/decorated_pot.png-atlas
+[22:24:22] [Render thread/INFO]: Created: 2048x1024x0 minecraft:textures/atlas/armor_trims.png-atlas
+[22:24:22] [Render thread/INFO]: Created: 512x256x0 minecraft:textures/atlas/paintings.png-atlas
+[22:24:22] [Render thread/INFO]: Created: 1024x512x0 minecraft:textures/atlas/shield_patterns.png-atlas
+[22:24:23] [Render thread/INFO]: Created: 2048x2048x4 minecraft:textures/atlas/blocks.png-atlas
+[22:24:23] [Render thread/INFO]: Created: 512x512x0 minecraft:textures/atlas/chest.png-atlas
+[22:24:23] [Render thread/INFO]: Created: 256x128x0 minecraft:textures/atlas/celestials.png-atlas
+[22:24:23] [Render thread/INFO]: Created: 1024x512x0 minecraft:textures/atlas/banner_patterns.png-atlas
+[22:24:23] [Render thread/INFO]: Created: 1024x512x0 minecraft:textures/atlas/items.png-atlas
+[22:24:23] [Render thread/INFO]: Created: 1024x1024x0 minecraft:textures/atlas/gui.png-atlas
+[22:24:23] [Render thread/INFO]: Created: 128x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[22:24:23] [Render thread/INFO]: Created: 512x512x0 minecraft:textures/atlas/shulker_boxes.png-atlas
+[22:24:23] [Render thread/INFO]: Connecting to 127.0.0.1, 59687
+[22:24:23] [Download-2/ERROR]: Failed to retrieve profile key pair
+MinecraftClientHttpException[type=HTTP_ERROR, status=401, response=ErrorResponse[path=/player/certificates, error=null, errorMessage=null, details=null]]
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.buildHttpException(MinecraftClient.java:170)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.readServiceResponse(MinecraftClient.java:147)
+	at knot//com.mojang.authlib.minecraft.client.MinecraftClient.post(MinecraftClient.java:89)
+	at knot//com.mojang.authlib.yggdrasil.YggdrasilUserApiService.getKeyPair(YggdrasilUserApiService.java:62)
+	at knot//net.minecraft.client.multiplayer.AccountProfileKeyPairManager.fetchProfileKeyPair(AccountProfileKeyPairManager.java:128)
+	at knot//net.minecraft.client.multiplayer.AccountProfileKeyPairManager.lambda$readOrFetchProfileKeyPair$0(AccountProfileKeyPairManager.java:77)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1789)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+[22:24:24 INFO] [srv] UUID of player SpikeJack is e9047869-8ee7-3b21-8209-6b802591277b
+[22:24:25 INFO] [srv] SpikeJack joined the game
+[22:24:25 INFO] [srv] SpikeJack[/127.0.0.1:36754] logged in with entity id 1 at ([minecraft:overworld]2.5, -60.0, 0.5)
+[22:24:26] [Render thread/INFO]: [System] [CHAT] SpikeJack joined the game
+[22:24:26] [Render thread/INFO]: Loaded 2 advancements
+[22:24:26] [Render thread/INFO]: Resizing Dynamic Transforms UBO, capacity limit of 2 reached during a single frame. New capacity will be 4.
+[22:24:26] [Render thread/INFO]: Resizing Dynamic Transforms UBO, capacity limit of 4 reached during a single frame. New capacity will be 8.
+[22:24:27] [Render thread/INFO]: Resizing Dynamic Transforms UBO, capacity limit of 8 reached during a single frame. New capacity will be 16.
+[22:24:27] [Render thread/INFO]: Resizing Chunk Sections UBO, capacity limit of 2 reached during a single frame. New capacity will be 8.
+[22:24:27] [Render thread/INFO]: Resizing Chunk Sections UBO, capacity limit of 8 reached during a single frame. New capacity will be 16.
+[22:24:27] [Render thread/INFO]: Resizing Chunk Sections UBO, capacity limit of 16 reached during a single frame. New capacity will be 32.
+[22:24:52 INFO] [srv] Stopping the server
+[22:24:52 INFO] [srv] Stopping server
+[22:24:52 INFO] [srv] Saving players
+[22:24:52 INFO] [srv] SpikeJack lost connection: Disconnected
+[22:24:52 INFO] [srv] SpikeJack left the game
+[22:24:52 INFO] [srv] Saving worlds
+[22:24:52 INFO] [srv] Saving chunks for level 'ServerLevel[spike]'/minecraft:overworld
+[22:24:52 INFO] [srv] Waiting 60s for chunk system to halt for world 'minecraft:overworld'
+[22:24:52 INFO] [srv] Halted chunk system for world 'minecraft:overworld'
+[22:24:52 INFO] [srv] Saving all chunkholders for world 'minecraft:overworld'
+[22:24:52] [Render thread/WARN]: Client disconnected with reason: Server closed
+[22:24:52 INFO] [srv] Saved 1089 block chunks, 121 entity chunks, 0 poi chunks in world 'minecraft:overworld' in 0.64s
+[22:24:52 INFO] [srv] Waiting 60s for chunk I/O to halt for world 'minecraft:overworld'
+[22:24:52 INFO] [srv] Halted I/O scheduler for world 'minecraft:overworld'
+[22:24:52 INFO] [srv] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_nether
+[22:24:52 INFO] [srv] Waiting 60s for chunk system to halt for world 'minecraft:the_nether'
+[22:24:52 INFO] [srv] Halted chunk system for world 'minecraft:the_nether'
+[22:24:52 INFO] [srv] Saving all chunkholders for world 'minecraft:the_nether'
+[22:24:52 INFO] [srv] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:the_nether' in 0.00s
+[22:24:52 INFO] [srv] Waiting 60s for chunk I/O to halt for world 'minecraft:the_nether'
+[22:24:52 INFO] [srv] Halted I/O scheduler for world 'minecraft:the_nether'
+[22:24:52 INFO] [srv] Saving chunks for level 'ServerLevel[spike]'/minecraft:the_end
+[22:24:52 INFO] [srv] Waiting 60s for chunk system to halt for world 'minecraft:the_end'
+[22:24:52 INFO] [srv] Halted chunk system for world 'minecraft:the_end'
+[22:24:52 INFO] [srv] Saving all chunkholders for world 'minecraft:the_end'
+[22:24:52 INFO] [srv] Saved 0 block chunks, 0 entity chunks, 0 poi chunks in world 'minecraft:the_end' in 0.00s
+[22:24:52 INFO] [srv] Waiting 60s for chunk I/O to halt for world 'minecraft:the_end'
+[22:24:52 INFO] [srv] Halted I/O scheduler for world 'minecraft:the_end'
+[22:24:52 INFO] [srv] ThreadedAnvilChunkStorage (world): All chunks are saved
+[22:24:52 INFO] [srv] ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[22:24:52 INFO] [srv] ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[22:24:52 INFO] [srv] ThreadedAnvilChunkStorage: All dimensions are saved
+[22:24:52 INFO] [srv] Waiting for all RegionFile I/O tasks to complete...
+[22:24:52 INFO] [srv] All RegionFile I/O tasks to complete
+[22:24:52 INFO] [srv] Awaiting termination of worker pool for up to 60s...
+[22:24:52 INFO] [srv] Awaiting termination of I/O pool for up to 60s...
+[22:24:52 INFO] [srv] [STDOUT] [SpikeHooks] SPIKE server.exit.intercepted=0
