@@ -6,7 +6,7 @@ Resultado (`result.json`): **pass** del embebido (misma JVM, quickplay, jugador 
 
 Plugins habilitados dentro del cliente: DrakesCore (motor Rust: `libslimefun_ffi.so` cargada), DrakesBio, DrakesCombat, DrakesGenerators, DrakesMagic, DrakesUtility (con sus módulos warfare, nukes, ore_chunks, guidetools, worldedit_sf…).
 
-Fallos del **monolito b140**, no del embebido (se reproducen igual fuera del cliente, mismas rutas de `plugins/`):
+Fallos que apuntan al contenido del **monolito b140**, no al embebido (no reproducido aún fuera del cliente):
 
 - **Slimefun no está**: `DrakesTech` no carga — `UnknownDependencyException: [Slimefun]`.
 - Un plugin con `plugin.yml` inválido: descripción sin comillas con `:` («…Standalone: Motor Odysseia…», línea 6, col 58).
