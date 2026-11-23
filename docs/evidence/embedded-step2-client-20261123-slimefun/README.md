@@ -14,5 +14,6 @@ Pendiente (no bloquea el paso 2, sí la plantilla del paso 5):
 
 - El monolito publicado aún no trae Slimefun; aquí se sembró aparte.
 - Slimefun deja tareas async al parar (`Nag author … not properly shutting down its async tasks`); el cliente sobrevive, pero hay que revisarlo antes de reinicios repetidos en la misma sesión.
+  - Causa (23-nov): el `GitHubTask` async arranca 30 s tras el enable (`Done` 16:55:57 → `stop` 16:56:27) y `GitHubConnector.download()` hacía `client.send` bloqueante sin timeout. Corregido en Slimefun4-Drake `port-26x` `9a630d1b5` (`sendAsync` + `awaitWhileRunning`, sale en ≤250 ms al apagar; prueba `GitHubConnectorShutdownTest`). **Falta repetir la corrida de CI con un núcleo construido desde `9a630d1b5`** para confirmar que el aviso desaparece; el jar sembrado aquí (20261029) es anterior.
 - Siguen los fallos de contenido del b140: `plugin.yml` inválido (Odysseia, `:` sin comillas) y `DrakesMultiverse` sin `config.yml`.
 - Motor Rust de Purpur y de Slimefun apagados por configuración en esta corrida (el FFM activo se probó en el paso 3).
