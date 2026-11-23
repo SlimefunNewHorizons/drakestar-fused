@@ -33,6 +33,7 @@ def main():
     p.add_argument("--display", default=":77")
     p.add_argument("--timeout", type=int, default=900)
     p.add_argument("--join-timeout", type=int, default=420)
+    p.add_argument("--seed-plugins", type=Path, help="plugins/ de una corrida previa (el 1er arranque solo extrae las suites)")
     a = p.parse_args()
     out = a.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -50,6 +51,8 @@ def main():
         z.write(HERE / "mod/fabric.mod.json", "fabric.mod.json")
         for c in build.rglob("*.class"):
             z.write(c, c.relative_to(build).as_posix())
+    if a.seed_plugins:
+        shutil.copytree(a.seed_plugins, server / "plugins")
     # Servidor desechable, igual que probe.py.
     if a.mojang_cache:
         (server / "cache").mkdir()
@@ -147,6 +150,8 @@ def main():
         res["server_done"] = "Done (" in (server / "logs/latest.log").read_text(errors="replace") \
             if (server / "logs/latest.log").exists() else False
         res["unsatisfied_link"] = t.count("UnsatisfiedLinkError")
+        res["plugins_enabled"] = sorted({l.split("Enabling ")[1].split(" ")[0] for l in t.splitlines()
+                                         if "] Enabling " in l})
         res["host_alive_after_stop_marker"] = (server / "host-alive-after-stop.txt").exists()
         res["pass"] = bool(res.get("joined_seconds") and res.get("client_alive_after_stop"))
         (out / "result.json").write_text(json.dumps(res, indent=2))

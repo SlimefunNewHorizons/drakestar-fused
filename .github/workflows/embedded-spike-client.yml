@@ -43,6 +43,12 @@ jobs:
           python3 tools/embedded-spike/client/run_client.py --client-root "$RUNNER_TEMP/client" \
             --jar "$RUNNER_TEMP/purpur.jar" --java-home "$JAVA_HOME" --output "$RUNNER_TEMP/out" --timeout 1500
 
+      - name: Jugar otra vez con las suites ya extraídas (Slimefun habilitado)
+        run: |
+          python3 tools/embedded-spike/client/run_client.py --client-root "$RUNNER_TEMP/client" \
+            --jar "$RUNNER_TEMP/purpur.jar" --java-home "$JAVA_HOME" --output "$RUNNER_TEMP/out2" --timeout 1500 \
+            --seed-plugins "$RUNNER_TEMP/out/server/plugins"
+
       - name: Evidencia
         if: always()
         uses: actions/upload-artifact@v4
@@ -54,4 +60,8 @@ jobs:
             ${{ runner.temp }}/out/*.txt
             ${{ runner.temp }}/out/server/logs/
             ${{ runner.temp }}/out/instance/logs/
+            ${{ runner.temp }}/out2/*.json
+            ${{ runner.temp }}/out2/*.png
+            ${{ runner.temp }}/out2/*.txt
+            ${{ runner.temp }}/out2/server/logs/
           if-no-files-found: warn
