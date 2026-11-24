@@ -17,13 +17,14 @@
 
 ---
 
-## Estado real / Actual status (alpha.3)
+## Estado real / Actual status (alpha.4)
 
-- **Funciona hoy**: un solo `.jar` de Fabric (`drakestar-fused-fabric-universal-<version>.jar`) para **Minecraft 1.20 a 26.2**, sin mixins (usa los eventos `SERVER_STARTING/STOPPING` de Fabric API). Probado con el launcher DrakeStar en 1.20.1, 1.21.1, 1.21.11, 26.1 y 26.2; en 1.21.1 se enganchó al crear un mundo en solitario.
-- **Decisión (2026-11-12)**: Fused **no** es el camino para jugar Slimefun. Un host Bukkit dentro del servidor integrado no cubre Fabric+Forge+NeoForge de 1.20 a 26.2 ni las optimizaciones del núcleo de DrakesPurpur (Cardboard: solo Fabric 1.21.x y Slimefun falla en las cabezas de jugador; Arclight: hasta 1.21.1). El launcher DrakeStar arranca el DrakesPurpur real en segundo plano («Slimefun en solitario / LAN»). Fused queda como mod opcional en alfa.
-- **Aun no**: el host Bukkit/Purpur dentro del servidor integrado **todavia no ejecuta plugins**. Hoy prepara `plugins/`, detecta jars y enlaza el puente Rust si existe. Lo demas de este README es el objetivo de diseño.
+- **Funciona hoy**:
+  - Jars universales para **Fabric, NeoForge y Forge** (`drakestar-fused-<loader>-universal-<version>.jar`) compatibles con **Minecraft 1.20 a 26.2**, sin mixins (`release-artifacts/check_jar.py`).
+  - **Servidor embebido en la misma JVM (Fabric 26.2, Java 25+, Paso 5)**: cuando el [DrakeStar Launcher](https://github.com/SlimefunNewHorizons/DrakeStar-Launcher) lanza la plantilla «Slimefun en solitario / LAN» (`slimefun-solo`, `fused: true`) con `-Ddrakestar.fused.embedded.jar=<monolito>` y `-Ddrakestar.fused.embedded.server=<dir>`, `DrakeStarFusedClient` arranca el monolito **DrakesPurpur 26.2 (`b141`)** con **Slimefun + las 9 suites (`Drakes-Suites@26.x`) y el motor nativo Rust FFM/JNI** dentro de la misma JVM del cliente mediante un cargador aislado (`Embed` / `SpikeLoader` / `SpikeHooks`), sin levantar un segundo proceso de servidor, redirigiendo rutas a `server/`, aislando Log4j2 y bibliotecas JNI por cargador, e interceptando `System.exit` al parar (evidencia reproducible en [`docs/EMBEDDED_SERVER_SPIKE.md`](docs/EMBEDDED_SERVER_SPIKE.md)).
+- **Qué NO hace todavía**: fuera del modo de monolito embebido en 26.2 (Java 25+), el puente `FusedCraftServer` en el `IntegratedServer` vanilla solo prepara `plugins/`, detecta jars y enlaza el puente Rust si existe (no traduce plugins Bukkit sobre mundos singleplayer vanilla 1.20–1.21).
 - Las releases `v1.0.0-alpha.1` y `alpha.2` usaban mixins sin remapear y **fallan al arrancar** en el juego real: no usarlas.
-- Para publicar: subir `mod_version` en `gradle.properties` y empujar la etiqueta `vX.Y.Z`; el flujo compila, valida el jar (`release-artifacts/check_jar.py`) y crea la release.
+- Para publicar: subir `mod_version` en `gradle.properties` y empujar la etiqueta `vX.Y.Z`; el flujo compila, valida los tres jars (`release-artifacts/check_jar.py`) y crea la release.
 - Sin descargas remotas ni navegador automatico: `-Ddrakestar.fused.provision=true` activa la descarga de suites; `-Ddrakestar.fused.openIssue=true` abre el enlace de reporte de fallos.
 
 ---

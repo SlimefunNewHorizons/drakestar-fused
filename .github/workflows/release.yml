@@ -51,4 +51,4 @@ jobs:
           gh release create "${GITHUB_REF_NAME}" drakestar-fused-*-universal-*.jar SHA256SUMS \
             --repo "${GITHUB_REPOSITORY}" --title "DrakeStar Fused ${GITHUB_REF_NAME}" \
             --latest \
-            --notes "Fabric, NeoForge y Forge, Minecraft 1.20 a 26.2 (jars universales, sin mixins). Alpha: prepara el entorno del servidor integrado; el host Bukkit todavia no ejecuta plugins. Las versiones alpha.1 y alpha.2 no cargan en el juego real: usa esta."
+            --notes "Fabric, NeoForge y Forge, Minecraft 1.20 a 26.2 (jars universales, sin mixins). En Fabric 26.2 (Java 25+) incluye el host embebido opt-in (Embed / SpikeLoader / SpikeHooks) para correr el monolito DrakesPurpur dentro de la JVM del cliente cuando el launcher pasa -Ddrakestar.fused.embedded.jar y -Ddrakestar.fused.embedded.server. Las versiones alpha.1 y alpha.2 no cargan en el juego real: usa esta."
