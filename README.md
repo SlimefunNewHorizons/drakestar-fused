@@ -3,13 +3,13 @@
 <img src="./assets/drakestar-fused-banner.svg" alt="DrakeStar Fused Banner" width="100%" />
 
 # ⚡ DrakeStar Fused (`drakestar-fused`)
-### *Fabric bridge mod (alpha) — plugin host in the integrated server is a design goal, not implemented*
+### *Universal bridge mod (alpha.4) — embedded DrakesPurpur 26.2 + Slimefun host inside Fabric 26.2 (Java 25+)*
 
 [![DrakeStar Fused CI](https://github.com/SlimefunNewHorizons/drakestar-fused/actions/workflows/build-test.yml/badge.svg)](https://github.com/SlimefunNewHorizons/drakestar-fused/actions/workflows/build-test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Fabric Loader](https://img.shields.io/badge/Loader-Fabric%20(Forge%20%2F%20NeoForge%3A%20planned)-c084fc.svg)](https://fabricmc.net/)
-[![Target Minecraft](https://img.shields.io/badge/Minecraft-1.20%20to%2026.2%20(Fabric%20only)-00f0ff.svg)](https://papermc.io/)
-[![Architecture](https://img.shields.io/badge/Status-alpha%20%C2%B7%20no%20plugin%20host%20yet-f59e0b.svg)](https://github.com/SlimefunNewHorizons)
+[![Loaders](https://img.shields.io/badge/Loaders-Fabric%20%C2%B7%20NeoForge%20%C2%B7%20Forge-c084fc.svg)](https://fabricmc.net/)
+[![Target Minecraft](https://img.shields.io/badge/Minecraft-1.20%20to%2026.2-00f0ff.svg)](https://papermc.io/)
+[![Architecture](https://img.shields.io/badge/Status-alpha.4%20%C2%B7%20embedded%20monolith%2026.2-10b981.svg)](https://github.com/SlimefunNewHorizons)
 
 **English** · [Español](#-visión-arquitectónica-en-español)
 
@@ -30,9 +30,9 @@
 ---
 
 > [!IMPORTANT]
-> **Todo lo que sigue desde aquí hasta «Networking» es la VISIÓN / DISEÑO OBJETIVO, no el estado real.** Hoy (alpha.3) el mod **no ejecuta plugins Bukkit**, no hay `CraftServer`, no se verificó compatibilidad con shaders/mods de cliente ni rendimiento. Para jugar Slimefun el camino soportado es el **servidor local gestionado del [DrakeStar Launcher](https://github.com/SlimefunNewHorizons/DrakeStar-Launcher)** (arranca el DrakesPurpur real en segundo plano y entra solo). Ver «Estado real» arriba.
+> **Todo lo que sigue desde aquí hasta «Networking» describe el puente directo sobre `IntegratedServer` (VISIÓN / DISEÑO OBJETIVO para 1.20–1.21) frente al modo de monolito embebido ya activo en 26.2 (`v1.0.0-alpha.4`).** En `v1.0.0-alpha.4` el modo **monolito DrakesPurpur 26.2 embebido en la misma JVM del cliente Fabric 26.2 (Java 25+)** ya funciona y está verificado paso a paso en [`docs/EMBEDDED_SERVER_SPIKE.md`](docs/EMBEDDED_SERVER_SPIKE.md) (10/10 plugins con Slimefun + 9 suites y motor nativo Rust FFM/JNI activos, sin proceso de servidor externo, conectado a la plantilla `slimefun-solo` del [DrakeStar Launcher](https://github.com/SlimefunNewHorizons/DrakeStar-Launcher)). En cambio, sobre el `IntegratedServer` vanilla (sin monolito 26.2), `FusedCraftServer` solo prepara `plugins/` y no traduce plugins Bukkit. Ver «Estado real» arriba.
 >
-> *Everything below up to «Networking» is the design vision, not the current state: alpha.3 does not run Bukkit plugins and nothing here (single-JVM host, CraftServer, shader/mod compatibility, Rust off-heap tickers inside the client) has been verified.*
+> *In `v1.0.0-alpha.4`, the embedded DrakesPurpur 26.2 monolith mode inside the Fabric 26.2 client JVM (Java 25+, isolated classloader `Embed` / `SpikeLoader` / `SpikeHooks`, Slimefun + 9 StarSuites + Rust FFM/JNI engine) is implemented and verified in [`docs/EMBEDDED_SERVER_SPIKE.md`](docs/EMBEDDED_SERVER_SPIKE.md). The sections below describe the broader `IntegratedServer` bridge architecture (still a design goal for non-monolith 1.20–1.21 worlds).*
 
 ## 🏛️ Executive Summary — design vision (not implemented)
 
@@ -163,15 +163,15 @@ El ecosistema de **Slimefun** enriquecido con **StarSuites** contiene más de 20
 
 En laptops y computadores personales, tener dos instancias completas de Java devora entre 8 y 14 GB de memoria RAM y satura la CPU con la recolección de basura (GC).
 
-**Objetivo de diseño (no implementado en alpha.3): DrakeStar Fused uniría los tres mundos:**
+**En `v1.0.0-alpha.4` (modo monolito embebido 26.2, Java 25+), DrakeStar Fused une los tres mundos en una sola JVM (`docs/EMBEDDED_SERVER_SPIKE.md`):**
 1. **Fabric Loader**: Te permite cargar tus mods favoritos de optimización (Sodium, Iris, Lithium, Indium) y shaders cinematográficos.
-2. **Purpur / Bukkit**: Inyecta en el servidor interno (`IntegratedServer`) la capacidad de cargar plugins Spigot/Paper/Purpur sin requerir una segunda ventana o servidor externo.
-3. **Rust Off-Heap SIMD (`Slimefun-Rust`)**: Conecta el cálculo de redes eléctricas y almacenamiento masivo a librerías nativas en Rust compiladas con AVX-512, liberando a Java de cualquier micro-lag o caída de TPS.
+2. **Purpur / Bukkit**: Ejecuta el monolito **DrakesPurpur 26.2 (`b141`)** con **Slimefun + las 9 suites** dentro de la misma JVM del cliente mediante un cargador aislado (`Embed` / `SpikeLoader` / `SpikeHooks`), sin requerir una segunda ventana ni un proceso de servidor externo (y en mundos vanilla 1.20–1.21 prepara el puente `IntegratedServer`).
+3. **Rust Off-Heap SIMD (`Slimefun-Rust`)**: Conecta el cálculo de redes eléctricas y almacenamiento masivo a librerías nativas en Rust (`libslimefun_ffi.so`, `libodysseia_ffi.so`, `libdrakes_hybrid_ffi.so`) compartidas vía FFM y rutas JNI aisladas por cargador.
 
-### Roadmap de Soporte Multi-Loader (planificado; hoy solo existe el jar de Fabric):
-1. 🚀 **Módulo 1 (Fabric Loader):** Implementación principal y más liviana.
-2. 🛠️ **Módulo 2 (NeoForge Loader):** Para usuarios de modpacks modernos basados en NeoForge.
-3. ⚙️ **Módulo 3 (Forge Clásico):** Soporte de retrocompatibilidad para packs tradicionales.
+### Soporte Multi-Loader (`v1.0.0-alpha.4` publica los 3 jars universales 1.20–26.2):
+1. 🚀 **Módulo 1 (Fabric Loader):** `drakestar-fused-fabric-universal-1.0.0-alpha.4.jar` — incluye además el host de monolito embebido 26.2 (`Embed` / `SpikeLoader` / `SpikeHooks`) integrado con la plantilla `slimefun-solo` del launcher.
+2. 🛠️ **Módulo 2 (NeoForge Loader):** `drakestar-fused-neoforge-universal-1.0.0-alpha.4.jar` — puente `common` sin mixins verificado en la misma JVM que el monolito 26.2 ([evidencia paso 4](docs/evidence/embedded-step4-neoforge-forge-20261121/README.md)).
+3. ⚙️ **Módulo 3 (Forge Clásico):** `drakestar-fused-forge-universal-1.0.0-alpha.4.jar` — puente `common` sin mixins verificado en la misma JVM que el monolito 26.2 ([evidencia paso 4](docs/evidence/embedded-step4-neoforge-forge-20261121/README.md)).
 
 ---
 
