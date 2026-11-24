@@ -25,7 +25,16 @@ sourceSets {
     main {
         java.srcDir '../common/src/main/java'   // el nucleo comun se empaqueta dentro del mismo .jar
     }
+    // Host del servidor embebido (tools/embedded-spike, paquete por defecto): solo JDK, --release 25 porque usa
+    // java.lang.classfile. Va en el mismo .jar; DrakeStarFusedClient lo invoca por reflexion solo en Java 25+.
+    embedded {
+        java {
+            srcDirs = ['../tools/embedded-spike']
+            include '*.java'
+        }
+    }
 }
+
 
 dependencies {
     // Compila contra stubs limpios de las firmas publicas de Fabric Loader 0.14.21 y Fabric API 0.83.0+1.20.
@@ -35,7 +44,8 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 17            // corre en Java 17 (1.20.x), 21 (1.21.x) y 25 (26.x)
+    // corre en Java 17 (1.20.x), 21 (1.21.x) y 25 (26.x); el host embebido solo en 25 (26.2)
+    options.release = name == 'compileEmbeddedJava' ? 25 : 17
     options.compilerArgs += ['-Xlint:all', '-Xlint:-processing']
 }
 
@@ -52,6 +62,7 @@ processResources {
 }
 
 jar {
+    from sourceSets.embedded.output
     from('../LICENSE') {
         rename { "${it}_${project.base.archivesName.get()}" }
     }

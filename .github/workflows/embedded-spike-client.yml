@@ -7,6 +7,9 @@ on:
     branches: [ spike/embedded-isolation-20261117 ]
     paths:
       - 'tools/embedded-spike/**'
+      - 'fabric/**'
+      - 'common/**'
+      - 'release-artifacts/check_jar.py'
       - '.github/workflows/embedded-spike-client.yml'
   workflow_dispatch:
 
@@ -25,6 +28,17 @@ jobs:
           distribution: temurin
           java-version: '25'
 
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.1.0'
+
+      # Paso 5a: el arranque embebido vive en el mod real (DrakeStarFusedClient + host Embed en el mismo jar).
+      - name: Mod Fabric real (gradle :fabric:build + check_jar)
+        run: |
+          gradle --no-daemon :fabric:build
+          python3 release-artifacts/check_jar.py fabric/build/libs/drakestar-fused-fabric-universal-*.jar
+          ls fabric/build/libs/drakestar-fused-fabric-universal-*.jar | grep -v -- '-sources\|-javadoc' | head -1 > "$RUNNER_TEMP/modjar"
+
       - name: Xvfb, mesa y ffmpeg
         run: |
           sudo apt-get update -q
@@ -36,15 +50,16 @@ jobs:
           echo "$JAR_SHA256  $RUNNER_TEMP/purpur.jar" | sha256sum -c
 
       - name: Cliente Fabric 26.2
-        run: python3 tools/embedded-spike/client/prepare_client.py --root "$RUNNER_TEMP/client"
+        run: python3 tools/embedded-spike/client/prepare_client.py --root "$RUNNER_TEMP/client" --fabric-api
 
       - name: Jugar (1er arranque directo con Slimefun + 9 suites desde el monolito b141)
         run: |
           python3 tools/embedded-spike/client/run_client.py --client-root "$RUNNER_TEMP/client" \
-            --jar "$RUNNER_TEMP/purpur.jar" --java-home "$JAVA_HOME" --output "$RUNNER_TEMP/out" --timeout 1500
+            --jar "$RUNNER_TEMP/purpur.jar" --mod-jar "$(cat "$RUNNER_TEMP/modjar")" --java-home "$JAVA_HOME" --output "$RUNNER_TEMP/out" --timeout 1500
           python3 -c '
           import json, sys
           r = json.load(open("'"$RUNNER_TEMP"'/out/result.json"))
+          assert r.get("mod", "").startswith("drakestar-fused-fabric-universal-"), f"no corrio el mod real: {r}"
           assert r.get("pass") is True, f"pass!=True: {r}"
           assert "Slimefun" in r.get("plugins_enabled", []), f"Slimefun no habilitado en 1er arranque: {r}"
           assert "DrakesTech" in r.get("plugins_enabled", []), f"DrakesTech no habilitado en 1er arranque: {r}"

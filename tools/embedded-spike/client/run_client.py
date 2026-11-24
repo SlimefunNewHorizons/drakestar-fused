@@ -33,6 +33,7 @@ def main():
     p.add_argument("--display", default=":77")
     p.add_argument("--timeout", type=int, default=900)
     p.add_argument("--join-timeout", type=int, default=420)
+    p.add_argument("--mod-jar", type=Path, help="jar Fabric real de Fused (gradle :fabric:build) en vez del mod desechable")
     p.add_argument("--seed-plugins", type=Path, help="plugins/ de una corrida previa (el 1er arranque solo extrae las suites)")
     a = p.parse_args()
     out = a.output.resolve()
@@ -44,13 +45,19 @@ def main():
     javac = str(a.java_home / "bin/javac")
     stubs = SPIKE.parent.parent / "fabric/stubs/net/fabricmc/api/ClientModInitializer.java"
     srcs = [*map(str, sorted(SPIKE.glob("*.java"))), str(HERE / "SpikeClientMod.java"), str(stubs)]
-    subprocess.run([javac, "--release", "25", "-d", str(build), *srcs], check=True)
-    shutil.rmtree(build / "net")  # la API real la aporta Fabric Loader
-    mod = inst / "mods/fused-embedded-spike.jar"
-    with zipfile.ZipFile(mod, "w") as z:
-        z.write(HERE / "mod/fabric.mod.json", "fabric.mod.json")
-        for c in build.rglob("*.class"):
-            z.write(c, c.relative_to(build).as_posix())
+    if a.mod_jar:
+        # el mod real necesita fabric-lifecycle-events-v1 (Fabric API), igual que en el launcher
+        shutil.copy2(a.mod_jar, inst / "mods" / a.mod_jar.name)
+        for api in sorted((a.client_root / "mods").glob("*.jar")):
+            shutil.copy2(api, inst / "mods" / api.name)
+    else:
+        subprocess.run([javac, "--release", "25", "-d", str(build), *srcs], check=True)
+        shutil.rmtree(build / "net")  # la API real la aporta Fabric Loader
+        mod = inst / "mods/fused-embedded-spike.jar"
+        with zipfile.ZipFile(mod, "w") as z:
+            z.write(HERE / "mod/fabric.mod.json", "fabric.mod.json")
+            for c in build.rglob("*.class"):
+                z.write(c, c.relative_to(build).as_posix())
     if a.seed_plugins:
         shutil.copytree(a.seed_plugins, server / "plugins")
     # Servidor desechable, igual que probe.py.
@@ -79,6 +86,7 @@ def main():
     root = a.client_root.resolve()
     cmd = [str(a.java_home / "bin/java"), "-Xmx4G", *launch["jvmArgs"],
            f"-Dfused.spike.server={server}", f"-Dfused.spike.jar={a.jar.resolve()}",
+           f"-Ddrakestar.fused.embedded.server={server}", f"-Ddrakestar.fused.embedded.jar={a.jar.resolve()}",
            "-cp", ":".join(launch["classpath"]), launch["mainClass"],
            "--username", "SpikeJack", "--uuid", "00000000-0000-0000-0000-000000000001",
            "--accessToken", "0", "--userType", "legacy", "--version", "26.2",
@@ -93,7 +101,8 @@ def main():
     console = open(out / "client-console.txt", "wb")
     client = subprocess.Popen(cmd, cwd=inst, stdin=subprocess.PIPE, stdout=console,
                               stderr=subprocess.STDOUT, env=env, start_new_session=True)
-    res = {"port": port, "client_pid": client.pid, "same_jvm": "Embed.main from Fabric client entrypoint"}
+    res = {"port": port, "client_pid": client.pid, "same_jvm": "Embed.main from Fabric client entrypoint",
+           "mod": a.mod_jar.name if a.mod_jar else "fused-embedded-spike.jar"}
     started, peak, stage = time.monotonic(), 0, "boot"
     def text():
         return (out / "client-console.txt").read_text(errors="replace")
@@ -101,10 +110,10 @@ def main():
         while time.monotonic() - started < a.timeout and client.poll() is None:
             peak = max(peak, rss_kib(client.pid))
             t = text()
-            if stage == "boot" and ("SPIKE-CLIENT embed.failed=" in t or "server.ready=false" in t):
-                res["boot_failure"] = next(l for l in t.splitlines() if "SPIKE-CLIENT" in l)
+            if stage == "boot" and ("embed.failed=" in t or "server.ready=false" in t):
+                res["boot_failure"] = next(l for l in t.splitlines() if "SPIKE-CLIENT" in l or "FUSED-EMBEDDED" in l)
                 break
-            if stage == "boot" and "SPIKE-CLIENT server.ready port=" in t:
+            if stage == "boot" and ("SPIKE-CLIENT server.ready port=" in t or "FUSED-EMBEDDED server.ready port=" in t):
                 res["server_ready_seconds"] = round(time.monotonic() - started, 1)
                 stage = "join"
                 join_at, shots = time.monotonic(), 0

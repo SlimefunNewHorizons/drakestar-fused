@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Descarga un cliente Fabric 26.2 mínimo (sin sonidos) para el paso 2 del spike."""
-import argparse, hashlib, json, os, sys, urllib.request
+import argparse, hashlib, json, os, sys, urllib.parse, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 MANIFEST = "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
@@ -45,6 +45,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--mc", default="26.2")
     p.add_argument("--loader", default="0.20.1")
+    p.add_argument("--fabric-api", action="store_true", help="baja Fabric API a <root>/mods (lo exige el mod real de Fused)")
     p.add_argument("--root", required=True)
     a = p.parse_args()
     root = os.path.abspath(a.root)
@@ -90,6 +91,14 @@ def main():
            "gameArgs": fab.get("arguments", {}).get("game", []),
            "jvmArgs": fab.get("arguments", {}).get("jvm", []), "javaMajor": ver.get("javaVersion", {}).get("majorVersion")}
     json.dump(out, open(f"{root}/launch.json", "w"), indent=2)
+    if a.fabric_api:
+        q = urllib.parse.quote(json.dumps(["fabric"])), urllib.parse.quote(json.dumps([a.mc]))
+        vers = json.loads(get(f"https://api.modrinth.com/v2/project/fabric-api/version?loaders={q[0]}&game_versions={q[1]}"))
+        if not vers:
+            raise SystemExit(f"sin Fabric API para {a.mc}")
+        f = next((x for x in vers[0]["files"] if x.get("primary")), vers[0]["files"][0])
+        fetch(f["url"], f"{root}/mods/{f['filename']}", f["hashes"]["sha1"])
+        print(f"fabric-api: {f['filename']}")
     print(f"ok: {len(jobs)} archivos, main={out['mainClass']}, java={out['javaMajor']}")
 
 

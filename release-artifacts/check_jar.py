@@ -6,6 +6,7 @@ import re
 import sys
 import zipfile
 
+EMBEDDED_HOST = {"Embed", "SpikeHooks", "SpikeLoader"}
 ALLOWED = {b"net/minecraft/server/MinecraftServer"}
 DESCRIPTORS = (
     "fabric.mod.json",
@@ -39,7 +40,9 @@ def main(paths: list[str]) -> int:
         for n in classes:
             data = z.read(n)
             major = int.from_bytes(data[6:8], "big")
-            if major > 61:
+            # host embebido (tools/embedded-spike): Java 25 a proposito, solo se carga en 26.2 por reflexion
+            embedded_host = "/" not in n and n.split("$")[0].removesuffix(".class") in EMBEDDED_HOST
+            if major > (69 if embedded_host else 61):
                 errors.append(f"{n}: bytecode Java {major - 44} (maximo 17)")
             for ref in set(re.findall(rb"net/minecraft/[A-Za-z0-9_/$]+", data)):
                 if ref not in ALLOWED:
