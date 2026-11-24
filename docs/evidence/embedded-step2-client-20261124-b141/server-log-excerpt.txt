@@ -1,0 +1,81 @@
+ - DrakesBio (2.0.0-26.X-SNAPSHOT), DrakesCombat (2.0.0-26.X-SNAPSHOT), DrakesCore (2.0.0-26.X-SNAPSHOT), DrakesGenerators (2.0.0-26.X-SNAPSHOT), DrakesMagic (2.0.0-26.X-SNAPSHOT), DrakesMultiverse (2.0.0-26.X-SNAPSHOT), DrakesServer (2.0.0-26.X-SNAPSHOT), DrakesTech (2.0.0-26.X-SNAPSHOT), DrakesUtility (2.0.0-26.X-SNAPSHOT), Slimefun (11.0-Universal-26.x-SNAPSHOT)
+[04:09:27 INFO] [DrakesBundled] 0 en keep; 10 plugins activos (0 desactivados en drakes-data/suites.yml), 0 extraídos/actualizados en plugins/
+[04:09:27 INFO] [38;5;245mGitHub    [0m[4;38;5;81mhttps://github.com/SlimefunNewHorizons/DrakesPurpur[0m
+[04:09:29 INFO] Loading server plugin DrakesCore v2.0.0-26.X-SNAPSHOT
+[04:09:29 INFO] Loading server plugin Slimefun v11.0-Universal-26.x-SNAPSHOT
+[04:09:29 INFO] Loading server plugin DrakesCombat v2.0.0-26.X-SNAPSHOT
+[04:09:29 INFO] Loading server plugin DrakesTech v2.0.0-26.X-SNAPSHOT
+[04:09:29 INFO] Loading server plugin DrakesServer v2.0.0-26.X-SNAPSHOT
+[04:09:29 INFO] Loading server plugin DrakesBio v2.0.0-26.X-SNAPSHOT
+[04:09:29 INFO] Loading server plugin DrakesMultiverse v2.0.0-26.X-SNAPSHOT
+[04:09:29 INFO] Loading server plugin DrakesMagic v2.0.0-26.X-SNAPSHOT
+[04:09:29 INFO] Loading server plugin DrakesGenerators v2.0.0-26.X-SNAPSHOT
+[04:09:29 INFO] Loading server plugin DrakesUtility v2.0.0-26.X-SNAPSHOT
+[04:09:29 INFO] Enabling DrakesCore v2.0.0-26.X-SNAPSHOT
+[04:09:32 INFO] Enabling Slimefun v11.0-Universal-26.x-SNAPSHOT
+[04:09:32 INFO] [92m[1m      DRAKESCRAFT LABS — Slimefun Drake[0m
+[04:09:32 INFO] [92m[1m      Slimefun Drake build: 11.0-Universal-26.x-SNAPSHOT[0m
+[04:09:32 INFO] [92m[1m      Repo: https://github.com/SlimefunNewHorizons/drakes-slimefun-labs[0m
+[04:09:32 INFO] [Slimefun-Rust] Motor nativo deshabilitado por configuración.
+[04:09:33 INFO] Slimefun has finished loading in 1.38s
+[04:09:33 INFO] Enabling DrakesCombat v2.0.0-26.X-SNAPSHOT
+[04:09:33 INFO] Módulo [SlimefunWarfare Ballistics & Exoskeletons] (warfare) habilitado.
+[04:09:33 INFO] [SlimefunDisc] Módulo acústico habilitado (4 pistas musicales registradas).
+[04:09:33 INFO] Módulo [SlimefunDisc Custom Acoustic & Music Resonance] (slimefundisc) habilitado.
+[04:09:33 INFO] Módulo [SlimefunNukes Tactical Warheads & Deterrence] (slimefun_nukes) habilitado.
+[04:09:33 INFO] Módulo [HardcoreSlimefun Lethality & Tactical Survival] (hardcore_combat) habilitado.
+[04:09:33 INFO] Enabling DrakesTech v2.0.0-26.X-SNAPSHOT
+[04:09:33 INFO] [DrakesTech] InfinityExpansionModule activado (Singularidades: 22, AntiVoid: true, GodBypass: true, QuarrySpeed: 8 blk/t).
+[04:09:33 INFO] [DrakesTech] SupremeModule activado (Tiers 1-10, Multiplier=4.0x).
+[04:09:33 INFO] [DrakesTech] FluffyMachinesModule habilitado (Tick delay: 2, Snapshot validation: true).
+[04:09:34 INFO] Cross-addon recipe ingredients resolved: {Slimefun=474}
+[04:09:34 INFO] [DrakesTech] NanotechModule activado con éxito (158 items, 15 máquinas, 8 multibloques).
+[04:09:34 INFO] [DrakesTech] FoxyMachinesModule habilitado (Chunk guard: true, Max buffer: 1024 J).
+[04:09:34 INFO] DrakesTech v2.0.0-26.X-SNAPSHOT inicializado con éxito.
+[04:09:34 INFO] Enabling DrakesServer v2.0.0-26.X-SNAPSHOT
+[04:09:34 INFO] DrakesServer v2.0.0-26.X-SNAPSHOT inicializado con éxito.
+[04:09:34 INFO] Enabling DrakesBio v2.0.0-26.X-SNAPSHOT
+[04:09:34 INFO] Enabling DrakesMultiverse v2.0.0-26.X-SNAPSHOT
+[04:09:34 INFO] [Compat] Slimefun detected (me.mrCookieSlime.Slimefun.api). Grabbers, pushers, and crafters can use machines.
+[04:09:34 INFO] §5[DrakesMultiverse] §dSuite Multiverse de Chagui68 v2.0.0-26.X-SNAPSHOT inicializada con exito.
+[04:09:34 INFO] Enabling DrakesMagic v2.0.0-26.X-SNAPSHOT
+[04:09:34 INFO] Enabling DrakesGenerators v2.0.0-26.X-SNAPSHOT
+[04:09:34 INFO] Módulo [Slimefun OreChunks Mineral Processing] (ore_chunks) habilitado.
+[04:09:34 INFO] Enabling DrakesUtility v2.0.0-26.X-SNAPSHOT
+[04:09:34 INFO] Módulo [JustEnoughGuide & SlimefunAdvancements Visuals] (guidetools) habilitado.
+[04:09:34 INFO] Módulo [WorldEditSlimefun Schematic & Paste Engine] (worldedit_sf) habilitado.
+[04:09:36 INFO] ######################### - Slimefun v11.0-Universal-26.x-SNAPSHOT - #########################
+[04:09:36 INFO] ( 435 Items from Slimefun, 157 Items from 8 Addons )
+[04:09:36 INFO] Slimefun DrakesCraft is maintained for this server by DrakesCraft Labs.
+[04:09:36 INFO]  - Repository: https://github.com/SlimefunNewHorizons/Slimefun4-Drake
+[04:09:36 INFO]  - Issues: https://github.com/SlimefunNewHorizons/Slimefun4-Drake/issues
+[04:09:36 INFO] Done (17.485s)! For help, type "help"
+[04:09:42 INFO] UUID of player SpikeJack is e9047869-8ee7-3b21-8209-6b802591277b
+[04:09:45 INFO] SpikeJack joined the game
+[04:09:45 INFO] SpikeJack[/127.0.0.1:49344] logged in with entity id 1 at ([minecraft:overworld]-2.5, -60.0, -0.5)
+[04:10:12 INFO] Stopping the server
+[04:10:12 INFO] Stopping server
+[04:10:12 INFO] Disabling DrakesUtility v2.0.0-26.X-SNAPSHOT
+[04:10:12 INFO] Disabling DrakesGenerators v2.0.0-26.X-SNAPSHOT
+[04:10:12 INFO] Disabling DrakesMagic v2.0.0-26.X-SNAPSHOT
+[04:10:12 INFO] Disabling DrakesMultiverse v2.0.0-26.X-SNAPSHOT
+[04:10:12 INFO] [DrakesMultiverse] Suite de Chagui68 deshabilitada limpiamente.
+[04:10:12 INFO] Disabling DrakesBio v2.0.0-26.X-SNAPSHOT
+[04:10:12 INFO] Disabling DrakesServer v2.0.0-26.X-SNAPSHOT
+[04:10:12 INFO] DrakesServer deshabilitado limpiamente.
+[04:10:12 INFO] Disabling DrakesTech v2.0.0-26.X-SNAPSHOT
+[04:10:12 INFO] [DrakesTech] InfinityExpansionModule deshabilitado limpiamente.
+[04:10:12 INFO] [DrakesTech] SupremeModule deshabilitado limpiamente.
+[04:10:12 INFO] [DrakesTech] FluffyMachinesModule deshabilitado limpiamente.
+[04:10:12 INFO] [DrakesTech] NanotechModule deshabilitado limpiamente.
+[04:10:12 INFO] [DrakesTech] FoxyMachinesModule deshabilitado limpiamente.
+[04:10:12 INFO] DrakesTech deshabilitado limpiamente.
+[04:10:12 INFO] Disabling DrakesCombat v2.0.0-26.X-SNAPSHOT
+[04:10:12 INFO] [SlimefunDisc] Módulo acústico deshabilitado.
+[04:10:12 INFO] Disabling Slimefun v11.0-Universal-26.x-SNAPSHOT
+[04:10:12 INFO] Slimefun: ejecutando guardado de apagado (jugadores, bloques y chunks)...
+[04:10:12 INFO] Slimefun: guardados 1 perfil(es) de jugador en el apagado.
+[04:10:12 INFO] Slimefun: volcado de BlockStorage revisado en 3 mundo(s) al apagar.
+[04:10:12 INFO] Disabling DrakesCore v2.0.0-26.X-SNAPSHOT
+[04:10:12 INFO] SpikeJack lost connection: Server closed
+[04:10:12 INFO] SpikeJack left the game

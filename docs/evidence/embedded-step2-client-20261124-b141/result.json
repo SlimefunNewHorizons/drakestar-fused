@@ -1,0 +1,30 @@
+{
+  "port": 45729,
+  "client_pid": 3916,
+  "same_jvm": "Embed.main from Fabric client entrypoint",
+  "server_ready_seconds": 34.0,
+  "joined_seconds": 44.0,
+  "stop_sent": true,
+  "client_alive_after_stop": true,
+  "stage": "done",
+  "seconds": 124.7,
+  "peak_rss_kib": 2249868,
+  "client_exit": null,
+  "server_done": true,
+  "unsatisfied_link": 0,
+  "async_shutdown_nag": 0,
+  "plugins_enabled": [
+    "DrakesBio",
+    "DrakesCombat",
+    "DrakesCore",
+    "DrakesGenerators",
+    "DrakesMagic",
+    "DrakesMultiverse",
+    "DrakesServer",
+    "DrakesTech",
+    "DrakesUtility",
+    "Slimefun"
+  ],
+  "host_alive_after_stop_marker": true,
+  "pass": true
+}
