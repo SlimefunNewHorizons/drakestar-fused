@@ -15,12 +15,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
-      JAR_URL: https://github.com/SlimefunNewHorizons/DrakesPurpur/releases/download/v26.2.140-stable/purpur-paperclip-26.2.build.140-stable.jar
-      JAR_SHA256: 750811c856cb0e36a9b117598d7d57834b53779f5d17d84ca04f47e747f00145
-      # El monolito b140 no incluye Slimefun: se siembra el núcleo 26.x publicado (port-26x 9a630d1b5).
-      SF_URL: https://maven.drakescraft.cl/com/github/drakescraft_labs/slimefun-core/11.0-Universal-26.x-SNAPSHOT/slimefun-core-11.0-Universal-26.x-20261124.023000-3.jar
-      SF_FALLBACK_URL: https://raw.githubusercontent.com/SlimefunNewHorizons/maven-repo/main/com/github/drakescraft_labs/slimefun-core/11.0-Universal-26.x-SNAPSHOT/slimefun-core-11.0-Universal-26.x-20261124.023000-3.jar
-      SF_SHA256: 3941762f3cb99f2b5a0eaeae234b2380527cf495c5039660d989bddbe6455579
+      JAR_URL: https://github.com/SlimefunNewHorizons/DrakesPurpur/releases/download/26.2-drakes.141/purpur-paperclip-26.2.build.141-stable.jar
+      JAR_SHA256: 30ff10f692c12df7a8260ed0f1ba1fa898968b7ee561d4ac087545a19a1e7ffe
     steps:
       - uses: actions/checkout@v4
 
@@ -34,7 +30,7 @@ jobs:
           sudo apt-get update -q
           sudo apt-get install -yq xvfb ffmpeg libgl1 libgl1-mesa-dri libegl1 libxcursor1 libxrandr2 libxi6 libxxf86vm1
 
-      - name: Monolito DrakesPurpur b140 (mismo SHA que pasos 1-4)
+      - name: Monolito DrakesPurpur b141 (con Slimefun 26.x + 9 suites embebidas)
         run: |
           curl -fsSL -o "$RUNNER_TEMP/purpur.jar" "$JAR_URL"
           echo "$JAR_SHA256  $RUNNER_TEMP/purpur.jar" | sha256sum -c
@@ -42,22 +38,19 @@ jobs:
       - name: Cliente Fabric 26.2
         run: python3 tools/embedded-spike/client/prepare_client.py --root "$RUNNER_TEMP/client"
 
-      - name: Jugar (quickplay al monolito embebido)
+      - name: Jugar (1er arranque directo con Slimefun + 9 suites desde el monolito b141)
         run: |
           python3 tools/embedded-spike/client/run_client.py --client-root "$RUNNER_TEMP/client" \
             --jar "$RUNNER_TEMP/purpur.jar" --java-home "$JAVA_HOME" --output "$RUNNER_TEMP/out" --timeout 1500
-
-      - name: Sembrar Slimefun 26.x en plugins/
-        run: |
-          curl -fsSL -o "$RUNNER_TEMP/out/server/plugins/Slimefun.jar" "$SF_URL" || \
-            curl -fsSL -o "$RUNNER_TEMP/out/server/plugins/Slimefun.jar" "$SF_FALLBACK_URL"
-          echo "$SF_SHA256  $RUNNER_TEMP/out/server/plugins/Slimefun.jar" | sha256sum -c
-
-      - name: Jugar otra vez con las suites ya extraídas (Slimefun habilitado)
-        run: |
-          python3 tools/embedded-spike/client/run_client.py --client-root "$RUNNER_TEMP/client" \
-            --jar "$RUNNER_TEMP/purpur.jar" --java-home "$JAVA_HOME" --output "$RUNNER_TEMP/out2" --timeout 1500 \
-            --seed-plugins "$RUNNER_TEMP/out/server/plugins"
+          python3 -c '
+          import json, sys
+          r = json.load(open("'"$RUNNER_TEMP"'/out/result.json"))
+          assert r.get("pass") is True, f"pass!=True: {r}"
+          assert "Slimefun" in r.get("plugins_enabled", []), f"Slimefun no habilitado en 1er arranque: {r}"
+          assert "DrakesTech" in r.get("plugins_enabled", []), f"DrakesTech no habilitado en 1er arranque: {r}"
+          assert r.get("unsatisfied_link") == 0, f"unsatisfied_link!=0: {r}"
+          assert r.get("async_shutdown_nag") == 0, f"async_shutdown_nag!=0: {r}"
+          '
 
       - name: Evidencia
         if: always()
@@ -70,8 +63,4 @@ jobs:
             ${{ runner.temp }}/out/*.txt
             ${{ runner.temp }}/out/server/logs/
             ${{ runner.temp }}/out/instance/logs/
-            ${{ runner.temp }}/out2/*.json
-            ${{ runner.temp }}/out2/*.png
-            ${{ runner.temp }}/out2/*.txt
-            ${{ runner.temp }}/out2/server/logs/
           if-no-files-found: warn

@@ -383,6 +383,12 @@ public final class Embed {
         }
         var launch = new Thread(() -> {
             try {
+                if (isolated) {
+                    try {
+                        Class.forName("org.purpurmc.purpur.bundled.DrakesBundledPlugins", true, serverLoader)
+                            .getMethod("initialize").invoke(null);
+                    } catch (ClassNotFoundException ignored) { }
+                }
                 Class.forName(mainClass, true, serverLoader)
                     .getMethod("main", String[].class).invoke(null, (Object) new String[]{
                         "--nogui", "--universe", server.resolve("worlds").toString(),
