@@ -150,6 +150,7 @@ def main():
         res["server_done"] = "Done (" in (server / "logs/latest.log").read_text(errors="replace") \
             if (server / "logs/latest.log").exists() else False
         res["unsatisfied_link"] = t.count("UnsatisfiedLinkError")
+        res["async_shutdown_nag"] = t.count("not properly shutting down its async tasks")
         res["plugins_enabled"] = sorted({l.split("Enabling ")[1].split(" ")[0] for l in t.splitlines()
                                          if "] Enabling " in l})
         res["host_alive_after_stop_marker"] = (server / "host-alive-after-stop.txt").exists()
